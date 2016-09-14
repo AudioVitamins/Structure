@@ -38,7 +38,7 @@ MainWindow::MainWindow ()
     option1Button->addListener (this);
 
     option1Button->setImages (false, true, true,
-                              ImageCache::getFromMemory (white_pushbutton_redled_36x36_up_png, white_pushbutton_redled_36x36_up_pngSize), 1.000f, Colour (0x00000000),
+                              ImageCache::getFromMemory (white_pushbutton_redled_36x36_down_png, white_pushbutton_redled_36x36_down_pngSize), 1.000f, Colour (0x00000000),
                               Image(), 1.000f, Colour (0x00000000),
                               ImageCache::getFromMemory (white_pushbutton_down_png, white_pushbutton_down_pngSize), 1.000f, Colour (0x00000000));
     addAndMakeVisible (option2Button = new ImageButton ("option2"));
@@ -56,11 +56,11 @@ MainWindow::MainWindow ()
     option3Button->addListener (this);
 
     option3Button->setImages (false, true, true,
-                              ImageCache::getFromMemory (white_pushbutton_redled_36x36_down_png, white_pushbutton_redled_36x36_down_pngSize), 1.000f, Colour (0x00000000),
+                              ImageCache::getFromMemory (white_pushbutton_redled_36x36_up_png, white_pushbutton_redled_36x36_up_pngSize), 1.000f, Colour (0x00000000),
                               Image(), 1.000f, Colour (0x00000000),
                               ImageCache::getFromMemory (white_pushbutton_down_png, white_pushbutton_down_pngSize), 1.000f, Colour (0x00000000));
     addAndMakeVisible (analysisButton = new ImageButton ("analysisButton"));
-    analysisButton->setButtonText (TRANS("new button"));
+    analysisButton->setButtonText (String());
     analysisButton->addListener (this);
 
     analysisButton->setImages (false, true, true,
@@ -68,7 +68,7 @@ MainWindow::MainWindow ()
                                Image(), 1.000f, Colour (0x00000000),
                                ImageCache::getFromMemory (white_pushbutton_down_png, white_pushbutton_down_pngSize), 1.000f, Colour (0x00000000));
     addAndMakeVisible (allButton = new ImageButton ("allButton"));
-    allButton->setButtonText (TRANS("new button"));
+    allButton->setButtonText (String());
     allButton->addListener (this);
 
     allButton->setImages (false, true, true,
@@ -140,24 +140,29 @@ void MainWindow::buttonClicked (Button* buttonThatWasClicked)
     //[/UserbuttonClicked_Pre]
 
     if (buttonThatWasClicked == option1Button)
-    {    
-        // GainSetting = -27db
+    {
+        //[UserButtonCode_option1Button] -- add your button handler code here..
+        //[/UserButtonCode_option1Button]
     }
     else if (buttonThatWasClicked == option2Button)
     {
-        // GainSetting = -25db
+        //[UserButtonCode_option2Button] -- add your button handler code here..
+        //[/UserButtonCode_option2Button]
     }
     else if (buttonThatWasClicked == option3Button)
     {
-        // GainSetting = -23db
+        //[UserButtonCode_option3Button] -- add your button handler code here..
+        //[/UserButtonCode_option3Button]
     }
     else if (buttonThatWasClicked == analysisButton)
     {
-        // Set EBU128 level measuring on
+        //[UserButtonCode_analysisButton] -- add your button handler code here..
+        //[/UserButtonCode_analysisButton]
     }
     else if (buttonThatWasClicked == allButton)
     {
-        // set all plugins to EBU128 level measuring on
+        //[UserButtonCode_allButton] -- add your button handler code here..
+        //[/UserButtonCode_allButton]
     }
 
     //[UserbuttonClicked_Post]
@@ -189,7 +194,7 @@ BEGIN_JUCER_METADATA
   <IMAGEBUTTON name="option1" id="8e6ab73192acb360" memberName="option1Button"
                virtualName="" explicitFocusOrder="0" pos="31 18 44 51" buttonText=""
                connectedEdges="0" needsCallback="1" radioGroupId="1" keepProportions="1"
-               resourceNormal="white_pushbutton_redled_36x36_up_png" opacityNormal="1"
+               resourceNormal="white_pushbutton_redled_36x36_down_png" opacityNormal="1"
                colourNormal="0" resourceOver="" opacityOver="1" colourOver="0"
                resourceDown="white_pushbutton_down_png" opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="option2" id="7a692faf8b6bc181" memberName="option2Button"
@@ -201,17 +206,17 @@ BEGIN_JUCER_METADATA
   <IMAGEBUTTON name="option3" id="e25fb72013a9c00e" memberName="option3Button"
                virtualName="" explicitFocusOrder="0" pos="185 18 44 51" buttonText=""
                connectedEdges="0" needsCallback="1" radioGroupId="1" keepProportions="1"
-               resourceNormal="white_pushbutton_redled_36x36_down_png" opacityNormal="1"
+               resourceNormal="white_pushbutton_redled_36x36_up_png" opacityNormal="1"
                colourNormal="0" resourceOver="" opacityOver="1" colourOver="0"
                resourceDown="white_pushbutton_down_png" opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="analysisButton" id="73c2def1366b9fd0" memberName="analysisButton"
-               virtualName="" explicitFocusOrder="0" pos="25 115 44 44" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="25 115 44 44" buttonText=""
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="white_pushbutton_up_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="white_pushbutton_down_png"
                opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="allButton" id="f5440fd0fcb8a3a" memberName="allButton"
-               virtualName="" explicitFocusOrder="0" pos="75 115 44 44" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="75 115 44 44" buttonText=""
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="white_pushbutton_up_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="white_pushbutton_down_png"
