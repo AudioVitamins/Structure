@@ -11,8 +11,8 @@
 
 */
 
-#ifndef __JUCE_APPCONFIG_LXVPPG__
-#define __JUCE_APPCONFIG_LXVPPG__
+#ifndef __JUCE_APPCONFIG_UTBO6R__
+#define __JUCE_APPCONFIG_UTBO6R__
 
 //==============================================================================
 // [BEGIN_USER_CODE_SECTION]
@@ -263,7 +263,7 @@
  #define JucePlugin_ManufacturerCode       0x4d616e75 // 'Manu'
 #endif
 #ifndef  JucePlugin_PluginCode
- #define JucePlugin_PluginCode             0x4c787670 // 'Lxvp'
+ #define JucePlugin_PluginCode             0x5574626f // 'Utbo'
 #endif
 #ifndef  JucePlugin_IsSynth
  #define JucePlugin_IsSynth                0
@@ -347,4 +347,4 @@
  #define JucePlugin_AAXDisableMultiMono    0
 #endif
 
-#endif  // __JUCE_APPCONFIG_LXVPPG__
+#endif  // __JUCE_APPCONFIG_UTBO6R__

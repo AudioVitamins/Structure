@@ -10,8 +10,8 @@
 
 */
 
-#ifndef __APPHEADERFILE_LXVPPG__
-#define __APPHEADERFILE_LXVPPG__
+#ifndef __APPHEADERFILE_UTBO6R__
+#define __APPHEADERFILE_UTBO6R__
 
 #include "AppConfig.h"
 
@@ -46,4 +46,4 @@ namespace ProjectInfo
 }
 #endif
 
-#endif   // __APPHEADERFILE_LXVPPG__
+#endif   // __APPHEADERFILE_UTBO6R__
