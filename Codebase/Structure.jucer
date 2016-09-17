@@ -22,28 +22,28 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015">
+    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="D:\Working\FrameWork\VST3 SDK">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+        <CONFIGURATION name="Debug_VST" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        isDebug="1" optimisation="1" targetName="Structure"/>
-        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+        <CONFIGURATION name="Release_VST" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        isDebug="0" optimisation="3" targetName="Structure"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="../../modules"/>
-        <MODULEPATH id="juce_events" path="../../modules"/>
-        <MODULEPATH id="juce_graphics" path="../../modules"/>
-        <MODULEPATH id="juce_data_structures" path="../../modules"/>
-        <MODULEPATH id="juce_gui_basics" path="../../modules"/>
-        <MODULEPATH id="juce_gui_extra" path="../../modules"/>
-        <MODULEPATH id="juce_cryptography" path="../../modules"/>
-        <MODULEPATH id="juce_video" path="../../modules"/>
-        <MODULEPATH id="juce_opengl" path="../../modules"/>
-        <MODULEPATH id="juce_audio_basics" path="../../modules"/>
-        <MODULEPATH id="juce_audio_devices" path="../../modules"/>
-        <MODULEPATH id="juce_audio_formats" path="../../modules"/>
-        <MODULEPATH id="juce_audio_processors" path="../../modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../../modules"/>
+        <MODULEPATH id="juce_core" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../FrameWork/JUCE/modules"/>
       </MODULEPATHS>
     </VS2015>
   </EXPORTFORMATS>

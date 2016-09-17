@@ -22,6 +22,9 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "PluginProcessor.h"
+
+
 //[/Headers]
 
 
@@ -34,7 +37,8 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class StructureAudioProcessorEditor  : public AudioProcessorEditor
+class StructureAudioProcessorEditor  : public AudioProcessorEditor,
+                                       public ButtonListener
 {
 public:
     //==============================================================================
@@ -47,22 +51,25 @@ public:
 
     void paint (Graphics& g) override;
     void resized() override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
 
     // Binary resources:
     static const char* structureuibackground_png;
     static const int structureuibackground_pngSize;
-    static const char* white_pushbutton_down_png;
-    static const int white_pushbutton_down_pngSize;
+    static const char* white_pushbutton_44x60_down_png;
+    static const int white_pushbutton_44x60_down_pngSize;
+    static const char* white_pushbutton_44x60_up_png;
+    static const int white_pushbutton_44x60_up_pngSize;
+    static const char* white_pushbutton_greenLed_png;
+    static const int white_pushbutton_greenLed_pngSize;
+    static const char* white_pushbutton_orangeLed_png;
+    static const int white_pushbutton_orangeLed_pngSize;
+    static const char* white_pushbutton_orangeLed_down_png;
+    static const int white_pushbutton_orangeLed_down_pngSize;
     static const char* white_pushbutton_redled_36x36_down_png;
     static const int white_pushbutton_redled_36x36_down_pngSize;
     static const char* white_pushbutton_redled_36x36_up_png;
     static const int white_pushbutton_redled_36x36_up_pngSize;
-    static const char* white_pushbutton_up_png;
-    static const int white_pushbutton_up_pngSize;
-    static const char* structureanalysegreenlight_png;
-    static const int structureanalysegreenlight_pngSize;
-    static const char* structureanalyseorangelight_png;
-    static const int structureanalyseorangelight_pngSize;
 
 
 private:
@@ -70,6 +77,11 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<ImageButton> instrumentsBtn;
+    ScopedPointer<ImageButton> busBtn;
+    ScopedPointer<ImageButton> voxBtn;
+    ScopedPointer<ImageButton> analyseBtn;
+    ScopedPointer<ImageButton> analyseBtn2;
     Image cachedImage_structureuibackground_png_1;
 
 

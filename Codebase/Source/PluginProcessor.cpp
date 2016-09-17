@@ -9,7 +9,7 @@
 */
 
 #include "PluginProcessor.h"
-#include "PluginEditor.h"
+#include "StructureEditor.h"
 
 
 //==============================================================================
@@ -144,7 +144,7 @@ bool StructureAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* StructureAudioProcessor::createEditor()
 {
-    return new StructureAudioProcessorEditor (*this);
+    return new StructureAudioProcessorEditor(*this);
 }
 
 //==============================================================================
