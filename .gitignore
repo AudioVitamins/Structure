@@ -1,0 +1,4 @@
+Codebase/Builds/VisualStudio2015/Binary/
+*.opendb
+*.db
+Codebase/Builds/VisualStudio2015/.vs/
