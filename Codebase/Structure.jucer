@@ -11,6 +11,13 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.3">
   <MAINGROUP id="jkKiHq" name="Structure">
     <GROUP id="{5B268EE9-594D-A388-F09E-F1E90AFA7F9D}" name="Source">
+      <GROUP id="{E7921EED-77C2-4B39-1DB1-9F3BFEBB1146}" name="DSP">
+        <FILE id="zKW4Ba" name="LogUtil.cpp" compile="1" resource="0" file="Source/DSP/LogUtil.cpp"/>
+        <FILE id="MJDeYS" name="LogUtil.h" compile="0" resource="0" file="Source/DSP/LogUtil.h"/>
+      </GROUP>
+      <FILE id="bS6tQS" name="DotComponent.cpp" compile="1" resource="0"
+            file="Source/DotComponent.cpp"/>
+      <FILE id="hihrAb" name="DotComponent.h" compile="0" resource="0" file="Source/DotComponent.h"/>
       <FILE id="fUnrGC" name="StructureEditor.cpp" compile="1" resource="0"
             file="Source/StructureEditor.cpp"/>
       <FILE id="EXQOIT" name="StructureEditor.h" compile="0" resource="0"

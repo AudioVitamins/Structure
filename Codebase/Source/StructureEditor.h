@@ -27,6 +27,7 @@
 
 //[/Headers]
 
+#include "DotComponent.h"
 
 
 //==============================================================================
@@ -38,7 +39,8 @@
                                                                     //[/Comments]
 */
 class StructureAudioProcessorEditor  : public AudioProcessorEditor,
-                                       public ButtonListener
+                                       public ButtonListener,
+									   public Timer
 {
 public:
     //==============================================================================
@@ -47,6 +49,11 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+	void synGUI();
+	void updateActiveMode();
+	void updateStateAnalysis();
+
+	void timerCallback();
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -70,10 +77,24 @@ public:
     static const int white_pushbutton_redled_36x36_down_pngSize;
     static const char* white_pushbutton_redled_36x36_up_png;
     static const int white_pushbutton_redled_36x36_up_pngSize;
+    static const char* white_pushbutton_down_png;
+    static const int white_pushbutton_down_pngSize;
+    static const char* white_pushbutton_up_png;
+    static const int white_pushbutton_up_pngSize;
+    static const char* structureanalysegreenlight_png;
+    static const int structureanalysegreenlight_pngSize;
+    static const char* structureanalyseorangelight_png;
+    static const int structureanalyseorangelight_pngSize;
 
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+	StructureAudioProcessor *p;
+
+	Image redUpImg;
+	Image redDownImg;
+	Image greenDownImg;
+	Image orangeDownImg;
     //[/UserVariables]
 
     //==============================================================================
@@ -81,7 +102,8 @@ private:
     ScopedPointer<ImageButton> busBtn;
     ScopedPointer<ImageButton> voxBtn;
     ScopedPointer<ImageButton> analyseBtn;
-    ScopedPointer<ImageButton> analyseBtn2;
+    ScopedPointer<ImageButton> allBtn;
+    ScopedPointer<DotComponent> analyseDotCom;
     Image cachedImage_structureuibackground_png_1;
 
 

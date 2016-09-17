@@ -12,12 +12,49 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "DSP\LogUtil.h"
 
 
 //==============================================================================
 /**
 */
+enum {
+	INSTRUMENTS_MODE,
+	BUS_GROUP_MODE,
+	VOX_LEAD_MODE
+};
+
+enum {
+	RED,
+	ORANGE,
+	GREEN
+};
+
+
+class InterprocessData
+{
+	bool hasError;
+	void Parser(String txt);
+	void FromMemoryBlock(MemoryBlock* mem);
+public:
+	InterprocessData();
+	InterprocessData(MemoryBlock mem);
+	bool isError();
+	MemoryBlock ToMemoryBlock();
+//Data info
+private:
+	void InitData();
+public:
+	struct Data {
+		bool analysisAllMode;
+	};
+	Data data;
+	bool getAnalysisMode();
+	void setAnalysisMode(bool mode);
+};
+
 class StructureAudioProcessor  : public AudioProcessor
+	, public InterprocessConnection
 {
 public:
     //==============================================================================
@@ -56,6 +93,13 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+	void connectionMade() ;
+	void connectionLost();
+	void messageReceived(const MemoryBlock& message) ;
+	//------------------------------------------------------------------------------
+	void sendAnalysisAllMode();
+	int optionMode;
+	bool analysisState;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StructureAudioProcessor)
