@@ -4,7 +4,7 @@ namespace Jimmy {
 	std::mutex Logger::m_mutex;
 #endif
 	std::string Logger::m_logfile = "_Log.txt";
-#ifdef WINDOW
+#ifdef _WIN32
 	std::string Logger::m_dir = "D:\\\\";
 #else
 	std::string Logger::m_dir = "";

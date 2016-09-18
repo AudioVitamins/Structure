@@ -38,6 +38,7 @@ StructureAudioProcessor::StructureAudioProcessor()
 
 StructureAudioProcessor::~StructureAudioProcessor()
 {
+	disconnect();
 }
 
 //==============================================================================
@@ -328,7 +329,7 @@ void StructureAudioProcessor::messageReceived(const MemoryBlock& message) {
 void StructureAudioProcessor::sendAnalysisAllMode() {
 	InterprocessData data;
 	data.setAnalysisMode(this->analysisState);
-	if (!isConnected()) {
+	/*if (!isConnected()) {
 		if (!createPipe("StructureAudioProcessor", 1000, true)) {
 			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "StructureAudioProcessor Existed\n");
 			if (connectToPipe("StructureAudioProcessor", 1000)) {
@@ -341,7 +342,7 @@ void StructureAudioProcessor::sendAnalysisAllMode() {
 		else {
 			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Created StructureAudioProcessor\n");
 		}
-	}
+	}*/
 	if (sendMessage(data.ToMemoryBlock())) {
 		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Sent Data\n");
 	}
