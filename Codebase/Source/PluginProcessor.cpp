@@ -14,26 +14,13 @@
 
 //==============================================================================
 StructureAudioProcessor::StructureAudioProcessor()
-	: InterprocessConnection(false)
 {
 	//Log Start
 	JIMMY_LOGGER_ACTIVATE(JIMMY_LOGGER_DATA, true);
 	optionMode = INSTRUMENTS_MODE;
 	analysisState = true;
-
-	// PipeLine Name
-	if (!createPipe("StructureAudioProcessor", 1000, true)) {
-		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "StructureAudioProcessor Existed\n");
-		if (connectToPipe("StructureAudioProcessor", 1000)) {
-			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Connected StructureAudioProcessor\n");
-		}
-		else {
-			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Not Connected StructureAudioProcessor\n");
-		}
-	}
-	else {
-		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Created StructureAudioProcessor\n");
-	}
+	server = new PluginServer(*this);
+	client = new PluginClient(*this);
 }
 
 StructureAudioProcessor::~StructureAudioProcessor()
@@ -263,90 +250,46 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 //==============================================================================
 
-InterprocessData::InterprocessData():hasError(false) {
-	InitData();
-};
-InterprocessData::InterprocessData(MemoryBlock mem) : hasError(false){
-	InitData();
-	FromMemoryBlock(&mem);
-}
-void InterprocessData::Parser(String txt) {
-	/*ScopedPointer<XmlElement> xmlState(XmlDocument::parse(txt));
-	if (xmlState->hasTagName("AudioPluginStructureInterprocessData")) {
-		if (xmlState->hasAttribute("AnalysisModeAll")) {
-			analysisAllMode = xmlState->getBoolAttribute("StateAnalysis");
-		}
-		else {
-			hasError = true;
-		}
-	}
-	else {
-		hasError = true;
-	}
-	xmlState = nullptr;*/
-}
-void InterprocessData::FromMemoryBlock(MemoryBlock* mem) {
-	if (mem->getSize() == sizeof(data)) {
-		memcpy(&data, mem->getData(), mem->getSize());
-	}
-	else {
-		hasError = true;
-	}
-}
-bool InterprocessData::isError() {
-	return hasError;
-}
-MemoryBlock InterprocessData::ToMemoryBlock() {
-	/*XmlElement xml("AudioPluginStructureInterprocessData");
-	xml.setAttribute("AnalysisModeAll", analysisAllMode);
-	MemoryBlock mem;
-	StructureAudioProcessor::copyXmlToBinary(xml, mem);*/
-	return MemoryBlock(&data, sizeof(data));
-}
-void InterprocessData::InitData() {
-	data.analysisAllMode = false;
-}
-bool InterprocessData::getAnalysisMode() {
-	return data.analysisAllMode;
-}
-void InterprocessData::setAnalysisMode(bool mode) {
-	data.analysisAllMode = mode;
-}
 //==============================================================================
-void StructureAudioProcessor::connectionMade() {
-	JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "connectionMade\n");
+//void StructureAudioProcessor::connectionMade() {
+//	JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "connectionMade\n");
+//}
+//void StructureAudioProcessor::connectionLost() {
+//	JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "connectionLost\n");
+//}
+//void StructureAudioProcessor::messageReceived(const MemoryBlock& message) {
+//	/*PluginMessage data(message);
+//	if (!data.isError()) {
+//		analysisState = data.getAnalysisMode();
+//	}	
+//	JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Got Data\n");*/
+//}
+//void StructureAudioProcessor::sendAnalysisAllMode() {
+//	/*PluginMessage data;
+//	data.setAnalysisMode(this->analysisState);
+//	if (!isConnected()) {
+//		if (!createPipe("StructureAudioProcessor", 1000, true)) {
+//			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "StructureAudioProcessor Existed\n");
+//			if (connectToPipe("StructureAudioProcessor", 1000)) {
+//				JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Connected StructureAudioProcessor\n");
+//			}
+//			else {
+//				JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Not Connected StructureAudioProcessor\n");
+//			}
+//		}
+//		else {
+//			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Created StructureAudioProcessor\n");
+//		}
+//	}
+//	if (sendMessage(data.ToMemoryBlock())) {
+//		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Sent Data\n");
+//	}
+//	else {
+//		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Did not Send Data\n");
+//	}*/
+//}
+void StructureAudioProcessor::pluginClientCallback(PluginClient *pluginConnection, PluginMessage *msg) {
+
 }
-void StructureAudioProcessor::connectionLost() {
-	JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "connectionLost\n");
-}
-void StructureAudioProcessor::messageReceived(const MemoryBlock& message) {
-	InterprocessData data(message);
-	if (!data.isError()) {
-		analysisState = data.getAnalysisMode();
-	}	
-	JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Got Data\n");
-}
-void StructureAudioProcessor::sendAnalysisAllMode() {
-	InterprocessData data;
-	data.setAnalysisMode(this->analysisState);
-	/*if (!isConnected()) {
-		if (!createPipe("StructureAudioProcessor", 1000, true)) {
-			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "StructureAudioProcessor Existed\n");
-			if (connectToPipe("StructureAudioProcessor", 1000)) {
-				JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Connected StructureAudioProcessor\n");
-			}
-			else {
-				JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Not Connected StructureAudioProcessor\n");
-			}
-		}
-		else {
-			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Created StructureAudioProcessor\n");
-		}
-	}*/
-	if (sendMessage(data.ToMemoryBlock())) {
-		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Sent Data\n");
-	}
-	else {
-		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Did not Send Data\n");
-	}
+void StructureAudioProcessor::pluginServerCenter(PluginServerConnection *pluginConnection, PluginMessage *msg) {
 }

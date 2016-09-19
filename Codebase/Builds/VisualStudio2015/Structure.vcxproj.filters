@@ -382,7 +382,7 @@
     <Filter Include="Juce Library Code">
       <UniqueIdentifier>{8B4D1BAA-6DB4-CAEC-A0FA-271F354D5C61}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Structure\Source\NewFilter1">
+    <Filter Include="Structure\Source\PluginCommunication">
       <UniqueIdentifier>{dd2543dd-9c5b-4b2e-a00b-c9fb4c4e7403}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -2084,6 +2084,15 @@
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\juce_video.cpp">
       <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PluginComunication\TcpClient.cpp">
+      <Filter>Structure\Source\PluginCommunication</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PluginComunication\TcpServer.cpp">
+      <Filter>Structure\Source\PluginCommunication</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PluginComunication\ManagePluginComunication.cpp">
+      <Filter>Structure\Source\PluginCommunication</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -4045,6 +4054,29 @@
     <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_extra\juce_gui_extra.h" />
     <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_opengl\juce_opengl.h" />
     <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_video\juce_video.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_basics\juce_audio_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_devices\juce_audio_devices.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_formats\juce_audio_formats.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_processors\juce_audio_processors.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_core\juce_core.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_cryptography\juce_cryptography.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_data_structures\juce_data_structures.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_events\juce_events.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_graphics\juce_graphics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_basics\juce_gui_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_extra\juce_gui_extra.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_opengl\juce_opengl.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_video\juce_video.h" />
+    <ClInclude Include="..\..\Source\PluginComunication\TcpClient.h">
+      <Filter>Structure\Source\PluginCommunication</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\PluginComunication\TcpServer.h">
+      <Filter>Structure\Source\PluginCommunication</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\PluginComunication\ManagePluginComunication.h">
+      <Filter>Structure\Source\PluginCommunication</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_formats\codecs\flac\Flac Licence.txt">

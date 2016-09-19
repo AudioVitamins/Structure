@@ -13,6 +13,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DSP\LogUtil.h"
+#include "PluginComunication\TcpClient.h"
+#include "PluginComunication\TcpServer.h"
 
 
 //==============================================================================
@@ -31,30 +33,9 @@ enum {
 };
 
 
-class InterprocessData
-{
-	bool hasError;
-	void Parser(String txt);
-	void FromMemoryBlock(MemoryBlock* mem);
-public:
-	InterprocessData();
-	InterprocessData(MemoryBlock mem);
-	bool isError();
-	MemoryBlock ToMemoryBlock();
-//Data info
-private:
-	void InitData();
-public:
-	struct Data {
-		bool analysisAllMode;
-	};
-	Data data;
-	bool getAnalysisMode();
-	void setAnalysisMode(bool mode);
-};
-
 class StructureAudioProcessor  : public AudioProcessor
-	, public InterprocessConnection
+	, public PluginServerListener
+	, public PluginClientListener
 {
 public:
     //==============================================================================
@@ -93,11 +74,16 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-	void connectionMade() ;
-	void connectionLost();
-	void messageReceived(const MemoryBlock& message) ;
+	//void connectionMade() ;
+	//void connectionLost();
+	//void messageReceived(const MemoryBlock& message) ;
+
+	void pluginClientCallback(PluginClient *pluginConnection, PluginMessage *msg);
+	void pluginServerCenter(PluginServerConnection *pluginConnection, PluginMessage *msg);
 	//------------------------------------------------------------------------------
-	void sendAnalysisAllMode();
+	//void sendAnalysisAllMode();
+	PluginServer *server;
+	PluginClient *client;
 	int optionMode;
 	bool analysisState;
 private:
