@@ -11,6 +11,16 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.3">
   <MAINGROUP id="jkKiHq" name="Structure">
     <GROUP id="{5B268EE9-594D-A388-F09E-F1E90AFA7F9D}" name="Source">
+      <GROUP id="{17E62069-73A5-3302-3968-DE5E7E51193B}" name="PluginCommunication">
+        <FILE id="kic45S" name="ManagePluginComunication.cpp" compile="1" resource="0"
+              file="Source/PluginComunication/ManagePluginComunication.cpp"/>
+        <FILE id="gSbf3N" name="ManagePluginComunication.h" compile="0" resource="0"
+              file="Source/PluginComunication/ManagePluginComunication.h"/>
+        <FILE id="z9fsp7" name="TcpClient.cpp" compile="1" resource="0" file="Source/PluginComunication/TcpClient.cpp"/>
+        <FILE id="OajNfb" name="TcpClient.h" compile="0" resource="0" file="Source/PluginComunication/TcpClient.h"/>
+        <FILE id="kkHicT" name="TcpServer.cpp" compile="1" resource="0" file="Source/PluginComunication/TcpServer.cpp"/>
+        <FILE id="phbWJR" name="TcpServer.h" compile="0" resource="0" file="Source/PluginComunication/TcpServer.h"/>
+      </GROUP>
       <GROUP id="{E7921EED-77C2-4B39-1DB1-9F3BFEBB1146}" name="DSP">
         <FILE id="zKW4Ba" name="LogUtil.cpp" compile="1" resource="0" file="Source/DSP/LogUtil.cpp"/>
         <FILE id="MJDeYS" name="LogUtil.h" compile="0" resource="0" file="Source/DSP/LogUtil.h"/>
