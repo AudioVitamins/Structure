@@ -30,7 +30,7 @@ bool ManagePluginComunication::turnOnServer() {
 
 bool ManagePluginComunication::turnOnClient() {
 	client = new PluginClient(p);
-	client->Connect("localhost", port, 1000);
+	return client->Connect("localhost", port, 1000);
 }
 
 bool ManagePluginComunication::sendMessage(PluginMessage &msg) {

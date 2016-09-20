@@ -24,6 +24,7 @@ StructureAudioProcessor::StructureAudioProcessor()
 
 StructureAudioProcessor::~StructureAudioProcessor()
 {
+	manageCom = nullptr;
 }
 
 //==============================================================================
@@ -272,7 +273,7 @@ void StructureAudioProcessor::pluginServerCenter(PluginServerConnection *pluginC
 			PluginServerConnection* ipc = clients.getUnchecked(i);
 			if (ipc != pluginConnection && ipc != nullptr)
 			{
-				if (PluginServerConnection::kDisconnected == ipc->GetConnectionState())
+				if (PluginServerConnection::kConnected == ipc->GetConnectionState())
 				{
 					ipc->SendPluginMessage(*msg);
 				}

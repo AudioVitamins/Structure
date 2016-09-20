@@ -29,7 +29,7 @@ void PluginClient::connectionMade()
 void PluginClient::connectionLost()
 {
    DBG("RpcClient::connectionLost()");
-   fIsConnected = true;
+   fIsConnected = false;
 }
 
 bool PluginClient::SendMessage(const MemoryBlock& message) {

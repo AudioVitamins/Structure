@@ -3,22 +3,34 @@
 PluginServer::PluginServer(AudioProcessor &p):
 	p(p)
 {
-  this->startTimer(10 * 1000);
-
 }
 
 bool PluginServer::StartServer(int port) {
+	this->startTimer(10 * 1000);
 	return beginWaitingForSocket(port);
 }
 
 bool PluginServer::StopServer() {
+	stopTimer();
+	int connectionListSize = fConnections.size();
+	if (connectionListSize)
+	{
+		for (int i = (connectionListSize - 1); i >= 0; --i)
+		{
+
+			PluginServerConnection* ipc = fConnections.getUnchecked(i);
+			if (ipc)
+			{
+				ipc->disconnect();
+			}
+		}
+	}
 	stop();
 	return true;
 }
 
 PluginServer::~PluginServer()
 {
-	stop();
 }
 
 void PluginServer::timerCallback()

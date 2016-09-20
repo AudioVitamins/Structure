@@ -34,7 +34,7 @@ public:
 };
 
 class PluginServer : public InterprocessConnectionServer
-                , public Timer
+, public Timer
 {
 	friend class PluginServerConnection;
 public: 
@@ -45,7 +45,7 @@ public:
 	PluginServer(AudioProcessor &p);
    ~PluginServer();
    InterprocessConnection* createConnectionObject();
-   OwnedArray<PluginServerConnection> getClientsConnection();
+   OwnedArray<PluginServerConnection> &getClientsConnection();
    bool StartServer(int port);
    bool StopServer();
   
