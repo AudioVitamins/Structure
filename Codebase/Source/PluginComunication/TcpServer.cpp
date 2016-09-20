@@ -18,7 +18,7 @@ bool PluginServer::StopServer() {
 
 PluginServer::~PluginServer()
 {
-
+	stop();
 }
 
 void PluginServer::timerCallback()
@@ -31,17 +31,24 @@ void PluginServer::timerCallback()
     {
       for (int i = (connectionListSize - 1); i >= 0; --i)
       {
+
 		  PluginServerConnection* ipc = fConnections.getUnchecked(i);
          if (ipc)
          {
             if (PluginServerConnection::kDisconnected == ipc->GetConnectionState())
             {
                // this connection is no longer operative; delete it.
+				const ScopedLock sl(lock);
                fConnections.remove(i);
             }
          }
       }
     }
+}
+
+OwnedArray<PluginServerConnection> &PluginServer::getClientsConnection() {
+	const ScopedLock sl(lock);
+	return fConnections;
 }
 
 void PluginServer::pluginServerCallback(PluginServerConnection *pluginConnection, PluginMessage *msg) {
@@ -104,6 +111,10 @@ void PluginServerConnection::messageReceived(const MemoryBlock& message)
 	if (!data.isError()) {
 		server->pluginServerCallback(this, &data);
 	}
+}
+
+PluginServer *PluginServerConnection::getServer() {
+	return server;
 }
 
 PluginMessage::PluginMessage() :hasError(false) {

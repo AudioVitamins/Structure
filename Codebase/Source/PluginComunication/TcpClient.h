@@ -19,7 +19,7 @@ public:
    void connectionMade() override;
 
    void connectionLost() override;
-   void SendMessage(const MemoryBlock& message);
+   bool SendMessage(const MemoryBlock& message);
    void messageReceived(const MemoryBlock& message) override;
    bool IsConnected() const { return fIsConnected; };
    void Disconnect();

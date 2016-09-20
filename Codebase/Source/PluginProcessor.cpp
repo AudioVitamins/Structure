@@ -19,13 +19,11 @@ StructureAudioProcessor::StructureAudioProcessor()
 	JIMMY_LOGGER_ACTIVATE(JIMMY_LOGGER_DATA, true);
 	optionMode = INSTRUMENTS_MODE;
 	analysisState = true;
-	server = new PluginServer(*this);
-	client = new PluginClient(*this);
+	manageCom = new ManagePluginComunication(*this, 1000);
 }
 
 StructureAudioProcessor::~StructureAudioProcessor()
 {
-	disconnect();
 }
 
 //==============================================================================
@@ -251,45 +249,36 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 //==============================================================================
 
 //==============================================================================
-//void StructureAudioProcessor::connectionMade() {
-//	JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "connectionMade\n");
-//}
-//void StructureAudioProcessor::connectionLost() {
-//	JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "connectionLost\n");
-//}
-//void StructureAudioProcessor::messageReceived(const MemoryBlock& message) {
-//	/*PluginMessage data(message);
-//	if (!data.isError()) {
-//		analysisState = data.getAnalysisMode();
-//	}	
-//	JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Got Data\n");*/
-//}
-//void StructureAudioProcessor::sendAnalysisAllMode() {
-//	/*PluginMessage data;
-//	data.setAnalysisMode(this->analysisState);
-//	if (!isConnected()) {
-//		if (!createPipe("StructureAudioProcessor", 1000, true)) {
-//			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "StructureAudioProcessor Existed\n");
-//			if (connectToPipe("StructureAudioProcessor", 1000)) {
-//				JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Connected StructureAudioProcessor\n");
-//			}
-//			else {
-//				JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Not Connected StructureAudioProcessor\n");
-//			}
-//		}
-//		else {
-//			JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Created StructureAudioProcessor\n");
-//		}
-//	}
-//	if (sendMessage(data.ToMemoryBlock())) {
-//		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Sent Data\n");
-//	}
-//	else {
-//		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Did not Send Data\n");
-//	}*/
-//}
+void StructureAudioProcessor::sendAnalysisAllMode() {
+	PluginMessage data;
+	data.setAnalysisMode(this->analysisState);
+	manageCom->sendMessage(data);
+}
 void StructureAudioProcessor::pluginClientCallback(PluginClient *pluginConnection, PluginMessage *msg) {
-
+	if (msg != nullptr && !msg->isError()) {
+		this->analysisState = msg->getAnalysisMode();
+	}
 }
 void StructureAudioProcessor::pluginServerCenter(PluginServerConnection *pluginConnection, PluginMessage *msg) {
+	PluginServer *server = pluginConnection->getServer();
+	OwnedArray<PluginServerConnection> &clients = server->getClientsConnection();
+	const ScopedLock sl(server->lock);
+	int connectionListSize = clients.size();
+	if (connectionListSize)
+	{
+		for (int i = (connectionListSize - 1); i >= 0; --i)
+		{
+
+			PluginServerConnection* ipc = clients.getUnchecked(i);
+			if (ipc != pluginConnection && ipc != nullptr)
+			{
+				if (PluginServerConnection::kDisconnected == ipc->GetConnectionState())
+				{
+					ipc->SendPluginMessage(*msg);
+				}
+			}
+		}
+	}
+
+
 }

@@ -13,8 +13,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DSP\LogUtil.h"
-#include "PluginComunication\TcpClient.h"
-#include "PluginComunication\TcpServer.h"
+#include "PluginComunication\ManagePluginComunication.h"
+
 
 
 //==============================================================================
@@ -74,18 +74,15 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-	//void connectionMade() ;
-	//void connectionLost();
 	//void messageReceived(const MemoryBlock& message) ;
 
 	void pluginClientCallback(PluginClient *pluginConnection, PluginMessage *msg);
 	void pluginServerCenter(PluginServerConnection *pluginConnection, PluginMessage *msg);
 	//------------------------------------------------------------------------------
-	//void sendAnalysisAllMode();
-	PluginServer *server;
-	PluginClient *client;
+	void sendAnalysisAllMode();
 	int optionMode;
 	bool analysisState;
+	ScopedPointer<ManagePluginComunication> manageCom;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StructureAudioProcessor)

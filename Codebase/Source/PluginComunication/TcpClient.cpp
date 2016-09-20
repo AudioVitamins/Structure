@@ -17,7 +17,7 @@ PluginClient::PluginClient(AudioProcessor &p)
 
 PluginClient::~PluginClient()
 {
-
+	
 }
 
 void PluginClient::connectionMade()
@@ -32,8 +32,8 @@ void PluginClient::connectionLost()
    fIsConnected = true;
 }
 
-void PluginClient::SendMessage(const MemoryBlock& message) {
-	sendMessage(message);
+bool PluginClient::SendMessage(const MemoryBlock& message) {
+	return sendMessage(message);
 }
 
 void PluginClient::messageReceived(const MemoryBlock& message)

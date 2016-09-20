@@ -45,14 +45,17 @@ public:
 	PluginServer(AudioProcessor &p);
    ~PluginServer();
    InterprocessConnection* createConnectionObject();
-   void timerCallback();
+   OwnedArray<PluginServerConnection> getClientsConnection();
    bool StartServer(int port);
    bool StopServer();
   
 private:
+	void timerCallback();
 	void pluginServerCallback(PluginServerConnection *pluginConnection, PluginMessage *msg);
    OwnedArray<PluginServerConnection> fConnections;
    AudioProcessor &p;
+public:
+    CriticalSection lock;
 };
 
 class PluginServerConnection : public InterprocessConnection
@@ -79,8 +82,11 @@ public:
 
    void SendPluginMessage(const PluginMessage& msg);
 
+   PluginServer *getServer();
+
    ConnectionState GetConnectionState() const { return fConnected; };
 private:
+
    CriticalSection fLock;
    PluginServer *server;
    ConnectionState fConnected;
