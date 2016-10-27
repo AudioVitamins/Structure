@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="UtbO6R" name="Structure" projectType="audioplug" version="1.0.0"
-              bundleIdentifier="com.yourcompany.Structure" includeBinaryInAppConfig="1"
-              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
-              buildAAX="0" pluginName="Structure" pluginDesc="Structure" pluginManufacturer="yourcompany"
+              bundleIdentifier="com.audiovitamins.com.Structure" includeBinaryInAppConfig="0"
+              buildVST="1" buildVST3="1" buildAU="0" buildAUv3="0" buildRTAS="0"
+              buildAAX="1" pluginName="Structure" pluginDesc="Structure" pluginManufacturer="audiovitamins"
               pluginManufacturerCode="Manu" pluginCode="Utbo" pluginChannelConfigs=""
               pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
               pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="StructureAU"
               pluginRTASCategory="" aaxIdentifier="com.yourcompany.Structure"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.3">
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.3"
+              userNotes="Deveopment by HungJ.Com">
   <MAINGROUP id="jkKiHq" name="Structure">
     <GROUP id="{5B268EE9-594D-A388-F09E-F1E90AFA7F9D}" name="Source">
       <GROUP id="{17E62069-73A5-3302-3968-DE5E7E51193B}" name="PluginCommunication">
@@ -22,8 +23,18 @@
         <FILE id="phbWJR" name="TcpServer.h" compile="0" resource="0" file="Source/PluginComunication/TcpServer.h"/>
       </GROUP>
       <GROUP id="{E7921EED-77C2-4B39-1DB1-9F3BFEBB1146}" name="DSP">
-        <FILE id="zKW4Ba" name="LogUtil.cpp" compile="1" resource="0" file="Source/DSP/LogUtil.cpp"/>
-        <FILE id="MJDeYS" name="LogUtil.h" compile="0" resource="0" file="Source/DSP/LogUtil.h"/>
+        <GROUP id="{7C682FD2-0157-1DD6-69B2-FDA51C346ED0}" name="Filter">
+          <FILE id="pj3MAt" name="IIRFilter.cpp" compile="1" resource="0" file="Source/DSP/Filter/IIRFilter.cpp"/>
+          <FILE id="AWTHDr" name="IIRFilter.h" compile="0" resource="0" file="Source/DSP/Filter/IIRFilter.h"/>
+        </GROUP>
+        <GROUP id="{E923681E-0FA3-208C-F9A9-CCCE4A10BFF8}" name="Ebu128">
+          <FILE id="NFStpM" name="Ebu128.cpp" compile="1" resource="0" file="Source/DSP/Loudness/Ebu128.cpp"/>
+          <FILE id="k1U76N" name="Ebu128.h" compile="0" resource="0" file="Source/DSP/Loudness/Ebu128.h"/>
+        </GROUP>
+        <GROUP id="{7C9C3FC3-432A-222C-204D-D1E64FE05BD3}" name="Logger">
+          <FILE id="zKW4Ba" name="LogUtil.cpp" compile="1" resource="0" file="Source/DSP/LogUtil.cpp"/>
+          <FILE id="MJDeYS" name="LogUtil.h" compile="0" resource="0" file="Source/DSP/LogUtil.h"/>
+        </GROUP>
       </GROUP>
       <FILE id="bS6tQS" name="DotComponent.cpp" compile="1" resource="0"
             file="Source/DotComponent.cpp"/>
@@ -39,28 +50,39 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="D:\Working\FrameWork\VST3 SDK">
+    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="D:\Working\FrameWork\VST3 SDK"
+            vst3Folder="D:\Working\FrameWork\VST3 SDK" aaxFolder="D:\Working\FrameWork\AAX_SDK">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug_VST" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="1" optimisation="1" targetName="Structure"/>
+                       isDebug="1" optimisation="1" targetName="$(ProjectName)" binaryPath="$(Configuration)\$(PlatformName)"
+                       intermediatesPath="int\$(ProjectName)\$(Configuration)\$(PlatformName)"
+                       defines="JUCE_DEBUG"/>
         <CONFIGURATION name="Release_VST" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="0" optimisation="3" targetName="Structure"/>
+                       isDebug="0" optimisation="3" targetName="$(ProjectName)" binaryPath="$(Configuration)\$(PlatformName)"
+                       intermediatesPath="int\$(ProjectName)\$(Configuration)\$(PlatformName)"/>
+        <CONFIGURATION name="Debug_AAX" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       targetName="$(ProjectName)" binaryPath="$(Configuration)\$(ProjectName).aaxplugin\Contents\$(PlatformName)"
+                       intermediatesPath="int\$(ProjectName)\$(Configuration)\$(PlatformName)"
+                       defines="JUCE_DEBUG"/>
+        <CONFIGURATION name="Release_AAX" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       targetName="$(ProjectName)" binaryPath="$(Configuration)\$(ProjectName).aaxplugin\Contents\$(PlatformName)"
+                       intermediatesPath="int\$(ProjectName)\$(Configuration)\$(PlatformName)"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_video" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_opengl" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../FrameWork/JUCE/modules"/>
         <MODULEPATH id="juce_audio_devices" path="../../FrameWork/JUCE/modules"/>
         <MODULEPATH id="juce_audio_formats" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="../../FrameWork/JUCE/modules"/>
         <MODULEPATH id="juce_audio_plugin_client" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_basics" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../../FrameWork/JUCE/modules"/>
       </MODULEPATHS>
     </VS2015>
   </EXPORTFORMATS>

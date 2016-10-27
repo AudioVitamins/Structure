@@ -16,7 +16,9 @@
 StructureAudioProcessor::StructureAudioProcessor()
 {
 	//Log Start
-	JIMMY_LOGGER_ACTIVATE(Jimmy::DATA, true);
+#if LOG_MODE == 1
+	JIMMY_LOGGER_ACTIVATE(Jimmy::DATA);
+#endif
 	sampleRate = 0.0f;
 	currentGainEbu128 = 0.0f;
 	samplesPerBlock = 0;

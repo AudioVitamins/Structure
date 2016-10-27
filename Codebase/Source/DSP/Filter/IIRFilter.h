@@ -1,6 +1,6 @@
 #ifndef IIR_FILTER_H
 #define IIR_FILTER_H
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "../../../JuceLibraryCode/JuceHeader.h"
 	template <typename Type>
 	class IIRFilterBase {
 	public:

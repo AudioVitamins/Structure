@@ -9,10 +9,19 @@
       <Configuration>Release_VST</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_AAX|x64">
+      <Configuration>Debug_AAX</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_AAX|x64">
+      <Configuration>Release_AAX</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{242CF787-070C-F637-AD3D-568351F3DB07}</ProjectGuid>
     <PlatformToolset>v140</PlatformToolset>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VST|x64'" Label="Configuration">
@@ -22,6 +31,20 @@
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_VST|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_AAX|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_AAX|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -38,11 +61,30 @@
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_VST|x64'">Structure</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_VST|x64'">$(Configuration)\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_VST|x64'">int\$(ProjectName)\$(Configuration)\$(PlatformName)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_VST|x64'">$(ProjectName)</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug_VST|x64'">true</GenerateManifest>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_VST|x64'">Structure</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_VST|x64'">$(Configuration)\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_VST|x64'">int\$(ProjectName)\$(Configuration)\$(PlatformName)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_VST|x64'">$(ProjectName)</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_VST|x64'">true</GenerateManifest>
-    <PlatformToolset>v140</PlatformToolset>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_AAX|x64'">$(Configuration)\$(ProjectName).aaxplugin\Contents\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_AAX|x64'">int\$(ProjectName)\$(Configuration)\$(PlatformName)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_AAX|x64'">$(ProjectName)</TargetName>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug_AAX|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_AAX|x64'">$(Configuration)\$(ProjectName).aaxplugin\Contents\$(PlatformName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_AAX|x64'">int\$(ProjectName)\$(Configuration)\$(PlatformName)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_AAX|x64'">$(ProjectName)</TargetName>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_AAX|x64'">true</GenerateManifest>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_AAX|x64'">
+    <TargetExt>.aaxplugin</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_AAX|x64'">
+    <TargetExt>.aaxplugin</TargetExt>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VST|x64'">
     <Midl>
@@ -55,8 +97,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>D:\Working\FrameWork\VST3 SDK;..\..\JuceLibraryCode;..\..\..\..\FrameWork\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Working\FrameWork\VST3 SDK;..\..\JuceLibraryCode;D:\Working\FrameWork\AAX_SDK;D:\Working\FrameWork\AAX_SDK\Interfaces;D:\Working\FrameWork\AAX_SDK\Interfaces\ACF;..\..\..\..\FrameWork\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;JucePlugin_AAXLibs_path="D:\\Working\\FrameWork\\AAX_SDK\\Libs";WIN32;_WINDOWS;DEBUG;_DEBUG;JUCE_DEBUG;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader />
@@ -71,18 +113,21 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\Structure.dll</OutputFile>
+      <OutputFile>$(ProjectName).dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmt.lib; msvcrt.lib;;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)\Structure.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(ProjectName).pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>$(IntDir)\Structure.bsc</OutputFile>
+      <OutputFile>$(ProjectName).bsc</OutputFile>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>copy /Y "$(OutDir)\$(TargetFileName)" "$(OutDir)\$(TargetName).vst3"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_VST|x64'">
     <Midl>
@@ -94,8 +139,8 @@
     </Midl>
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>D:\Working\FrameWork\VST3 SDK;..\..\JuceLibraryCode;..\..\..\..\FrameWork\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Working\FrameWork\VST3 SDK;..\..\JuceLibraryCode;D:\Working\FrameWork\AAX_SDK;D:\Working\FrameWork\AAX_SDK\Interfaces;D:\Working\FrameWork\AAX_SDK\Interfaces\ACF;..\..\..\..\FrameWork\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;JucePlugin_AAXLibs_path="D:\\Working\\FrameWork\\AAX_SDK\\Libs";WIN32;_WINDOWS;NDEBUG;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader />
@@ -110,11 +155,11 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\Structure.dll</OutputFile>
+      <OutputFile>$(ProjectName).dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)\Structure.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(ProjectName).pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -122,15 +167,111 @@
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>$(IntDir)\Structure.bsc</OutputFile>
+      <OutputFile>$(ProjectName).bsc</OutputFile>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>taskkill /IM ProTools.exe /f
+xcopy /Y /S $(Configuration) "C:\Program Files\Avid\Pro Tools Developer\Plug-Ins\"
+
+start "C:\Program Files\Avid\Pro Tools Developer\" ProTools.exe</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_AAX|x64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>D:\Working\FrameWork\VST3 SDK;..\..\JuceLibraryCode;D:\Working\FrameWork\AAX_SDK;D:\Working\FrameWork\AAX_SDK\Interfaces;D:\Working\FrameWork\AAX_SDK\Interfaces\ACF;..\..\..\..\FrameWork\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;JucePlugin_AAXLibs_path="D:\\Working\\FrameWork\\AAX_SDK\\Libs";WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2012_78A501F=1;JUCE_APP_VERSION=1.0.1.1;JUCE_APP_VERSION_HEX=0x1000101;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader />
+      <AssemblerListingLocation>$(IntDir)\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)\</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(ProjectName).aaxplugin</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib; msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(ProjectName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>$(ProjectName).bsc</OutputFile>
+    </Bscmake>
+    <PostBuildEvent>
+      <Command>copy /Y "$(OutDir)\$(TargetFileName)" "$(OutDir)\$(TargetName).vst3"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_AAX|x64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>D:\Working\FrameWork\VST3 SDK;..\..\JuceLibraryCode;D:\Working\FrameWork\AAX_SDK;D:\Working\FrameWork\AAX_SDK\Interfaces;D:\Working\FrameWork\AAX_SDK\Interfaces\ACF;..\..\..\..\FrameWork\JUCE\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;JucePlugin_AAXLibs_path="D:\\Working\\FrameWork\\AAX_SDK\\Libs";WIN32;_WINDOWS;NDEBUG;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader />
+      <AssemblerListingLocation>$(IntDir)\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)\</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(ProjectName).aaxplugin</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(ProjectName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>$(ProjectName).bsc</OutputFile>
+    </Bscmake>
+    <PostBuildEvent>
+      <Command>copy /Y "$(OutDir)\$(TargetFileName)" "$(OutDir)\$(TargetName).vst3"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\DSP\Filter\IIRFilter.cpp" />
-    <ClCompile Include="..\..\Source\DSP\Loudness\Ebu128.cpp" />
     <ClCompile Include="..\..\Source\PluginComunication\ManagePluginComunication.cpp" />
     <ClCompile Include="..\..\Source\PluginComunication\TcpClient.cpp" />
     <ClCompile Include="..\..\Source\PluginComunication\TcpServer.cpp" />
+    <ClCompile Include="..\..\Source\DSP\Filter\IIRFilter.cpp" />
+    <ClCompile Include="..\..\Source\DSP\Loudness\Ebu128.cpp" />
     <ClCompile Include="..\..\Source\DSP\LogUtil.cpp" />
     <ClCompile Include="..\..\Source\DotComponent.cpp" />
     <ClCompile Include="..\..\Source\StructureEditor.cpp" />
@@ -1784,8 +1925,10 @@
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_basics.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_devices.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_formats.cpp" />
+    <ClCompile Include="..\..\JuceLibraryCode\juce_audio_plugin_client_AAX.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_plugin_client_utils.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_plugin_client_VST2.cpp" />
+    <ClCompile Include="..\..\JuceLibraryCode\juce_audio_plugin_client_VST3.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_processors.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\juce_core.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\juce_cryptography.cpp" />
@@ -1798,11 +1941,11 @@
     <ClCompile Include="..\..\JuceLibraryCode\juce_video.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\DSP\Filter\IIRFilter.h" />
-    <ClInclude Include="..\..\Source\DSP\Loudness\Ebu128.h" />
     <ClInclude Include="..\..\Source\PluginComunication\ManagePluginComunication.h" />
     <ClInclude Include="..\..\Source\PluginComunication\TcpClient.h" />
     <ClInclude Include="..\..\Source\PluginComunication\TcpServer.h" />
+    <ClInclude Include="..\..\Source\DSP\Filter\IIRFilter.h" />
+    <ClInclude Include="..\..\Source\DSP\Loudness\Ebu128.h" />
     <ClInclude Include="..\..\Source\DSP\LogUtil.h" />
     <ClInclude Include="..\..\Source\DotComponent.h" />
     <ClInclude Include="..\..\Source\StructureEditor.h" />

@@ -1,5 +1,5 @@
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "../../../JuceLibraryCode/JuceHeader.h"
 #include "../Filter/IIRFilter.h"
 
 class Ebu128Loudness {
@@ -9,33 +9,22 @@ class Ebu128Loudness {
 	int numberOfSamplesPerBin, numberOfSamplesInAllBins, numberOfSamplesInTheCurrentBin;
 	int numberOfBins;// Number of bin on each channel
 	int currentBin;
-	int numberOfBinsToCover400ms;
-	int numberOfSamplesIn400ms;
 	std::vector<std::vector<double>> bin; // bin on all channel, each channel have numberofbin
-
-										  /*
-										  The average of the filtered and squared samples of the last
-										  3 seconds.
-										  A value for each channel.
-										  */
+	/*
+	The average of the filtered and squared samples of the last
+	3 seconds.
+	A value for each channel.
+	*/
 	std::vector<double> averageOfTheLast3s;
-
 	/*
 	The average of the filtered and squared samples of the last
 	400 milliseconds.
 	A value for each channel.
 	*/
-	std::vector<double> averageOfTheLast400ms;
-
 	std::vector<double> channelWeighting;
-
 	std::vector<float> momentaryLoudnessForIndividualChannels;
-
 	float shortTermLoudness;
 	float maximumShortTermLoudness;
-
-
-	
 public:
 	static const float minimalReturnValue;
 	class Listener {
@@ -51,17 +40,13 @@ public:
 public:
 	Ebu128Loudness();
 	~Ebu128Loudness();
-
 	void prepareToPlay(double sampleRate,
 		int numberOfInputChannels,
 		int estimatedSamplesPerBlock,
 		int expectedRequestRate);
-
 	void processBlock(AudioSampleBuffer &buffer);
-
 	float getShortTermLoudness() const;
 	float getMaximumShortTermLoudness() const;
-
 	void reset();
 };
 

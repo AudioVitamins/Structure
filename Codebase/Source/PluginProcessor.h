@@ -17,7 +17,7 @@
 #include "PluginComunication\ManagePluginComunication.h"
 
 #define TEST_VERSION  1
-
+#define LOG_MODE 0
 //==============================================================================
 /**
 */

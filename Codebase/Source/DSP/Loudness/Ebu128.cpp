@@ -57,12 +57,7 @@ void Ebu128Loudness::prepareToPlay(double sampleRate,
 	currentBin = 0;// Current bin
 	numberOfSamplesPerBin = int(sampleRate / expectedRequestRate);
 	numberOfSamplesInAllBins = numberOfBins * numberOfSamplesPerBin;
-
-	numberOfBinsToCover400ms = int(0.4 * expectedRequestRate);
-	numberOfSamplesIn400ms = numberOfBinsToCover400ms * numberOfSamplesPerBin;
-
 	averageOfTheLast3s.assign(numberOfInputChannels, 0.0);
-	averageOfTheLast400ms.assign(numberOfInputChannels, 0.0);
 	//Init weight channel
 	channelWeighting.clear();
 	for (int k = 0; k != numberOfInputChannels; ++k)
@@ -205,33 +200,8 @@ void Ebu128Loudness::processBlock(AudioSampleBuffer &buffer) {
 						if (shortTermLoudness > maximumShortTermLoudness)
 							maximumShortTermLoudness = shortTermLoudness;
 					}
-
-					//double sumOfBinsToCoverTheLast400ms = 0.0;
-					//for (int d = 0; d != numberOfBinsToCover400ms; ++d)
-					//{
-					//	// The index for the bin.
-					//	int b = currentBin - d;
-					//	// this might be negative right now.
-					//	int n = numberOfBins;
-					//	b = (b % n + n) % n;
-					//	// b = b mod n (in the mathematical sense).
-					//	// Not negative anymore.
-					//	//
-					//	// Now 0 <= b < numberOfBins.
-					//	// Example: b=-5, n=30
-					//	//  b%n = -5
-					//	//  (b%n +n)%n = 25%30 = 25
-					//	//
-					//	// Example: b=16, n=30
-					//	//  b%n = 16
-					//	//  (b%n +n)%n = 46%30 = 16
-					//	sumOfBinsToCoverTheLast400ms += bin[k][b];
-					//}
-					//averageOfTheLast400ms[k] = sumOfBinsToCoverTheLast400ms / numberOfSamplesIn400ms;
-
 				}
 				// Move on to the next bin
-				//currentBin = (currentBin + 1) % numberOfBins;
 				currentBin = (currentBin + 1);
 				// Set it to zero.
 				for (int k = 0; k != numberOfChannels && currentBin < numberOfBins; ++k)
@@ -264,8 +234,6 @@ void Ebu128Loudness::reset() {
 	// Bin reset
 	currentBin = 0;
 	bin.assign(bin.size(), std::vector<double>(numberOfBins, 0.0));
-	averageOfTheLast3s.assign(averageOfTheLast400ms.size(), 0.0);
-	//averageOfTheLast400ms.assign(averageOfTheLast400ms.size(), 0.0);
 	// Short term loudness
 	shortTermLoudness = minimalReturnValue;
 	maximumShortTermLoudness = minimalReturnValue;

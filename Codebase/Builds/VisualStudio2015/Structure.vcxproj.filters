@@ -13,6 +13,15 @@
     <Filter Include="Structure\Source\DSP">
       <UniqueIdentifier>{1DE1BEB1-AA6C-2429-6CB0-F6573F3DDEC5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Structure\Source\DSP\Filter">
+      <UniqueIdentifier>{037ECF10-0452-8E83-857D-C75A0E053950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structure\Source\DSP\Ebu128">
+      <UniqueIdentifier>{207B900E-4E81-3A81-B20E-F01E69F6EF54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structure\Source\DSP\Logger">
+      <UniqueIdentifier>{26FAE642-613C-DA3A-6D1C-1D0FB9D4E1FA}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Juce Modules">
       <UniqueIdentifier>{422C46B7-0467-2DB0-BF3C-16DFCAFD69AC}</UniqueIdentifier>
     </Filter>
@@ -385,12 +394,6 @@
     <Filter Include="Juce Library Code">
       <UniqueIdentifier>{8B4D1BAA-6DB4-CAEC-A0FA-271F354D5C61}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Structure\Source\DSP\Loudness">
-      <UniqueIdentifier>{0f8788c4-9e04-443f-aca4-4058989d0bde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Structure\Source\DSP\Filter">
-      <UniqueIdentifier>{f59f9d38-8449-4ff6-b7df-fb18044e010a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\PluginComunication\ManagePluginComunication.cpp">
@@ -402,8 +405,14 @@
     <ClCompile Include="..\..\Source\PluginComunication\TcpServer.cpp">
       <Filter>Structure\Source\PluginCommunication</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\DSP\Filter\IIRFilter.cpp">
+      <Filter>Structure\Source\DSP\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\DSP\Loudness\Ebu128.cpp">
+      <Filter>Structure\Source\DSP\Ebu128</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\DSP\LogUtil.cpp">
-      <Filter>Structure\Source\DSP</Filter>
+      <Filter>Structure\Source\DSP\Logger</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\DotComponent.cpp">
       <Filter>Structure\Source</Filter>
@@ -2064,10 +2073,16 @@
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_formats.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\juce_audio_plugin_client_AAX.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_plugin_client_utils.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_plugin_client_VST2.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\juce_audio_plugin_client_VST3.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\juce_audio_processors.cpp">
@@ -2100,12 +2115,6 @@
     <ClCompile Include="..\..\JuceLibraryCode\juce_video.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\DSP\Loudness\Ebu128.cpp">
-      <Filter>Structure\Source\DSP\Loudness</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\DSP\Filter\IIRFilter.cpp">
-      <Filter>Structure\Source\DSP\Filter</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\PluginComunication\ManagePluginComunication.h">
@@ -2117,8 +2126,14 @@
     <ClInclude Include="..\..\Source\PluginComunication\TcpServer.h">
       <Filter>Structure\Source\PluginCommunication</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\DSP\Filter\IIRFilter.h">
+      <Filter>Structure\Source\DSP\Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DSP\Loudness\Ebu128.h">
+      <Filter>Structure\Source\DSP\Ebu128</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\DSP\LogUtil.h">
-      <Filter>Structure\Source\DSP</Filter>
+      <Filter>Structure\Source\DSP\Logger</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DotComponent.h">
       <Filter>Structure\Source</Filter>
@@ -4075,12 +4090,34 @@
     <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_extra\juce_gui_extra.h" />
     <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_opengl\juce_opengl.h" />
     <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_video\juce_video.h" />
-    <ClInclude Include="..\..\Source\DSP\Loudness\Ebu128.h">
-      <Filter>Structure\Source\DSP\Loudness</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\DSP\Filter\IIRFilter.h">
-      <Filter>Structure\Source\DSP\Filter</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_basics\juce_audio_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_devices\juce_audio_devices.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_formats\juce_audio_formats.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_processors\juce_audio_processors.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_core\juce_core.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_cryptography\juce_cryptography.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_data_structures\juce_data_structures.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_events\juce_events.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_graphics\juce_graphics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_basics\juce_gui_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_extra\juce_gui_extra.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_opengl\juce_opengl.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_video\juce_video.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_basics\juce_audio_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_devices\juce_audio_devices.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_formats\juce_audio_formats.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_processors\juce_audio_processors.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_core\juce_core.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_cryptography\juce_cryptography.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_data_structures\juce_data_structures.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_events\juce_events.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_graphics\juce_graphics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_basics\juce_gui_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_extra\juce_gui_extra.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_opengl\juce_opengl.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_video\juce_video.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_formats\codecs\flac\Flac Licence.txt">
