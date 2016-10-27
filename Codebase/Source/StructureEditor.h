@@ -39,8 +39,8 @@
                                                                     //[/Comments]
 */
 class StructureAudioProcessorEditor  : public AudioProcessorEditor,
-                                       public ButtonListener,
-									   public Timer
+                                       public Timer,
+                                       public ButtonListener
 {
 public:
     //==============================================================================
@@ -52,7 +52,7 @@ public:
 	void synGUI();
 	void updateActiveMode();
 	void updateStateAnalysis();
-
+	void updateMetterValue();
 	void timerCallback();
     //[/UserMethods]
 
@@ -104,6 +104,7 @@ private:
     ScopedPointer<ImageButton> analyseBtn;
     ScopedPointer<ImageButton> allBtn;
     ScopedPointer<DotComponent> analyseDotCom;
+    ScopedPointer<Label> metterLbt;
     Image cachedImage_structureuibackground_png_1;
 
 

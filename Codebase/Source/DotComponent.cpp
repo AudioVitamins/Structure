@@ -31,6 +31,7 @@ DotComponent::DotComponent ()
 {
     //[Constructor_pre] You can add your own custom stuff here..
 	mode = ANALYSIS;
+	analyzingMode = true;
 	orangeImg = ImageCache::getFromMemory(structureanalyseorangelight_png, structureanalyseorangelight_pngSize);
 	greenImg = ImageCache::getFromMemory(structureanalysegreenlight_png, structureanalysegreenlight_pngSize);
     //[/Constructor_pre]
@@ -44,6 +45,7 @@ DotComponent::DotComponent ()
 
 
     //[Constructor] You can add your own custom stuff here..
+	setMode(ANALYSIS);
     //[/Constructor]
 }
 

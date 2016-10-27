@@ -3,7 +3,7 @@
 #include <string>
 #include <stdarg.h>
 #include <time.h>
-
+#if (JIMMY_LOG_MODE)
 #define JIMMY_LOGGER_PRINT Jimmy::Logger::Print
 #define JIMMY_LOGGER_ACTIVATE Jimmy::Logger::SetEnabled
 
@@ -13,7 +13,17 @@
 #define JIMMY_LOGGER_STEP Jimmy::STEP
 #define JIMMY_LOGGER_NONE Jimmy::NONE
 #define JIMMY_LOGGER_NONE_TIME Jimmy::NONE_TIME
+#else
+#define JIMMY_LOGGER_PRINT Jimmy::Logger::Print
+#define JIMMY_LOGGER_ACTIVATE Jimmy::Logger::SetEnabled
 
+#define JIMMY_LOGGER_DATA Jimmy::LOG_LEVEL::DATA
+#define JIMMY_LOGGER_DETAIL Jimmy::LOG_LEVEL::DETAIL
+#define JIMMY_LOGGER_INFO Jimmy::LOG_LEVEL::INFORMATION
+#define JIMMY_LOGGER_STEP Jimmy::LOG_LEVEL::STEP
+#define JIMMY_LOGGER_NONE Jimmy::LOG_LEVEL::NONE
+#define JIMMY_LOGGER_NONE_TIME Jimmy::LOG_LEVEL::NONE_TIME
+#endif
 
 #ifdef JYMMY_LOGGER_MUTEXT
 #include <mutex>

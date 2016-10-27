@@ -2,3 +2,5 @@ Codebase/Builds/VisualStudio2015/Binary/
 *.opendb
 *.db
 Codebase/Builds/VisualStudio2015/.vs/
+Codebase/Builds/VisualStudio2015/x64/
+Codebase/Builds/VisualStudio2015 - Copy/

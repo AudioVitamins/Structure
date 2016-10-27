@@ -83,6 +83,15 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
                        Image(), 1.000f, Colour (0x00000000),
                        ImageCache::getFromMemory (white_pushbutton_down_png, white_pushbutton_down_pngSize), 1.000f, Colour (0x00000000));
     addAndMakeVisible (analyseDotCom = new DotComponent());
+    addAndMakeVisible (metterLbt = new Label ("Meeter",
+                                              TRANS("0.00 db")));
+    metterLbt->setFont (Font (15.00f, Font::plain));
+    metterLbt->setJustificationType (Justification::centred);
+    metterLbt->setEditable (false, false, false);
+    metterLbt->setColour (Label::textColourId, Colours::white);
+    metterLbt->setColour (TextEditor::textColourId, Colours::black);
+    metterLbt->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
     cachedImage_structureuibackground_png_1 = ImageCache::getFromMemory (structureuibackground_png, structureuibackground_pngSize);
 
     //[UserPreSize]
@@ -96,6 +105,11 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
     //[Constructor] You can add your own custom stuff here..
 	synGUI();
 	startTimer(50);
+#if TEST_VERSION
+	metterLbt->setVisible(true);
+#else
+	metterLbt->setVisible(false);
+#endif
     //[/Constructor]
 }
 
@@ -110,6 +124,7 @@ StructureAudioProcessorEditor::~StructureAudioProcessorEditor()
     analyseBtn = nullptr;
     allBtn = nullptr;
     analyseDotCom = nullptr;
+    metterLbt = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -144,6 +159,7 @@ void StructureAudioProcessorEditor::resized()
     analyseBtn->setBounds (25, 111, 44, 44);
     allBtn->setBounds (76, 111, 44, 44);
     analyseDotCom->setBounds (40, 103, 11, 11);
+    metterLbt->setBounds (24, 176, 88, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -182,6 +198,7 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
         //[UserButtonCode_analyseBtn] -- add your button handler code here..
 		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "analyseBtn Pressed\n");
 		p->analysisState = false;
+		p->ResetMetter();
 		updateStateAnalysis();
 		//buttonThatWasClicked->setToggleState(true, false);
         //[/UserButtonCode_analyseBtn]
@@ -190,7 +207,9 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     {
         //[UserButtonCode_allBtn] -- add your button handler code here..
 		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "allBtn Pressed\n");
-		p->analysisState = true;
+		p->analysisState = false;
+		p->ResetMetter();
+		updateStateAnalysis();
 		p->sendAnalysisAllMode();
 		//buttonThatWasClicked->setToggleState(true, false);
         //[/UserButtonCode_allBtn]
@@ -200,6 +219,8 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     //[/UserbuttonClicked_Post]
 }
 
+
+
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void StructureAudioProcessorEditor::timerCallback() {
 	synGUI();
@@ -208,6 +229,7 @@ void StructureAudioProcessorEditor::timerCallback() {
 void StructureAudioProcessorEditor::synGUI() {
 	updateActiveMode();
 	updateStateAnalysis();
+	updateMetterValue();
 }
 void StructureAudioProcessorEditor::updateActiveMode() {
 	int mode = p->optionMode;
@@ -257,6 +279,12 @@ void StructureAudioProcessorEditor::updateStateAnalysis() {
 		}
 
 	}*/
+}
+
+void StructureAudioProcessorEditor::updateMetterValue() {
+	char text[100] = { 0 };
+	sprintf(text, "%2.5f Db", p->ebu128.getShortTermLoudness());
+	metterLbt->setText(text, NotificationType::dontSendNotification);
 }
 //[/MiscUserCode]
 
@@ -315,6 +343,11 @@ BEGIN_JUCER_METADATA
   <JUCERCOMP name="" id="59319dd7a237afb9" memberName="analyseDotCom" virtualName=""
              explicitFocusOrder="0" pos="40 103 11 11" sourceFile="DotComponent.cpp"
              constructorParams=""/>
+  <LABEL name="Meeter" id="2996657d953a87ce" memberName="metterLbt" virtualName=""
+         explicitFocusOrder="0" pos="24 176 88 24" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="0.00 db" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

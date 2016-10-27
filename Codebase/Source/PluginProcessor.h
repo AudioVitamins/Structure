@@ -13,9 +13,10 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DSP\LogUtil.h"
+#include "DSP\Loudness\Ebu128.h"
 #include "PluginComunication\ManagePluginComunication.h"
 
-
+#define TEST_VERSION  1
 
 //==============================================================================
 /**
@@ -33,11 +34,14 @@ enum {
 };
 
 
-class StructureAudioProcessor  : public AudioProcessor
+class StructureAudioProcessor : public AudioProcessor
 	, public PluginServerListener
 	, public PluginClientListener
+	, public Ebu128LoudnessListener
 {
 public:
+	int samplesPerBlock;
+	double sampleRate;
     //==============================================================================
     StructureAudioProcessor();
     ~StructureAudioProcessor();
@@ -82,7 +86,14 @@ public:
 	void sendAnalysisAllMode();
 	int optionMode;
 	bool analysisState;
+	float currentGainEbu128;
+	Ebu128Loudness ebu128;
 	ScopedPointer<ManagePluginComunication> manageCom;
+	double sampleIn3Sec;
+	void finishAnalysis(Ebu128Loudness *) override;
+	void startAnalysis(Ebu128Loudness *) override;
+	void ResetMetter();
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StructureAudioProcessor)
