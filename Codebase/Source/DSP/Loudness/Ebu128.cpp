@@ -15,8 +15,8 @@ Ebu128Loudness::Ebu128Loudness() :
 		0.99007225036621), // a2 
 	numberOfSamplesPerBin(0), numberOfSamplesInTheCurrentBin(0)
 		{
-	// -120dB -> approx. 1.0e-12
-	silenceThreshold = std::pow(10, 0.1 * SILENCE_DB);
+	silenceThreshold = std::pow(10, (SILENCE_DB) / 20);
+
 }
 Ebu128Loudness::~Ebu128Loudness() {
 
