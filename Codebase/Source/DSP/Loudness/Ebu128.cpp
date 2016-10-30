@@ -15,7 +15,8 @@ Ebu128Loudness::Ebu128Loudness() :
 		0.99007225036621), // a2 
 	numberOfSamplesPerBin(0), numberOfSamplesInTheCurrentBin(0)
 		{
-
+	// -120dB -> approx. 1.0e-12
+	silenceThreshold = std::pow(10, 0.1 * SILENCE_DB);
 }
 Ebu128Loudness::~Ebu128Loudness() {
 
@@ -77,6 +78,11 @@ void Ebu128Loudness::prepareToPlay(double sampleRate,
 
 void Ebu128Loudness::processBlock(AudioSampleBuffer &buffer) {
 	if (currentBin >= numberOfBins) return;
+	const float magnitude = buffer.getMagnitude(0, buffer.getNumSamples());
+	if (magnitude < silenceThreshold)
+	{
+		return;
+	}
 	bufferForMeasurement = buffer;
 	const int numberOfChannels = bufferForMeasurement.getNumChannels();
 	// STEP 1: K-weighted filter.

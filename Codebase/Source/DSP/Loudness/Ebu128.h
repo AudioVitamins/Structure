@@ -2,6 +2,7 @@
 #include "../../../JuceLibraryCode/JuceHeader.h"
 #include "../Filter/IIRFilter.h"
 
+#define SILENCE_DB -60
 class Ebu128Loudness {
 	SecondOrderFilter<float> preFilter; // Pre filter
 	SecondOrderFilter<float> revisedLowFrequencyBCurveFilter; // Rlb filter
@@ -16,11 +17,7 @@ class Ebu128Loudness {
 	A value for each channel.
 	*/
 	std::vector<double> averageOfTheLast3s;
-	/*
-	The average of the filtered and squared samples of the last
-	400 milliseconds.
-	A value for each channel.
-	*/
+	float silenceThreshold;
 	std::vector<double> channelWeighting;
 	std::vector<float> momentaryLoudnessForIndividualChannels;
 	float shortTermLoudness;
