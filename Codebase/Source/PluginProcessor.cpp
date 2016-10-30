@@ -203,7 +203,7 @@ void StructureAudioProcessor::setStateInformation (const void* data, int sizeInB
 		{
 			optionMode = xmlState->getIntAttribute("OptionMode");
 			analysisState = xmlState->getBoolAttribute("StateAnalysis");
-			currentGainEbu128 = xmlState->getBoolAttribute("EBUGain");
+			currentGainEbu128 = xmlState->getDoubleAttribute("EBUGain");
 			ebu128.setShortTermLoudness(currentGainEbu128);
 		}
 	}
