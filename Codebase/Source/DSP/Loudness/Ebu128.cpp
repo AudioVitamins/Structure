@@ -15,7 +15,7 @@ Ebu128Loudness::Ebu128Loudness() :
 		0.99007225036621), // a2 
 	numberOfSamplesPerBin(0), numberOfSamplesInTheCurrentBin(0)
 		{
-	silenceThreshold = std::pow(10, (SILENCE_DB) / 20);
+	silenceThreshold = std::pow(10.0f, (SILENCE_DB) / 20);
 
 }
 Ebu128Loudness::~Ebu128Loudness() {
@@ -228,6 +228,10 @@ void Ebu128Loudness::processBlock(AudioSampleBuffer &buffer) {
 float Ebu128Loudness::getShortTermLoudness() const
 {
 	return shortTermLoudness;
+}
+
+void Ebu128Loudness::setShortTermLoudness(float val) {
+	shortTermLoudness = val;
 }
 
 float Ebu128Loudness::getMaximumShortTermLoudness() const

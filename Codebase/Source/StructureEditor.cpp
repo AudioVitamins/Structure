@@ -107,6 +107,7 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
 	startTimer(50);
 #if TEST_VERSION
 	metterLbt->setVisible(true);
+	synGUI();
 #else
 	metterLbt->setVisible(false);
 #endif

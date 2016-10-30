@@ -42,6 +42,7 @@ public:
 		int estimatedSamplesPerBlock,
 		int expectedRequestRate);
 	void processBlock(AudioSampleBuffer &buffer);
+	void setShortTermLoudness(float val);
 	float getShortTermLoudness() const;
 	float getMaximumShortTermLoudness() const;
 	void reset();

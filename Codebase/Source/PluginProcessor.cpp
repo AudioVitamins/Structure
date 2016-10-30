@@ -187,6 +187,7 @@ void StructureAudioProcessor::getStateInformation (MemoryBlock& destData)
 	XmlElement xml("AudioPluginStructure");
 	xml.setAttribute("OptionMode", optionMode);
 	xml.setAttribute("StateAnalysis", analysisState);
+	xml.setAttribute("EBUGain", currentGainEbu128);
 	copyXmlToBinary(xml, destData);
 }
 
@@ -202,6 +203,8 @@ void StructureAudioProcessor::setStateInformation (const void* data, int sizeInB
 		{
 			optionMode = xmlState->getIntAttribute("OptionMode");
 			analysisState = xmlState->getBoolAttribute("StateAnalysis");
+			currentGainEbu128 = xmlState->getBoolAttribute("EBUGain");
+			ebu128.setShortTermLoudness(currentGainEbu128);
 		}
 	}
 
