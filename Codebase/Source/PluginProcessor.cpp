@@ -24,7 +24,7 @@ StructureAudioProcessor::StructureAudioProcessor()
 	samplesPerBlock = 0;
 	optionMode = INSTRUMENTS_MODE;
 	analysisState = true;
-	manageCom = new ManagePluginComunication(*this, 1000);
+	manageCom = new ManagePluginComunication(*this, PLUGIN_PORT);
 	ebu128.addListener(this);
 }
 
