@@ -12,6 +12,12 @@
               userNotes="Deveopment by HungJ.Com">
   <MAINGROUP id="jkKiHq" name="Structure">
     <GROUP id="{5B268EE9-594D-A388-F09E-F1E90AFA7F9D}" name="Source">
+      <GROUP id="{579A58F0-5925-165D-FE4C-637416A37FE3}" name="Authentication">
+        <FILE id="WvihaS" name="Authentication.cpp" compile="1" resource="0"
+              file="Source/Authentication/Authentication.cpp"/>
+        <FILE id="qdGMlc" name="Authentication.h" compile="0" resource="0"
+              file="Source/Authentication/Authentication.h"/>
+      </GROUP>
       <GROUP id="{17E62069-73A5-3302-3968-DE5E7E51193B}" name="PluginCommunication">
         <FILE id="kic45S" name="ManagePluginComunication.cpp" compile="1" resource="0"
               file="Source/PluginComunication/ManagePluginComunication.cpp"/>

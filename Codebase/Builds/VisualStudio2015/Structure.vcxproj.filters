@@ -7,6 +7,9 @@
     <Filter Include="Structure\Source">
       <UniqueIdentifier>{65B87E24-C31B-597A-908C-CD75E7353CA5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Structure\Source\Authentication">
+      <UniqueIdentifier>{E6EB8874-AA44-81A2-087A-A8E11C6A0BF9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Structure\Source\PluginCommunication">
       <UniqueIdentifier>{692F745A-23C9-57C0-8859-DEBCF1C9DEDB}</UniqueIdentifier>
     </Filter>
@@ -396,6 +399,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Authentication\Authentication.cpp">
+      <Filter>Structure\Source\Authentication</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\PluginComunication\ManagePluginComunication.cpp">
       <Filter>Structure\Source\PluginCommunication</Filter>
     </ClCompile>
@@ -2117,6 +2123,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\Authentication\Authentication.h">
+      <Filter>Structure\Source\Authentication</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\PluginComunication\ManagePluginComunication.h">
       <Filter>Structure\Source\PluginCommunication</Filter>
     </ClInclude>
@@ -4076,6 +4085,34 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_basics\juce_audio_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_devices\juce_audio_devices.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_formats\juce_audio_formats.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_processors\juce_audio_processors.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_core\juce_core.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_cryptography\juce_cryptography.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_data_structures\juce_data_structures.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_events\juce_events.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_graphics\juce_graphics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_basics\juce_gui_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_extra\juce_gui_extra.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_opengl\juce_opengl.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_video\juce_video.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_basics\juce_audio_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_devices\juce_audio_devices.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_formats\juce_audio_formats.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_plugin_client\juce_audio_plugin_client.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_processors\juce_audio_processors.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_core\juce_core.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_cryptography\juce_cryptography.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_data_structures\juce_data_structures.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_events\juce_events.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_graphics\juce_graphics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_basics\juce_gui_basics.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_gui_extra\juce_gui_extra.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_opengl\juce_opengl.h" />
+    <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_video\juce_video.h" />
     <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_basics\juce_audio_basics.h" />
     <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_devices\juce_audio_devices.h" />
     <ClInclude Include="..\..\..\..\FrameWork\JUCE\modules\juce_audio_formats\juce_audio_formats.h" />

@@ -16,10 +16,10 @@
 		virtual void releaseResources() {
 		};
 
-		virtual void processBlock(AudioBuffer<Type>& buffer) {
+		virtual void processBlock(AudioBuffer<Type>& ) {
 		};
 
-		virtual void processBlock(Type *buffer) {
+		virtual void processBlock(Type *) {
 		};
 	};
 	template <typename Type>
@@ -52,13 +52,13 @@
 			mumChannels(0),
 			sampleRate(0)
 		{
-			Type KoverQ = (2. - 2. * a2_at48k) / (a2_at48k - a1_at48k + 1.);
-			Type K = sqrt((a1_at48k + a2_at48k + 1.) / (a2_at48k - a1_at48k + 1.));
-			Q = K / KoverQ;
-			arctanK = atan(K);
-			VB = (b0_at48k - b2_at48k) / (1. - a2_at48k);
-			VH = (b0_at48k - b1_at48k + b2_at48k) / (a2_at48k - a1_at48k + 1.);
-			VL = (b0_at48k + b1_at48k + b2_at48k) / (a1_at48k + a2_at48k + 1.);
+			Type KoverQ = (Type) (2. - 2. * a2_at48k) / (a2_at48k - a1_at48k + 1.);
+			Type K = (Type) sqrt((a1_at48k + a2_at48k + 1.) / (a2_at48k - a1_at48k + 1.));
+			Q = (Type) K / KoverQ;
+			arctanK = (Type) atan(K);
+			VB = (Type) (b0_at48k - b2_at48k) / (1. - a2_at48k);
+			VH = (Type) (b0_at48k - b1_at48k + b2_at48k) / (a2_at48k - a1_at48k + 1.);
+			VL = (Type) (b0_at48k + b1_at48k + b2_at48k) / (a1_at48k + a2_at48k + 1.);
 		}
 		~SecondOrderFilter() {
 
@@ -66,7 +66,7 @@
 
 		void prepareToPlay(double sampleRate, int numberOfChannels) {
 			this->mumChannels = numberOfChannels;
-			this->sampleRate = sampleRate;
+			this->sampleRate = (int) sampleRate;
 
 			// Initialize z1 and z2.
 			z1.calloc(numberOfChannels);
@@ -113,7 +113,7 @@
 						out = 0.0;
 
 					z2[channel] = z1[channel];
-					z1[channel] = factorForB0;
+					z1[channel] = (Type) factorForB0;
 
 					samples[i] = Type(out);
 				}
@@ -125,7 +125,7 @@
 		void requantize() {
 			Type sampleRate48k = 48000;
 			const Type K = tan(arctanK * sampleRate48k / sampleRate);
-			const Type commonFactor = 1. / (1. + K / Q + K*K);
+			const Type commonFactor = (Type) 1. / (1. + K / Q + K*K);
 			b0 = (VH + VB*K / Q + VL*K*K)*commonFactor;
 			b1 = 2.*(VL*K*K - VH)*commonFactor;
 			b2 = (VH - VB*K / Q + VL*K*K)*commonFactor;

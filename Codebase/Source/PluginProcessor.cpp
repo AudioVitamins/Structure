@@ -26,6 +26,16 @@ StructureAudioProcessor::StructureAudioProcessor()
 	analysisState = true;
 	manageCom = new ManagePluginComunication(*this, PLUGIN_PORT);
 	ebu128.addListener(this);
+#if TEST_VERSION
+	authentication = new Authentication();
+#else
+	authentication = new Authentication(false);
+#endif
+	if(authentication->isValidDate()){
+		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Valid\n");
+	} else {
+		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "InValid\n");
+	}
 }
 
 StructureAudioProcessor::~StructureAudioProcessor()
@@ -73,16 +83,16 @@ int StructureAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void StructureAudioProcessor::setCurrentProgram (int index)
+void StructureAudioProcessor::setCurrentProgram (int )
 {
 }
 
-const String StructureAudioProcessor::getProgramName (int index)
+const String StructureAudioProcessor::getProgramName (int )
 {
     return String();
 }
 
-void StructureAudioProcessor::changeProgramName (int index, const String& newName)
+void StructureAudioProcessor::changeProgramName (int , const String& )
 {
 }
 
@@ -131,9 +141,10 @@ bool StructureAudioProcessor::setPreferredBusArrangement (bool isInput, int bus,
 }
 #endif
 
-void StructureAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
+void StructureAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& )
 {
 	int expectedRequestRate = 20;
+	if (!authentication->isValidDate())  return;
 
 	if (analysisState) {
 		if (optionMode == BUS_GROUP_MODE) {
@@ -226,7 +237,7 @@ void StructureAudioProcessor::sendAnalysisAllMode() {
 	data.setAnalysisMode(this->analysisState);
 	manageCom->sendMessage(data);
 }
-void StructureAudioProcessor::pluginClientCallback(PluginClient *pluginConnection, PluginMessage *msg) {
+void StructureAudioProcessor::pluginClientCallback(PluginClient *, PluginMessage *msg) {
 	if (msg != nullptr && !msg->isError()) {
 		this->analysisState = msg->getAnalysisMode();
 		if (this->analysisState) {

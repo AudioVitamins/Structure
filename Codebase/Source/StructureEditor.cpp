@@ -92,6 +92,27 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
     metterLbt->setColour (TextEditor::textColourId, Colours::black);
     metterLbt->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (demoVersionlb = new Label ("Demo Version",
+                                                  TRANS("EXPIRED DEMO TIME\n"
+                                                  "Click to buy Structure plugin")));
+    demoVersionlb->setFont (Font (15.00f, Font::bold));
+    demoVersionlb->setJustificationType (Justification::centred);
+    demoVersionlb->setEditable (false, false, false);
+    demoVersionlb->setColour (Label::backgroundColourId, Colour (0x00020000));
+    demoVersionlb->setColour (Label::textColourId, Colours::red);
+    demoVersionlb->setColour (Label::outlineColourId, Colour (0x00000000));
+    demoVersionlb->setColour (TextEditor::textColourId, Colours::black);
+    demoVersionlb->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    demoVersionlb->setColour (TextEditor::highlightColourId, Colour (0x4012ff15));
+
+    addAndMakeVisible (demoLinkBtn = new ImageButton ("Demo Link"));
+    demoLinkBtn->setButtonText (TRANS("Expired Demo Time"));
+    demoLinkBtn->addListener (this);
+
+    demoLinkBtn->setImages (false, true, true,
+                            ImageCache::getFromMemory (structureuibackground_png, structureuibackground_pngSize), 0.136f, Colour (0x00000000),
+                            Image(), 0.136f, Colour (0x00000000),
+                            Image(), 0.136f, Colour (0x00000000));
     cachedImage_structureuibackground_png_1 = ImageCache::getFromMemory (structureuibackground_png, structureuibackground_pngSize);
 
     //[UserPreSize]
@@ -105,6 +126,8 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
     //[Constructor] You can add your own custom stuff here..
 	synGUI();
 	startTimer(50);
+	demoLinkBtn->setVisible(false);
+	demoVersionlb->setVisible(false);
 #if TEST_VERSION
 	metterLbt->setVisible(true);
 	synGUI();
@@ -126,6 +149,8 @@ StructureAudioProcessorEditor::~StructureAudioProcessorEditor()
     allBtn = nullptr;
     analyseDotCom = nullptr;
     metterLbt = nullptr;
+    demoVersionlb = nullptr;
+    demoLinkBtn = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -161,6 +186,8 @@ void StructureAudioProcessorEditor::resized()
     allBtn->setBounds (76, 111, 44, 44);
     analyseDotCom->setBounds (40, 103, 11, 11);
     metterLbt->setBounds (24, 176, 88, 24);
+    demoVersionlb->setBounds (-26, 84, 311, 35);
+    demoLinkBtn->setBounds (0, 0, 264, 200);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -215,6 +242,12 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 		//buttonThatWasClicked->setToggleState(true, false);
         //[/UserButtonCode_allBtn]
     }
+    else if (buttonThatWasClicked == demoLinkBtn)
+    {
+        //[UserButtonCode_demoLinkBtn] -- add your button handler code here..
+		 URL("https://www.audiovitamins.com/checkout/?add-to-cart=73&addutm_source=contrafree&utm_medium=software&utm_campaign=contrafree").launchInDefaultBrowser();
+        //[/UserButtonCode_demoLinkBtn]
+    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -231,6 +264,13 @@ void StructureAudioProcessorEditor::synGUI() {
 	updateActiveMode();
 	updateStateAnalysis();
 	updateMetterValue();
+	updateDemoVersion();
+}
+void StructureAudioProcessorEditor::updateDemoVersion() {
+	if(!p->authentication->isValidDate()){
+		demoLinkBtn->setVisible(true);
+		demoVersionlb->setVisible(true);
+	}
 }
 void StructureAudioProcessorEditor::updateActiveMode() {
 	int mode = p->optionMode;
@@ -284,7 +324,7 @@ void StructureAudioProcessorEditor::updateStateAnalysis() {
 
 void StructureAudioProcessorEditor::updateMetterValue() {
 	char text[100] = { 0 };
-	sprintf(text, "%2.5f Db", p->ebu128.getShortTermLoudness());
+	sprintf(text, "%2.2f Db", p->ebu128.getShortTermLoudness());
 	metterLbt->setText(text, NotificationType::dontSendNotification);
 }
 //[/MiscUserCode]
@@ -349,6 +389,19 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="0.00 db" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="Demo Version" id="212388da8e5cad8a" memberName="demoVersionlb"
+         virtualName="" explicitFocusOrder="0" pos="-26 84 311 35" bkgCol="20000"
+         textCol="ffff0000" outlineCol="0" edTextCol="ff000000" edBkgCol="0"
+         hiliteCol="4012ff15" labelText="EXPIRED DEMO TIME&#10;Click to buy Structure plugin"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="15" bold="1" italic="0" justification="36"/>
+  <IMAGEBUTTON name="Demo Link" id="ed1c245236e0e227" memberName="demoLinkBtn"
+               virtualName="" explicitFocusOrder="0" pos="0 0 264 200" buttonText="Expired Demo Time"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="structureuibackground_png" opacityNormal="0.13605442643165588379"
+               colourNormal="0" resourceOver="" opacityOver="0.13605439662933349609"
+               colourOver="0" resourceDown="" opacityDown="0.13605439662933349609"
+               colourDown="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

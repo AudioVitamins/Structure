@@ -54,6 +54,7 @@ public:
 	void updateStateAnalysis();
 	void updateMetterValue();
 	void timerCallback();
+	void updateDemoVersion();
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -105,6 +106,8 @@ private:
     ScopedPointer<ImageButton> allBtn;
     ScopedPointer<DotComponent> analyseDotCom;
     ScopedPointer<Label> metterLbt;
+    ScopedPointer<Label> demoVersionlb;
+    ScopedPointer<ImageButton> demoLinkBtn;
     Image cachedImage_structureuibackground_png_1;
 
 

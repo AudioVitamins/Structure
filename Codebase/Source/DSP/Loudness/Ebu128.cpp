@@ -3,20 +3,20 @@ const float Ebu128Loudness::minimalReturnValue = -300.0f;
 Ebu128Loudness::Ebu128Loudness() :
 // Also initialise the two filters with the coefficients for a sample
  // rate of 44100 Hz. These values are given in the ITU-R BS.1770-2.
-	preFilter(1.53512485958697,  // b0
-		-2.69169618940638, // b1
-		1.19839281085285,  // b2
-		-1.69065929318241, // a1
-		0.73248077421585), // a2
-	revisedLowFrequencyBCurveFilter(1.0,               // b0
-		-2.0,              // b1
-		1.0,               // b2
-		-1.99004745483398, // a1
-		0.99007225036621), // a2 
+	preFilter(1.53512485958697f,  // b0
+		-2.69169618940638f, // b1
+		1.19839281085285f,  // b2
+		-1.69065929318241f, // a1
+		0.73248077421585f), // a2
+	revisedLowFrequencyBCurveFilter(1.0f,               // b0
+		-2.0f,              // b1
+		1.0f,               // b2
+		-1.99004745483398f, // a1
+		0.99007225036621f), // a2 
 	numberOfSamplesPerBin(0), numberOfSamplesInTheCurrentBin(0)
 		{
 	silenceThreshold = std::pow(10.0f, (SILENCE_DB) / 20);
-
+	shortTermLoudness = 0.0f;
 }
 Ebu128Loudness::~Ebu128Loudness() {
 
