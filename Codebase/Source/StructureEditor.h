@@ -86,6 +86,8 @@ public:
     static const int structureanalysegreenlight_pngSize;
     static const char* structureanalyseorangelight_png;
     static const int structureanalyseorangelight_pngSize;
+    static const char* structuredemoexpired_png;
+    static const int structuredemoexpired_pngSize;
 
 
 private:
@@ -99,6 +101,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> demoVersionlb;
     ScopedPointer<ImageButton> instrumentsBtn;
     ScopedPointer<ImageButton> busBtn;
     ScopedPointer<ImageButton> voxBtn;
@@ -106,7 +109,6 @@ private:
     ScopedPointer<ImageButton> allBtn;
     ScopedPointer<DotComponent> analyseDotCom;
     ScopedPointer<Label> metterLbt;
-    ScopedPointer<Label> demoVersionlb;
     ScopedPointer<ImageButton> demoLinkBtn;
     Image cachedImage_structureuibackground_png_1;
 

@@ -12,7 +12,7 @@
 #define AUTHENTICATION_H_INCLUDED
 #include "../JuceLibraryCode/JuceHeader.h"
 #ifndef DEMO_TIME 
-#define DEMO_TIME 10*1000//15*24*60*60*1000
+#define DEMO_TIME /*10*1000*/14*24*60*60*1000
 #endif
 class Authentication {
 	File mAuthenticationDir;

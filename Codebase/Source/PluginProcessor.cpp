@@ -26,7 +26,7 @@ StructureAudioProcessor::StructureAudioProcessor()
 	analysisState = true;
 	manageCom = new ManagePluginComunication(*this, PLUGIN_PORT);
 	ebu128.addListener(this);
-#if TEST_VERSION
+#if DEMO_VERSION
 	authentication = new Authentication();
 #else
 	authentication = new Authentication(false);
