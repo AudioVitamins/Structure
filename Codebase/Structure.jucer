@@ -2,14 +2,16 @@
 
 <JUCERPROJECT id="UtbO6R" name="Structure" projectType="audioplug" version="1.0.0"
               bundleIdentifier="com.audiovitamins.com.Structure" includeBinaryInAppConfig="0"
-              buildVST="1" buildVST3="1" buildAU="0" buildAUv3="0" buildRTAS="0"
-              buildAAX="1" pluginName="Structure" pluginDesc="Structure" pluginManufacturer="audiovitamins"
-              pluginManufacturerCode="Manu" pluginCode="Utbo" pluginChannelConfigs=""
+              buildVST="1" buildVST3="1" buildAU="1" buildAUv3="0" buildRTAS="0"
+              buildAAX="1" pluginName="Structure" pluginDesc="Structure" pluginManufacturer="Audio Vitamins"
+              pluginManufacturerCode="AuVi" pluginCode="Strc" pluginChannelConfigs="{1, 1},{2, 2}"
               pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
               pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="StructureAU"
-              pluginRTASCategory="" aaxIdentifier="com.yourcompany.Structure"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.3"
-              userNotes="Deveopment by HungJ.Com">
+              pluginRTASCategory="" aaxIdentifier="com.AudioVitamins.Structure"
+              pluginAAXCategory="AAX_ePlugInCategory_None" jucerVersion="4.3.0"
+              userNotes="Deveopment by HungJ.Com" companyName="Audio Vitamins"
+              companyWebsite="www.audiovitamins.com" companyEmail="info@audiovitamins.com"
+              pluginVSTCategory="">
   <MAINGROUP id="jkKiHq" name="Structure">
     <GROUP id="{5B268EE9-594D-A388-F09E-F1E90AFA7F9D}" name="Source">
       <GROUP id="{579A58F0-5925-165D-FE4C-637416A37FE3}" name="Authentication">
@@ -91,6 +93,37 @@
         <MODULEPATH id="juce_video" path="../../FrameWork/JUCE/modules"/>
       </MODULEPATHS>
     </VS2015>
+    <XCODE_MAC targetFolder="Builds/MacOSX" vst3Folder="" aaxFolder="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="Structure"
+                       xcodeVstBinaryLocation="/_AudioVitamins/Structure/Build/Debug"
+                       xcodeVst3BinaryLocation="/_AudioVitamins/Structure/Build/Debug"
+                       xcodeAudioUnitBinaryLocation="/_AudioVitamins/Structure/Build/Debug"
+                       xcodeAaxBinaryLocation="/_AudioVitamins/Structure/Build/Debug"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="Structure"
+                       xcodeVstBinaryLocation="/_AudioVitamins/Structure/Build/Release"
+                       xcodeVst3BinaryLocation="/_AudioVitamins/Structure/Build/Release"
+                       xcodeAudioUnitBinaryLocation="/_AudioVitamins/Structure/Build/Release"
+                       xcodeAaxBinaryLocation="/_AudioVitamins/Structure/Build/Release"
+                       osxCompatibility="10.6 SDK" cppLanguageStandard="c++11" cppLibType="libstdc++"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../_SDKS/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../_SDKS/JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
