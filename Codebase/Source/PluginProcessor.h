@@ -12,15 +12,15 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "DSP\LogUtil.h"
-#include "DSP\Loudness\Ebu128.h"
-#include "PluginComunication\ManagePluginComunication.h"
+#include "DSP/LogUtil.h"
+#include "DSP/Loudness/Ebu128.h"
+#include "PluginComunication/ManagePluginComunication.h"
 
 #define DEMO_VERSION  0
-#define TEST_VERSION  1
+#define TEST_VERSION  0
 #define LOG_MODE 0
 #define PLUGIN_PORT 8001
-#include "Authentication\Authentication.h"
+#include "Authentication/Authentication.h"
 //==============================================================================
 /**
 */

@@ -167,11 +167,11 @@ void StructureAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
 			float gain = Decibels::decibelsToGain<float>(- 27.0  - currentGainEbu128);
 			buffer.applyGain(gain);
 		}
-		else if (optionMode == BUS_GROUP_MODE) {
-			float gain = Decibels::decibelsToGain<float>(-25.0 - currentGainEbu128);
+		else if (optionMode == VOX_LEAD_MODE ) {
+			float gain = Decibels::decibelsToGain<float>(-20.0 - currentGainEbu128);
 			buffer.applyGain(gain);
 		}
-		else if (optionMode == VOX_LEAD_MODE) {
+		else if (optionMode == BUS_GROUP_MODE) {
 			float gain = Decibels::decibelsToGain<float>(-23.0 - currentGainEbu128);
 			buffer.applyGain(gain);
 		}
