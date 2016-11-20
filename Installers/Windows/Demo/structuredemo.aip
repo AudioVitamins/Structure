@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DOCUMENT Type="Advanced Installer" CreateVersion="12.8" version="12.8" Modules="architect" RootPath="." Language="en" Id="{C5F593BC-CB44-467D-AA82-21E6A58FC4AE}">
+  <COMPONENT cid="caphyon.advinst.msicomp.ProjectOptionsComponent">
+    <ROW Name="HiddenItems" Value="ActSyncAppComponent"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
+    <ROW Property="AAX" Value="[AAX]"/>
+    <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
+    <ROW Property="AI_FINDEXE_TITLE" Value="Select the installation package for [|ProductName]" ValueLocId="AI.Property.FindExeTitle"/>
+    <ROW Property="AI_PRODUCTNAME_ARP" Value="[|ProductName]"/>
+    <ROW Property="AI_ThemeStyle" Value="default" MultiBuildValue="DefaultBuild:classic" MsiKey="AI_ThemeStyle"/>
+    <ROW Property="AI_UNINSTALLER" Value="msiexec.exe"/>
+    <ROW Property="ALLUSERS" Value="1"/>
+    <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
+    <ROW Property="ARPHELPLINK" Value="https://www.audiovitamins.com/support"/>
+    <ROW Property="ARPSYSTEMCOMPONENT" Value="1"/>
+    <ROW Property="ARPURLINFOABOUT" Value="https://www.audiovitamins.com/structure"/>
+    <ROW Property="Background" Value="dialogimage.jpg" Type="1"/>
+    <ROW Property="BannerBitmap" Value="banner" Type="1" MsiKey="BannerBitmap"/>
+    <ROW Property="DefaultUIFont" Value="CfTitleFont" Type="2" Options="65536" MsiKey="DefaultUIFont"/>
+    <ROW Property="DialogBitmap" Value="dialog" Type="1" MsiKey="DialogBitmap"/>
+    <ROW Property="Manufacturer" Value="Audio Vitamins"/>
+    <ROW Property="ProductCode" Value="1033:{887F1F9D-6691-422E-B57E-D8235E9F8D51} " Type="16"/>
+    <ROW Property="ProductLanguage" Value="1033"/>
+    <ROW Property="ProductName" Value="Structure Demo"/>
+    <ROW Property="ProductVersion" Value="1.0.0" Type="32"/>
+    <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
+    <ROW Property="UpgradeCode" Value="{116AF46A-CA4C-4699-AB4C-1CC47B6D99C9}"/>
+    <ROW Property="VST3" Value="[VST3]"/>
+    <ROW Property="VST32" Value="[VST32]"/>
+    <ROW Property="VST64" Value="[VST64]"/>
+    <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsType9XDisplay" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40Display" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50Display" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5X" MultiBuildValue="DefaultBuild:Windows XP/2003 RTM, Windows XP/2003 SP1, Windows XP SP2 x86" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5XDisplay" MultiBuildValue="DefaultBuild:Windows XP/2003 RTM, Windows XP/2003 SP1, Windows XP SP2 x86" ValueLocId="-"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
+    <ROW Directory="AAX" Directory_Parent="TARGETDIR" DefaultDir="AAX" IsPseudoRoot="1"/>
+    <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
+    <ROW Directory="AudioVitamins_Dir" Directory_Parent="ProgramMenuFolder" DefaultDir="AUDIOV~1|Audio Vitamins"/>
+    <ROW Directory="Audio_Dir" Directory_Parent="Avid_Dir" DefaultDir="Audio"/>
+    <ROW Directory="Avid_Dir" Directory_Parent="CommonFilesFolder" DefaultDir="Avid"/>
+    <ROW Directory="CommonAppDataFolder" Directory_Parent="TARGETDIR" DefaultDir="COMMON~2|CommonAppDataFolder" IsPseudoRoot="1"/>
+    <ROW Directory="CommonFilesFolder" Directory_Parent="TARGETDIR" DefaultDir="COMMON~1|CommonFilesFolder" IsPseudoRoot="1"/>
+    <ROW Directory="Contents_Dir" Directory_Parent="Structure.aaxplugin_Dir" DefaultDir="Contents"/>
+    <ROW Directory="Plugins_Dir" Directory_Parent="Audio_Dir" DefaultDir="Plugins"/>
+    <ROW Directory="ProgramMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="PROGRA~1|ProgramMenuFolder" IsPseudoRoot="1"/>
+    <ROW Directory="Structure.aaxplugin_Dir" Directory_Parent="AAX" DefaultDir="STRUCT~1.AAX|Structure.aaxplugin"/>
+    <ROW Directory="Structure_Dir" Directory_Parent="AudioVitamins_Dir" DefaultDir="STRUCT~1|Structure"/>
+    <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
+    <ROW Directory="VST3" Directory_Parent="TARGETDIR" DefaultDir="VST3" IsPseudoRoot="1"/>
+    <ROW Directory="VST32" Directory_Parent="TARGETDIR" DefaultDir="VST32" IsPseudoRoot="1"/>
+    <ROW Directory="VST64" Directory_Parent="TARGETDIR" DefaultDir="VST64" IsPseudoRoot="1"/>
+    <ROW Directory="Win32_Dir" Directory_Parent="Contents_Dir" DefaultDir="Win32"/>
+    <ROW Directory="bitVST_Dir" Directory_Parent="APPDIR" DefaultDir="32bit"/>
+    <ROW Directory="bit_Dir" Directory_Parent="APPDIR" DefaultDir="64bit"/>
+    <ROW Directory="regid.201507.com.audiovitamins_Dir" Directory_Parent="CommonAppDataFolder" DefaultDir="REGID2~1.AUD|regid.2015-07.com.audiovitamins"/>
+    <ROW Directory="x64_Dir" Directory_Parent="Contents_Dir" DefaultDir="x64"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
+    <ROW Component="AI_CustomARPName" ComponentId="{BCDB5AAC-19CD-4BFE-B62B-4F7033517C2A}" Directory_="APPDIR" Attributes="260" KeyPath="DisplayName" Options="1"/>
+    <ROW Component="AI_ExePath" ComponentId="{DECE4546-A45D-4526-B49F-5A5626E3DEEF}" Directory_="APPDIR" Attributes="260" KeyPath="AI_ExePath"/>
+    <ROW Component="AudioVitaminsStructure.dll" ComponentId="{5D86D73A-C591-46B3-9351-BC5E30A98544}" Directory_="VST64" Attributes="256" KeyPath="AudioVitaminsStructure.dll"/>
+    <ROW Component="AudioVitaminsStructure.vst3" ComponentId="{A775303B-6781-4FE5-A2EA-D7A24FCDCBA2}" Directory_="VST3" Attributes="256" KeyPath="AudioVitaminsStructure.vst3" Type="0"/>
+    <ROW Component="AudioVitaminsStructure1.dll" ComponentId="{5EFF49AF-29D8-4F4D-9E1B-2A8486E8BACB}" Directory_="VST32" Attributes="0" KeyPath="AudioVitaminsStructure1.dll"/>
+    <ROW Component="B5158184F44A6981C5919229A6AEBE" ComponentId="{A0BDAE4A-4641-4DE0-B0F6-CB30E8D2BB6A}" Directory_="APPDIR" Attributes="260" KeyPath="B5158184F44A6981C5919229A6AEBE" Options="2"/>
+    <ROW Component="D7E473DF14F3E98497864847195F2" ComponentId="{FC98187A-0730-41B3-B99A-DF78672714F3}" Directory_="APPDIR" Attributes="4" KeyPath="D7E473DF14F3E98497864847195F2" Options="2"/>
+    <ROW Component="PlugIn.ico" ComponentId="{33DCE111-884F-4A89-9CB5-B7FA10E4665F}" Directory_="Structure.aaxplugin_Dir" Attributes="256" Condition="!AAX = 3" KeyPath="PlugIn.ico"/>
+    <ROW Component="Plugins" ComponentId="{C7DA06F1-B4A9-439D-ABA9-D767C1C88542}" Directory_="Plugins_Dir" Attributes="0" Condition="!AAX = 3"/>
+    <ROW Component="ProductInformation" ComponentId="{047AC898-EC75-40BF-9646-112048390622}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="Structure" ComponentId="{96079EFB-D17C-4816-8079-A3311BDD42F9}" Directory_="Structure_Dir" Attributes="0"/>
+    <ROW Component="Structure.dll" ComponentId="{C17A2546-0372-4980-8946-DCAB9DB15A2B}" Directory_="bitVST_Dir" Attributes="0" KeyPath="Structure.dll_2"/>
+    <ROW Component="Structure.dll_1" ComponentId="{E11EDC8A-3F26-448A-869A-A0CFE725CC69}" Directory_="bit_Dir" Attributes="256" KeyPath="Structure.dll"/>
+    <ROW Component="Structure.dll_2" ComponentId="{4D9FF841-0D1D-4C09-B2F4-A46DE16EBA24}" Directory_="Win32_Dir" Attributes="0" KeyPath="Structure.dll_5"/>
+    <ROW Component="Structure.dll_3" ComponentId="{6AAE9598-AF5A-4D39-801C-4F32095F32A7}" Directory_="x64_Dir" Attributes="256" Condition="VersionNT64" KeyPath="Structure.dll_3"/>
+    <ROW Component="Structure.exp" ComponentId="{F641F079-6F5A-4B85-A2D4-3FA0041C9ECF}" Directory_="Win32_Dir" Attributes="256" KeyPath="Structure.exp"/>
+    <ROW Component="Structure.exp_1" ComponentId="{D1B42973-CC2D-4AE9-B0F4-EF16D1F67F58}" Directory_="x64_Dir" Attributes="256" KeyPath="Structure.lib_1"/>
+    <ROW Component="Structure.exp_2" ComponentId="{28764431-7582-41FE-9AFC-98FA9D12CFF9}" Directory_="x64_Dir" Attributes="0" KeyPath="Structure.exp_1"/>
+    <ROW Component="Structure.vst3" ComponentId="{8EB157E3-7DD0-441E-926F-7BA41FCAB33D}" Directory_="bit_Dir" Attributes="256" KeyPath="Structure.vst3_2" Type="0"/>
+    <ROW Component="StructureUserGuide.pdf" ComponentId="{DB0289FF-EC22-44A7-A917-E3D09D17EDDA}" Directory_="APPDIR" Attributes="0" KeyPath="StructureUserGuide.pdf" Type="0"/>
+    <ROW Component="regid.201507.com.audiovitamins" ComponentId="{E4763FDD-7322-4360-B928-FE5C6A35EA47}" Directory_="regid.201507.com.audiovitamins_Dir" Attributes="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
+    <ROW Feature="AAX" Title="AAX" Description="This will install the 64bit AAX version of Structure. The default directory is selected below but if you use a different directory to store your AAX plug-ins, please select it to make sure that Structure shows up in your plug-in list inside ProTools" Display="8" Level="1" Directory_="AAX" Attributes="0" Components="AI_CustomARPName AI_ExePath PlugIn.ico Plugins Structure.dll_3 Structure.exp Structure.exp_1 Structure.exp_2"/>
+    <ROW Feature="B5158184F44A6981C5919229A6AEBE" Title="Visual C++ Redistributable for Visual Studio 2015 x64" Description="Visual C++ Redistributable for Visual Studio 2015 x64" Display="0" Level="1" Attributes="0" Components="AI_CustomARPName AI_ExePath B5158184F44A6981C5919229A6AEBE"/>
+    <ROW Feature="D7E473DF14F3E98497864847195F2" Title="Visual C++ Redistributable for Visual Studio 2015 x86" Description="Visual C++ Redistributable for Visual Studio 2015 x86" Display="0" Level="1" Attributes="0" Components="AI_CustomARPName AI_ExePath D7E473DF14F3E98497864847195F2"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="0" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_CustomARPName AI_ExePath AudioVitaminsStructure.dll AudioVitaminsStructure.vst3 AudioVitaminsStructure1.dll ProductInformation Structure Structure.dll Structure.dll_1 Structure.dll_2 Structure.vst3 StructureUserGuide.pdf regid.201507.com.audiovitamins"/>
+    <ROW Feature="VST3" Title="VST3" Description="This will install the VST3 version of Structure. The default directory is selected below but if you use a different directory to store your VST plug-ins, please select it to make sure that Structure shows up in your plug-in list inside your DAW" Display="2" Level="1" Directory_="VST3" Attributes="0" Components="AI_CustomARPName AI_ExePath"/>
+    <ROW Feature="VST32" Title="VST32" Description="This will install the 32 bit VST version of Structure. The default directory is selected below but if you use a different directory to store your VST plug-ins, please select it to make sure that Structure shows up in your plug-in list inside your DAW" Display="4" Level="1" Directory_="VST32" Attributes="0" Components="AI_CustomARPName AI_ExePath"/>
+    <ROW Feature="VST64" Title="VST64" Description="This will install the 64 bit VST version of Structure. The default directory is selected below but if you use a different directory to store your VST plug-ins, please select it to make sure that Structure shows up in your plug-in list inside your DAW" Display="6" Level="1" Directory_="VST64" Attributes="0" Components="AI_CustomARPName AI_ExePath"/>
+    <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
+    <ROW File="AudioVitaminsStructure.dll" Component_="AudioVitaminsStructure.dll" FileName="AUDIOV~1.DLL|AudioVitamins-Structure.dll" Attributes="0" SourcePath="..\..\..\Build\Windows\Release_VST\x64_DEMO\Structure.dll" SelfReg="false" NextFile="AudioVitaminsStructure.vst3"/>
+    <ROW File="AudioVitaminsStructure.vst3" Component_="AudioVitaminsStructure.vst3" FileName="AUDIOV~1.VST|AudioVitamins-Structure.vst3" Attributes="0" SourcePath="..\..\..\Build\Windows\Release_VST\x64_DEMO\Structure.vst3" SelfReg="false"/>
+    <ROW File="AudioVitaminsStructure1.dll" Component_="AudioVitaminsStructure1.dll" FileName="AUDIOV~1.DLL|AudioVitamins-Structure.dll" Attributes="0" SourcePath="..\..\..\Build\Windows\Release_VST\Win32_DEMO\Structure.dll" SelfReg="false" NextFile="AudioVitaminsStructure.dll"/>
+    <ROW File="PlugIn.ico" Component_="PlugIn.ico" FileName="PlugIn.ico" Attributes="3" SourcePath="..\..\..\Build\Windows\AAX\Full_AAX_v1.0.1\Structure.aaxplugin\PlugIn.ico" SelfReg="false" NextFile="Structure.dll_2"/>
+    <ROW File="Structure.dll" Component_="Structure.dll_1" FileName="AUDIOV~2.DLL|AudioVitamins-Structure.dll" Attributes="0" SourcePath="..\..\..\Build\Windows\Release_VST\x64_DEMO\Structure.dll" SelfReg="false" NextFile="Structure.vst3_2"/>
+    <ROW File="Structure.dll_2" Component_="Structure.dll" FileName="AUDIOV~1.DLL|AudioVitamins-Structure.dll" Attributes="0" SourcePath="..\..\..\Build\Windows\Release_VST\Win32_DEMO\Structure.dll" SelfReg="false" NextFile="Structure.dll"/>
+    <ROW File="Structure.dll_3" Component_="Structure.dll_3" FileName="STRUCT~1.DLL|Structure.dll" Attributes="0" SourcePath="C:\Users\Dave\Desktop\AAX\Demo_AAX_v1.0.1\Structure.aaxplugin\Contents\x64\Structure.dll" SelfReg="false" NextFile="Structure.exp_1"/>
+    <ROW File="Structure.dll_5" Component_="Structure.dll_2" FileName="STRUCT~1.DLL|Structure.dll" Attributes="0" SourcePath="C:\Users\Dave\Desktop\AAX\Demo_AAX_v1.0.1\Structure.aaxplugin\Contents\Win32\Structure.dll" SelfReg="false" NextFile="AudioVitaminsStructure1.dll"/>
+    <ROW File="Structure.exp" Component_="Structure.exp" FileName="STRUCT~1.EXP|Structure.exp" Attributes="0" SourcePath="C:\Users\Dave\Desktop\AAX\Demo_AAX_v1.0.1\Structure.aaxplugin\Contents\Win32\Structure.exp" SelfReg="false" NextFile="Structure.lib"/>
+    <ROW File="Structure.exp_1" Component_="Structure.exp_2" FileName="STRUCT~1.EXP|Structure.exp" Attributes="0" SourcePath="C:\Users\Dave\Desktop\AAX\Demo_AAX_v1.0.1\Structure.aaxplugin\Contents\x64\Structure.exp" SelfReg="false" NextFile="Structure.lib_1"/>
+    <ROW File="Structure.lib" Component_="Structure.exp" FileName="STRUCT~1.LIB|Structure.lib" Attributes="0" SourcePath="C:\Users\Dave\Desktop\AAX\Demo_AAX_v1.0.1\Structure.aaxplugin\Contents\Win32\Structure.lib" SelfReg="false" NextFile="Structure.dll_3"/>
+    <ROW File="Structure.lib_1" Component_="Structure.exp_1" FileName="STRUCT~1.LIB|Structure.lib" Attributes="0" SourcePath="C:\Users\Dave\Desktop\AAX\Demo_AAX_v1.0.1\Structure.aaxplugin\Contents\x64\Structure.lib" SelfReg="false" NextFile="PlugIn.ico"/>
+    <ROW File="Structure.vst3_2" Component_="Structure.vst3" FileName="AUDIOV~1.VST|AudioVitamins-Structure.vst3" Attributes="0" SourcePath="..\..\..\Build\Windows\Release_VST\x64_DEMO\Structure.vst3" SelfReg="false" NextFile="Structure.dll_5"/>
+    <ROW File="StructureUserGuide.pdf" Component_="StructureUserGuide.pdf" FileName="STRUCT~1.PDF|Structure-UserGuide.pdf" Attributes="0" SourcePath="..\..\..\Docs\Structure-UserGuide.pdf" SelfReg="false" NextFile="Structure.exp"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="1" PackageFolder="..\Full\Setup Files" Languages="en" InstallationType="4" CabsLocation="1" PackageType="1" FilesInsideExe="true" ExtractionFolder="[AppDataFolder][|Manufacturer]\[|ProductName] [|ProductVersion]\install" ExtUI="true" UseLargeSchema="true" MsiPackageType="AI_ALL"/>
+    <ATTRIBUTE name="CurrentBuild" value="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
+    <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
+    <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DigCertStoreComponent">
+    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="0" SignTool="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.FragmentComponent">
+    <ROW Fragment="CommonUI.aip" Path="&lt;AI_FRAGS&gt;CommonUI.aip"/>
+    <ROW Fragment="MaintenanceTypeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceTypeDlg.aip"/>
+    <ROW Fragment="MaintenanceWelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceWelcomeDlg.aip"/>
+    <ROW Fragment="SequenceDialogs.aip" Path="&lt;AI_THEMES&gt;classic\fragments\SequenceDialogs.aip"/>
+    <ROW Fragment="Sequences.aip" Path="&lt;AI_FRAGS&gt;Sequences.aip"/>
+    <ROW Fragment="StaticUIStrings.aip" Path="&lt;AI_FRAGS&gt;StaticUIStrings.aip"/>
+    <ROW Fragment="UI.aip" Path="&lt;AI_THEMES&gt;classic\fragments\UI.aip"/>
+    <ROW Fragment="Validation.aip" Path="&lt;AI_FRAGS&gt;Validation.aip"/>
+    <ROW Fragment="VerifyRemoveDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRemoveDlg.aip"/>
+    <ROW Fragment="VerifyRepairDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRepairDlg.aip"/>
+    <ROW Fragment="WelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\WelcomeDlg.aip"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiActionTextComponent">
+    <ROW Action="AI_ConfigureChainer" Description="Configuring prerequisites launcher" Template="Configure Launcher" DescriptionLocId="ActionText.Description.AI_ConfigureChainer" TemplateLocId="ActionText.Template.AI_ConfigureChainer"/>
+    <ROW Action="AI_DeleteLzma" Description="Deleting files extracted from archive" DescriptionLocId="ActionText.Description.AI_DeleteLzma" TemplateLocId="-"/>
+    <ROW Action="AI_DeleteRLzma" Description="Deleting files extracted from archive" DescriptionLocId="ActionText.Description.AI_DeleteLzma" TemplateLocId="-"/>
+    <ROW Action="AI_DownloadPrereq" Description="Downloading prerequisite software" Template="Downloading [1]{[2] completed}" DescriptionLocId="ActionText.Description.AI_DownloadPrereq" TemplateLocId="ActionText.Template.AI_DownloadPrereq"/>
+    <ROW Action="AI_ExtractFiles" Description="Extracting files from archive" DescriptionLocId="ActionText.Description.AI_ExtractLzma" TemplateLocId="-"/>
+    <ROW Action="AI_ExtractLzma" Description="Extracting files from archive" DescriptionLocId="ActionText.Description.AI_ExtractLzma" TemplateLocId="-"/>
+    <ROW Action="AI_ExtractPrereq" Description="Extracting prerequisite software" Template="Extracting [1]{[2] completed}" DescriptionLocId="ActionText.Description.AI_ExtractPrereq" TemplateLocId="ActionText.Template.AI_ExtractPrereq"/>
+    <ROW Action="AI_InstallPostPrerequisite" Description="Installing prerequisite software" Template="Installing [1]{[2] completed}" DescriptionLocId="ActionText.Description.AI_InstallPrerequisite" TemplateLocId="ActionText.Template.AI_InstallPrerequisite"/>
+    <ROW Action="AI_InstallPrerequisite" Description="Installing prerequisite software" Template="Installing [1]{[2] completed}" DescriptionLocId="ActionText.Description.AI_InstallPrerequisite" TemplateLocId="ActionText.Template.AI_InstallPrerequisite"/>
+    <ROW Action="AI_VerifyPrereq" Description="Verifying prerequisites" Template="[1] was not installed correctly." DescriptionLocId="ActionText.Description.AI_VerifyPrereq" TemplateLocId="ActionText.Template.AI_VerifyPrereq"/>
+    <ROW Action="AI_XmlCommit" Description="Committing XML file configurations." Template="Committing XML file configurations." DescriptionLocId="ActionText.Description.AI_XmlCommit" TemplateLocId="ActionText.Template.AI_XmlCommit"/>
+    <ROW Action="AI_XmlConfig" Description="Executing XML file configurations" Template="Configuring XML file: &quot;[1]&quot;" DescriptionLocId="ActionText.Description.AI_XmlConfig" TemplateLocId="ActionText.Template.AI_XmlConfig"/>
+    <ROW Action="AI_XmlInstall" Description="Generating actions to configure XML files" DescriptionLocId="ActionText.Description.AI_XmlInstall"/>
+    <ROW Action="AI_XmlRemove" Description="Executing XML file configurations" Template="Configuring XML file: &quot;[1]&quot;" DescriptionLocId="ActionText.Description.AI_XmlRemove" TemplateLocId="ActionText.Template.AI_XmlRemove"/>
+    <ROW Action="AI_XmlRollback" Description="Rolling back XML file configurations." Template="Rolling back XML file configurations." DescriptionLocId="ActionText.Description.AI_XmlRollback" TemplateLocId="ActionText.Template.AI_XmlRollback"/>
+    <ROW Action="AI_XmlUninstall" Description="Generating actions to configure XML files" DescriptionLocId="ActionText.Description.AI_XmlUninstall"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiAppSearchComponent">
+    <ROW Property="AI_SETUPEXEPATH" Signature_="AI_EXE_PATH_CU" Builds="DefaultBuild"/>
+    <ROW Property="AI_SETUPEXEPATH" Signature_="AI_EXE_PATH_LM" Builds="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiBinaryComponent">
+    <ROW Name="Prereq.dll" SourcePath="&lt;AI_CUSTACTS&gt;Prereq.dll"/>
+    <ROW Name="aicustact.dll" SourcePath="&lt;AI_CUSTACTS&gt;aicustact.dll"/>
+    <ROW Name="aipackagechainer.exe" SourcePath="&lt;AI_CUSTACTS&gt;aipackagechainer.exe"/>
+    <ROW Name="dialogimage.jpg" SourcePath="..\..\..\Graphics\installergraphics\dialog-image.jpg"/>
+    <ROW Name="lzmaextractor.dll" SourcePath="&lt;AI_CUSTACTS&gt;lzmaextractor.dll"/>
+    <ROW Name="xmlCfg.dll" SourcePath="&lt;AI_CUSTACTS&gt;xmlCfg.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlComponent">
+    <ROW Dialog_="CustomizeDlg" Control="ItemDescription" Type="Text" X="215" Y="90" Width="131" Height="77" Attributes="3" Text="Multiline description of the currently selected item." Order="1500" TextLocId="Control.Text.CustomizeDlg#ItemDescription" MsiKey="CustomizeDlg#ItemDescription"/>
+    <ROW Dialog_="CustomizeDlg" Control="BannerLine" Type="Line" X="0" Y="44" Width="372" Height="0" Attributes="1" Order="1600" MsiKey="CustomizeDlg#BannerLine"/>
+    <ROW Dialog_="CustomizeDlg" Control="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Attributes="196611" Text="Custom Setup" TextStyle="[DlgTitleFont]" Order="1700" TextLocId="Control.Text.CustomizeDlg#Title" MsiKey="CustomizeDlg#Title"/>
+    <ROW Dialog_="CustomizeDlg" Control="Text" Type="Text" X="25" Y="55" Width="320" Height="20" Attributes="3" Text="Click on the icons in the tree below to change the way features will be installed." Order="1800" TextLocId="Control.Text.CustomizeDlg#Text" MsiKey="CustomizeDlg#Text"/>
+    <ATTRIBUTE name="DeletedRows" value="CustomizeDlg#ItemSize"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
+    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_INSTALL" Ordering="197"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="MaintenanceWelcomeDlg" Control_="Next" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="99"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_MAINT" Ordering="101"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_MAINT" Ordering="198"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="204"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="ChangeButton" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="501"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceWelcomeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RemoveButton" Event="NewDialog" Argument="VerifyRemoveDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RepairButton" Event="NewDialog" Argument="VerifyRepairDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="1"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Repair" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="399" Options="1"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Remove" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="299" Options="1"/>
+    <ROW Dialog_="PatchWelcomeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_PATCH" Ordering="201"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_PATCH" Ordering="199"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="PatchWelcomeDlg" Condition="AI_PATCH" Ordering="205"/>
+    <ROW Dialog_="ResumeDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_RESUME" Ordering="299"/>
+    <ROW Dialog_="ExitDialog" Control_="Finish" Event="DoAction" Argument="AI_CleanPrereq" Condition="1" Ordering="301"/>
+    <ROW Dialog_="FatalError" Control_="Finish" Event="DoAction" Argument="AI_CleanPrereq" Condition="1" Ordering="102"/>
+    <ROW Dialog_="UserExit" Control_="Finish" Event="DoAction" Argument="AI_CleanPrereq" Condition="1" Ordering="101"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_INSTALL" Ordering="102"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCreateFolderComponent">
+    <ROW Directory_="Structure_Dir" Component_="Structure" ManualDelete="false"/>
+    <ROW Directory_="Plugins_Dir" Component_="Plugins" ManualDelete="false"/>
+    <ROW Directory_="regid.201507.com.audiovitamins_Dir" Component_="regid.201507.com.audiovitamins" ManualDelete="false"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
+    <ROW Action="AI_AppSearchEx" Type="1" Source="Prereq.dll" Target="DoAppSearchEx"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH_ORIGINAL" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_CleanPrereq" Type="65" Source="Prereq.dll" Target="CleanPrereq" WithoutSeq="true"/>
+    <ROW Action="AI_ConfigureChainer" Type="1" Source="Prereq.dll" Target="ConfigurePrereqLauncher"/>
+    <ROW Action="AI_DATA_SETTER" Type="51" Source="AI_ExtractFiles" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DATA_SETTER_1" Type="51" Source="CustomActionData" Target="[~]"/>
+    <ROW Action="AI_DATA_SETTER_2" Type="51" Source="CustomActionData" Target="[~]"/>
+    <ROW Action="AI_DOWNGRADE" Type="19" Target="4010"/>
+    <ROW Action="AI_DeleteCadLzma" Type="51" Source="AI_DeleteLzma" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DeleteLzma" Type="1025" Source="lzmaextractor.dll" Target="DeleteLZMAFiles"/>
+    <ROW Action="AI_DeleteRCadLzma" Type="51" Source="AI_DeleteRLzma" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DeleteRLzma" Type="1281" Source="lzmaextractor.dll" Target="DeleteLZMAFiles"/>
+    <ROW Action="AI_DownloadPrereq" Type="1" Source="Prereq.dll" Target="DownloadPrereq"/>
+    <ROW Action="AI_DpiContentScale" Type="1" Source="aicustact.dll" Target="DpiContentScale"/>
+    <ROW Action="AI_EstimateExtractFiles" Type="1" Source="Prereq.dll" Target="EstimateExtractFiles"/>
+    <ROW Action="AI_ExtractCadLzma" Type="51" Source="AI_ExtractLzma" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_ExtractFiles" Type="1025" Source="Prereq.dll" Target="ExtractSourceFiles" AdditionalSeq="AI_DATA_SETTER"/>
+    <ROW Action="AI_ExtractLzma" Type="1025" Source="lzmaextractor.dll" Target="ExtractLZMAFiles"/>
+    <ROW Action="AI_ExtractPrereq" Type="65" Source="Prereq.dll" Target="ExtractPrereq"/>
+    <ROW Action="AI_FindExeLzma" Type="1" Source="lzmaextractor.dll" Target="FindEXE"/>
+    <ROW Action="AI_GetArpIconPath" Type="1" Source="aicustact.dll" Target="GetArpIconPath"/>
+    <ROW Action="AI_InstallModeCheck" Type="1" Source="aicustact.dll" Target="UpdateInstallMode" WithoutSeq="true"/>
+    <ROW Action="AI_InstallPostPrerequisite" Type="1" Source="Prereq.dll" Target="InstallPostPrereq"/>
+    <ROW Action="AI_InstallPrerequisite" Type="65" Source="Prereq.dll" Target="InstallPrereq"/>
+    <ROW Action="AI_LaunchChainer" Type="3314" Source="AI_PREREQ_CHAINER"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Type="65" Source="aicustact.dll" Target="PrepareUpgrade"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH" Target="[AI_SETUPEXEPATH_ORIGINAL]"/>
+    <ROW Action="AI_RESTORE_LOCATION" Type="65" Source="aicustact.dll" Target="RestoreLocation"/>
+    <ROW Action="AI_ResolveKnownFolders" Type="1" Source="aicustact.dll" Target="AI_ResolveKnownFolders"/>
+    <ROW Action="AI_SETPROGRAMFILES" Type="51" Source="AI_ProgramFiles" Target="[ProgramFilesFolder]"/>
+    <ROW Action="AI_SETPROGRAMFILES64" Type="51" Source="AI_ProgramFiles" Target="[ProgramFiles64Folder]"/>
+    <ROW Action="AI_SHOW_LOG" Type="65" Source="aicustact.dll" Target="LaunchLogFile" WithoutSeq="true"/>
+    <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
+    <ROW Action="AI_VerifyPrereq" Type="1" Source="Prereq.dll" Target="VerifyPrereq"/>
+    <ROW Action="AI_XmlCommit" Type="11777" Source="xmlCfg.dll" Target="OnXmlCommit" WithoutSeq="true"/>
+    <ROW Action="AI_XmlConfig" Type="11265" Source="xmlCfg.dll" Target="OnXmlConfig" WithoutSeq="true"/>
+    <ROW Action="AI_XmlInstall" Type="1" Source="xmlCfg.dll" Target="OnXmlInstall" AdditionalSeq="AI_DATA_SETTER_1"/>
+    <ROW Action="AI_XmlRemove" Type="11265" Source="xmlCfg.dll" Target="OnXmlRemove" WithoutSeq="true"/>
+    <ROW Action="AI_XmlRollback" Type="11521" Source="xmlCfg.dll" Target="OnXmlRollback" WithoutSeq="true"/>
+    <ROW Action="AI_XmlUninstall" Type="1" Source="xmlCfg.dll" Target="OnXmlUninstall" AdditionalSeq="AI_DATA_SETTER_2"/>
+    <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]" MultiBuildTarget="DefaultBuild:[AI_ProgramFiles][Manufacturer]\[ProductName]"/>
+    <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
+    <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
+    <ROW Action="SetProperty" Type="51" Source="VST3" Target="[CommonFiles64Folder]\VST3"/>
+    <ROW Action="SetProperty_1" Type="51" Source="VST32" Target="[ProgramFilesFolder]\VSTPlugins"/>
+    <ROW Action="SetProperty_1_1" Type="51" Source="VST64" Target="[ProgramFiles64Folder]\VSTPlugins"/>
+    <ROW Action="SetProperty_1_1_1" Type="51" Source="AAX" Target="[CommonFiles64Folder]\Avid\Audio\Plug-Ins"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiEventMappingComponent">
+    <ATTRIBUTE name="DeletedRows" value="CustomizeDlg#ItemSize#SelectionSize"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="SystemFoldermsiexec.exe" SourcePath="&lt;AI_RES&gt;uninstall.ico" Index="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiIniFileComponent">
+    <ROW IniFile="FolderType" FileName="desktop.ini" DirProperty="Structure.aaxplugin_Dir" Section="ViewState" Key="FolderType" Value="Generic" Action="0" Component_="Structure.dll_2"/>
+    <ROW IniFile="IconResource" FileName="desktop.ini" DirProperty="Structure.aaxplugin_Dir" Section=".ShellClassInfo" Key="IconResource" Value="Z:\_AudioVitamins\_SDKS\AAX\Utilities\PlugIn.ico,0" Action="0" Component_="Structure.dll_2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
+    <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="747"/>
+    <ROW Action="AI_STORE_LOCATION" Condition="(Not Installed) OR REINSTALL" Sequence="1501"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Condition="AI_UPGRADE=&quot;No&quot; AND (Not Installed)" Sequence="1399"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="51"/>
+    <ROW Action="AI_SETPROGRAMFILES64" Condition="VersionNT64" Sequence="748"/>
+    <ROW Action="AI_SETPROGRAMFILES" Condition="NOT VersionNT64" Sequence="749"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Sequence="99" Builds="DefaultBuild"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Condition="AI_SETUPEXEPATH_ORIGINAL" Sequence="102" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteCadLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="199" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteRCadLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="198" Builds="DefaultBuild"/>
+    <ROW Action="AI_ExtractCadLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="197" Builds="DefaultBuild"/>
+    <ROW Action="AI_FindExeLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="196" Builds="DefaultBuild"/>
+    <ROW Action="AI_ExtractLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="1549" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteRLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="1548" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="6597" Builds="DefaultBuild"/>
+    <ROW Action="AI_ExtractFiles" Sequence="3998" Builds="DefaultBuild"/>
+    <ROW Action="AI_DATA_SETTER" Sequence="3997"/>
+    <ROW Action="AI_EstimateExtractFiles" Sequence="3999" Builds="DefaultBuild"/>
+    <ROW Action="AI_GetArpIconPath" Sequence="1401"/>
+    <ROW Action="AI_XmlInstall" Condition="(REMOVE &lt;&gt; &quot;ALL&quot;)" Sequence="5102"/>
+    <ROW Action="AI_DATA_SETTER_1" Condition="(REMOVE &lt;&gt; &quot;ALL&quot;)" Sequence="5101"/>
+    <ROW Action="AI_XmlUninstall" Condition="(REMOVE)" Sequence="3102"/>
+    <ROW Action="AI_DATA_SETTER_2" Condition="(REMOVE)" Sequence="3101"/>
+    <ROW Action="AI_ConfigureChainer" Condition="((UILevel = 2) OR (UILevel = 3)) AND (NOT UPGRADINGPRODUCTCODE)" Sequence="6598"/>
+    <ROW Action="AI_LaunchChainer" Condition="AI_PREREQ_CHAINER AND (NOT UPGRADINGPRODUCTCODE)" Sequence="6599"/>
+    <ROW Action="AI_VerifyPrereq" Sequence="1101"/>
+    <ROW Action="AI_AppSearchEx" Sequence="101"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstallUISequenceComponent">
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="747"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="52"/>
+    <ROW Action="AI_DpiContentScale" Sequence="51"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Sequence="99"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Condition="AI_SETUPEXEPATH_ORIGINAL" Sequence="102"/>
+    <ROW Action="AI_SETPROGRAMFILES64" Condition="VersionNT64" Sequence="748"/>
+    <ROW Action="AI_SETPROGRAMFILES" Condition="NOT VersionNT64" Sequence="749"/>
+    <ROW Action="SetProperty" Sequence="79"/>
+    <ROW Action="SetProperty_1" Sequence="78"/>
+    <ROW Action="SetProperty_1_1" Sequence="76"/>
+    <ROW Action="SetProperty_1_1_1" Sequence="77"/>
+    <ROW Action="AI_DownloadPrereq" Sequence="1297"/>
+    <ROW Action="AI_ExtractPrereq" Sequence="1298"/>
+    <ROW Action="AI_InstallPrerequisite" Sequence="1299"/>
+    <ROW Action="AI_InstallPostPrerequisite" Sequence="1301"/>
+    <ROW Action="AI_AppSearchEx" Sequence="101"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiLaunchConditionsComponent">
+    <ROW Condition="(VersionNT &lt;&gt; 400)" Description="[ProductName] cannot be installed on [WindowsTypeNT40Display]." DescriptionLocId="AI.LaunchCondition.NoNT40" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT &lt;&gt; 500)" Description="[ProductName] cannot be installed on [WindowsTypeNT50Display]." DescriptionLocId="AI.LaunchCondition.NoNT50" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT64 OR ((VersionNT &lt;&gt; 501) OR (ServicePackLevel = 3))) AND ((VersionNT &lt;&gt; 502) OR (ServicePackLevel = 2))" Description="[ProductName] cannot be installed on [WindowsTypeNT5XDisplay]." DescriptionLocId="AI.LaunchCondition.NoNT5X" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="SETUPEXEDIR OR (REMOVE=&quot;ALL&quot;)" Description="This package can only be run from a bootstrapper." DescriptionLocId="AI.LaunchCondition.RequireBootstrapper" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="VersionNT" Description="[ProductName] cannot be installed on [WindowsType9XDisplay]." DescriptionLocId="AI.LaunchCondition.No9X" IsPredefined="true" Builds="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiRegLocatorComponent">
+    <ROW Signature_="AI_EXE_PATH_CU" Root="1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Type="2"/>
+    <ROW Signature_="AI_EXE_PATH_LM" Root="2" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Type="2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiRegsComponent">
+    <ROW Registry="AI_ExePath" Root="-1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Value="[AI_SETUPEXEPATH]" Component_="AI_ExePath"/>
+    <ROW Registry="B5158184F44A6981C5919229A6AEBE" Root="-1" Key="Software\Caphyon\Advanced Installer\Prereqs\[ProductCode]\[ProductVersion]" Name="B5158184F44A6981C5919229A6AEBE" Value="1" Component_="B5158184F44A6981C5919229A6AEBE"/>
+    <ROW Registry="Comments" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="Comments" Value="[ARPCOMMENTS]" Component_="AI_CustomARPName"/>
+    <ROW Registry="Contact" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="Contact" Value="[ARPCONTACT]" Component_="AI_CustomARPName"/>
+    <ROW Registry="D7E473DF14F3E98497864847195F2" Root="-1" Key="Software\Caphyon\Advanced Installer\Prereqs\[ProductCode]\[ProductVersion]" Name="D7E473DF14F3E98497864847195F2" Value="1" Component_="D7E473DF14F3E98497864847195F2"/>
+    <ROW Registry="DisplayIcon" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="DisplayIcon" Value="[ARP_ICON_PATH]" Component_="AI_CustomARPName"/>
+    <ROW Registry="DisplayName" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="DisplayName" Value="[AI_PRODUCTNAME_ARP]" Component_="AI_CustomARPName"/>
+    <ROW Registry="DisplayVersion" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="DisplayVersion" Value="[ProductVersion]" Component_="AI_CustomARPName"/>
+    <ROW Registry="EstimatedSize" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="EstimatedSize" Value="#[AI_ARP_SIZE]" Component_="AI_CustomARPName"/>
+    <ROW Registry="HelpLink" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="HelpLink" Value="[ARPHELPLINK]" Component_="AI_CustomARPName"/>
+    <ROW Registry="HelpTelephone" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="HelpTelephone" Value="[ARPHELPTELEPHONE]" Component_="AI_CustomARPName"/>
+    <ROW Registry="InstallLocation" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="InstallLocation" Value="[APPDIR]" Component_="AI_CustomARPName"/>
+    <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>
+    <ROW Registry="Publisher" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="Publisher" Value="[Manufacturer]" Component_="AI_CustomARPName"/>
+    <ROW Registry="URLInfoAbout" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="URLInfoAbout" Value="[ARPURLINFOABOUT]" Component_="AI_CustomARPName"/>
+    <ROW Registry="URLUpdateInfo" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="URLUpdateInfo" Value="[ARPURLUPDATEINFO]" Component_="AI_CustomARPName"/>
+    <ROW Registry="UninstallPath" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="UninstallPath" Value="[AI_UNINSTALLER] /i [ProductCode]" Component_="AI_CustomARPName"/>
+    <ROW Registry="UninstallString" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="UninstallString" Value="[AI_UNINSTALLER] /i [ProductCode]" Component_="AI_CustomARPName"/>
+    <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+    <ROW Registry="VersionMajor" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="VersionMajor" Value="#1" Component_="AI_CustomARPName"/>
+    <ROW Registry="VersionMinor" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="VersionMinor" Value="#0" Component_="AI_CustomARPName"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
+    <ROW Shortcut="StructureUserGuide" Directory_="Structure_Dir" Name="STRUCT~1|Structure User Guide" Component_="StructureUserGuide.pdf" Target="[#StructureUserGuide.pdf]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="Uninstall" Directory_="APPDIR" Name="UNINST~1|Uninstall" Component_="ProductInformation" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" Hotkey="0" Icon_="SystemFoldermsiexec.exe" IconIndex="0" ShowCmd="1"/>
+    <ROW Shortcut="Uninstall_1" Directory_="Structure_Dir" Name="UNINST~1|Uninstall" Component_="PlugIn.ico" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" Hotkey="0" Icon_="SystemFoldermsiexec.exe" IconIndex="0" ShowCmd="1"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiTextStyleComponent">
+    <ROW TextStyle="CfTitleFont" FaceName="Tahoma" Size="8" Color="0" StyleBits="0" MsiKey="CfTitleFont"/>
+    <ROW TextStyle="DlgFont8" FaceName="Tahoma" Size="8" Color="0" StyleBits="0" MsiKey="DlgFont8"/>
+    <ROW TextStyle="DlgFontBold8" FaceName="Tahoma" Size="8" Color="0" StyleBits="1" MsiKey="DlgFontBold8"/>
+    <ROW TextStyle="VerdanaBold13" FaceName="Verdana" Size="13" Color="0" StyleBits="1" MsiKey="VerdanaBold13"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
+    <ATTRIBUTE name="UsedTheme" value="classic"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiUpgradeComponent">
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMin="0.0.1" VersionMax="[|ProductVersion]" Attributes="257" ActionProperty="OLDPRODUCTS"/>
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMin="[|ProductVersion]" Attributes="2" ActionProperty="AI_NEWERPRODUCTFOUND"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.PreReqComponent">
+    <ROW PrereqKey="B5158184F44A6981C5919229A6AEBE" DisplayName="Visual C++ Redistributable for Visual Studio 2015 x64" VersionMin="14.0" SetupFileUrl="..\Full\Prerequisites\Visual C++ Redistributable for Visual Studio 2015\VC_2015u1_redist.x64.exe" Location="0" ExactSize="0" WinNTVersions="Windows 9x/ME/NT/2000/XP/Vista/Windows 7/Windows 8 x86/Windows 8.1 x86/Windows 10 x86" WinNT64Versions="Windows Vista x64, Windows Vista x64 Service Pack 1, Windows 7 x64, Windows Server 2008 R2 x64" Operator="1" NoUiComLine="/q /norestart" Options="x" TargetName="Visual C++ Redistributable for Visual Studio 2015\VC_2015u1_redist.x64.exe" Type="1" Feature="B5158184F44A6981C5919229A6AEBE"/>
+    <ROW PrereqKey="D7E473DF14F3E98497864847195F2" DisplayName="Visual C++ Redistributable for Visual Studio 2015 x86" VersionMin="14.0" SetupFileUrl="..\Full\Prerequisites\Visual C++ Redistributable for Visual Studio 2015\VC_2015u1_redist.x86.exe" Location="0" ExactSize="0" WinNTVersions="Windows Vista x86, Windows Vista x86 Service Pack 1, Windows 7 x86" WinNT64Versions="Windows Vista x64, Windows Vista x64 Service Pack 1, Windows 7 x64, Windows Server 2008 R2 x64" Operator="1" NoUiComLine="/q /norestart" TargetName="Visual C++ Redistributable for Visual Studio 2015\VC_2015u1_redist.x86.exe" Type="1" Feature="D7E473DF14F3E98497864847195F2"/>
+    <ATTRIBUTE name="PrereqsOrder" value="B5158184F44A6981C5919229A6AEBE D7E473DF14F3E98497864847195F2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.PreReqSearchComponent">
+    <ROW SearchKey="B5158184F44A6981C5919229A6AEBEVersion" Prereq="B5158184F44A6981C5919229A6AEBE" SearchType="2" SearchString="HKLM\SOFTWARE\Microsoft\DevDiv\VC\Servicing\14.0\RuntimeMinimum\Version" VerMin="14.0.23506" Order="1" Property="PreReqSearch_B5158184F44A6981C5919229A6AEBE" Platform="1"/>
+    <ROW SearchKey="D7E473DF14F3E98497864847195F2Version" Prereq="D7E473DF14F3E98497864847195F2" SearchType="2" SearchString="HKLM\SOFTWARE\Microsoft\DevDiv\VC\Servicing\14.0\RuntimeMinimum\Version" VerMin="14.0.23506" Order="1" Property="PreReqSearch_D7E473DF14F3E98497864847195F2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.SoftwareIdentificationComponent">
+    <ATTRIBUTE name="LocalFile" value="regid.199509.com.example_ProductName.swidtag"/>
+    <ATTRIBUTE name="SystemFile" value="regid.199509.com.example_ProductName.swidtag_1"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.XmlAttributeComponent">
+    <ROW XmlAttribute="xmlnsds" XmlElement="swidsoftware_identification_tag" Name="xmlns:ds" Flags="14" Order="0" Value="http://www.w3.org/2000/09/xmldsig#"/>
+    <ROW XmlAttribute="xmlnsswid" XmlElement="swidsoftware_identification_tag" Name="xmlns:swid" Flags="14" Order="1" Value="http://standards.iso.org/iso/19770/-2/2008/schema.xsd"/>
+    <ROW XmlAttribute="xmlnsxsi" XmlElement="swidsoftware_identification_tag" Name="xmlns:xsi" Flags="14" Order="2" Value="http://www.w3.org/2001/XMLSchema-instance"/>
+    <ROW XmlAttribute="xsischemaLocation" XmlElement="swidsoftware_identification_tag" Name="xsi:schemaLocation" Flags="14" Order="3" Value="http://standards.iso.org/iso/19770/-2/2008/schema.xsd software_identification_tag.xsd"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.XmlElementComponent">
+    <ROW XmlElement="swidbuild" ParentElement="swidnumeric" Name="swid:build" Condition="1" Order="2" Flags="14" Text="0"/>
+    <ROW XmlElement="swidentitlement_required_indicator" ParentElement="swidsoftware_identification_tag" Name="swid:entitlement_required_indicator" Condition="1" Order="0" Flags="14" Text="false"/>
+    <ROW XmlElement="swidmajor" ParentElement="swidnumeric" Name="swid:major" Condition="1" Order="0" Flags="14" Text="1"/>
+    <ROW XmlElement="swidminor" ParentElement="swidnumeric" Name="swid:minor" Condition="1" Order="1" Flags="14" Text="0"/>
+    <ROW XmlElement="swidname" ParentElement="swidproduct_version" Name="swid:name" Condition="1" Order="0" Flags="14" Text="[ProductVersion]"/>
+    <ROW XmlElement="swidname_1" ParentElement="swidsoftware_creator" Name="swid:name" Condition="1" Order="0" Flags="14" Text="[Manufacturer]"/>
+    <ROW XmlElement="swidname_2" ParentElement="swidsoftware_licensor" Name="swid:name" Condition="1" Order="0" Flags="14" Text="[Manufacturer]"/>
+    <ROW XmlElement="swidname_3" ParentElement="swidtag_creator" Name="swid:name" Condition="1" Order="0" Flags="14" Text="[Manufacturer]"/>
+    <ROW XmlElement="swidnumeric" ParentElement="swidproduct_version" Name="swid:numeric" Condition="1" Order="1" Flags="14"/>
+    <ROW XmlElement="swidproduct_title" ParentElement="swidsoftware_identification_tag" Name="swid:product_title" Condition="1" Order="1" Flags="14" Text="[ProductName]"/>
+    <ROW XmlElement="swidproduct_version" ParentElement="swidsoftware_identification_tag" Name="swid:product_version" Condition="1" Order="2" Flags="14"/>
+    <ROW XmlElement="swidregid" ParentElement="swidsoftware_creator" Name="swid:regid" Condition="1" Order="1" Flags="14" Text="regid.2015-07.com.audiovitamins"/>
+    <ROW XmlElement="swidregid_1" ParentElement="swidsoftware_licensor" Name="swid:regid" Condition="1" Order="1" Flags="14" Text="regid.2015-07.com.audiovitamins"/>
+    <ROW XmlElement="swidregid_2" ParentElement="swidtag_creator" Name="swid:regid" Condition="1" Order="1" Flags="14" Text="regid.2015-07.com.audiovitamins"/>
+    <ROW XmlElement="swidreview" ParentElement="swidnumeric" Name="swid:review" Condition="1" Order="3" Flags="14" Text="0"/>
+    <ROW XmlElement="swidsoftware_creator" ParentElement="swidsoftware_identification_tag" Name="swid:software_creator" Condition="1" Order="3" Flags="14"/>
+    <ROW XmlElement="swidsoftware_id" ParentElement="swidsoftware_identification_tag" Name="swid:software_id" Condition="1" Order="5" Flags="14"/>
+    <ROW XmlElement="swidsoftware_identification_tag" Name="swid:software_identification_tag" Condition="1" Order="0" Flags="14"/>
+    <ROW XmlElement="swidsoftware_licensor" ParentElement="swidsoftware_identification_tag" Name="swid:software_licensor" Condition="1" Order="4" Flags="14"/>
+    <ROW XmlElement="swidtag_creator" ParentElement="swidsoftware_identification_tag" Name="swid:tag_creator" Condition="1" Order="6" Flags="14"/>
+    <ROW XmlElement="swidtag_creator_regid" ParentElement="swidsoftware_id" Name="swid:tag_creator_regid" Condition="1" Order="1" Flags="14" Text="regid.2015-07.com.audiovitamins"/>
+    <ROW XmlElement="swidunique_id" ParentElement="swidsoftware_id" Name="swid:unique_id" Condition="1" Order="0" Flags="14" Text="[ProductName]"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.XmlFileComponent">
+    <ROW XmlFile="regid.199509.com.example_ProductName.swidtag" FileName="REGID2~1.SWI|regid.2015-07.com.audiovitamins_[|ProductName].swidtag" DirProperty="APPDIR" Component="ProductInformation" RootElement="swidsoftware_identification_tag" Flags="25" Version="1.0" Encoding="UTF-8" IndentUnits="2"/>
+    <ROW XmlFile="regid.199509.com.example_ProductName.swidtag_1" FileName="REGID2~1.SWI|regid.2015-07.com.audiovitamins_[|ProductName].swidtag" DirProperty="regid.201507.com.audiovitamins_Dir" Component="ProductInformation" RootElement="swidsoftware_identification_tag" Flags="25" Version="1.0" Encoding="UTF-8" IndentUnits="2"/>
+  </COMPONENT>
+</DOCUMENT>
