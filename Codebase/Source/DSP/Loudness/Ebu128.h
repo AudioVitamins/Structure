@@ -2,7 +2,7 @@
 #include "../../../JuceLibraryCode/JuceHeader.h"
 #include "../Filter/IIRFilter.h"
 
-#define SILENCE_DB -60
+#define SILENCE_DB -45
 class Ebu128Loudness {
 	SecondOrderFilter<float> preFilter; // Pre filter
 	SecondOrderFilter<float> revisedLowFrequencyBCurveFilter; // Rlb filter

@@ -16,7 +16,7 @@
 #include "DSP/Loudness/Ebu128.h"
 #include "PluginComunication/ManagePluginComunication.h"
 
-#define DEMO_VERSION  0
+#define DEMO_VERSION  1
 #define TEST_VERSION  0
 #define LOG_MODE 0
 #define PLUGIN_PORT 8001

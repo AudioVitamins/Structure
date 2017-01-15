@@ -1866,7 +1866,7 @@
 																				<key>GID</key>
 																				<integer>80</integer>
 																				<key>Path</key>
-																				<string>/_AudioVitamins/Structure/Build/Release-Full/Structure.aaxplugin</string>
+																				<string>/_AudioVitamins/Structure/Build/Release/AV-Structure.aaxplugin</string>
 																				<key>Path Type</key>
 																				<integer>1</integer>
 																				<key>Privileges</key>

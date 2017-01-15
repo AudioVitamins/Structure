@@ -105,7 +105,7 @@
                        xcodeVst3BinaryLocation="/_AudioVitamins/Structure/Build/Release"
                        xcodeAudioUnitBinaryLocation="/_AudioVitamins/Structure/Build/Release"
                        xcodeAaxBinaryLocation="/_AudioVitamins/Structure/Build/Release"
-                       osxCompatibility="10.6 SDK" cppLanguageStandard="c++11" cppLibType="libstdc++"/>
+                       osxCompatibility="10.8 SDK" cppLanguageStandard="c++11" cppLibType="libstdc++"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_video" path="../../_SDKS/JUCE/modules"/>
