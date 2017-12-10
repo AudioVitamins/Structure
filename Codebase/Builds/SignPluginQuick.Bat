@@ -1,1 +1,0 @@
-wraptool sign --verbose --account jimmyhung --password @Abc123hung --wcguid 9DF1CF10-A1ED-11E6-A442-005056A204F3 --keyfile AudioVitamins.p12 --keypassword AudioVitamins --in VisualStudio2015\Release_AAX\Structure.aaxplugin\Contents\x64\Structure.dll --out VisualStudio2015\Release_AAX\Structure.aaxplugin\Contents\x64\Structure.dll

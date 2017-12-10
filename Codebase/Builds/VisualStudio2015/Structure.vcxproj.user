@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VST|x64'">
-    <LocalDebuggerCommand>C:\Program Files\REAPER (x64)\reaper.exe</LocalDebuggerCommand>
-    <LocalDebuggerWorkingDirectory>C:\Program Files\REAPER (x64)\</LocalDebuggerWorkingDirectory>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-  </PropertyGroup>
-</Project>
