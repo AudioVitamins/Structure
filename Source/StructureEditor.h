@@ -49,7 +49,7 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 	void synGUI();
-	void updateActiveMode();
+//	void updateActiveMode();
 	void updateStateAnalysis();
 	void updateMetterValue();
 	void timerCallback();
@@ -84,8 +84,6 @@ public:
     static const int structureanalysegreenlight_pngSize;
     static const char* structureanalyseorangelight_png;
     static const int structureanalyseorangelight_pngSize;
-    static const char* structuredemoexpired_png;
-    static const int structuredemoexpired_pngSize;
 
 
 private:
@@ -99,15 +97,12 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> demoVersionlb;
     ScopedPointer<ImageButton> instrumentsBtn;
     ScopedPointer<ImageButton> busBtn;
     ScopedPointer<ImageButton> voxBtn;
     ScopedPointer<ImageButton> analyseBtn;
     ScopedPointer<ImageButton> allBtn;
     ScopedPointer<DotComponent> analyseDotCom;
-    ScopedPointer<Label> metterLbt;
-    ScopedPointer<ImageButton> demoLinkBtn;
     Image cachedImage_structureuibackground_png_1;
 
 
