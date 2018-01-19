@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="UtbO6R" name="Structure" projectType="audioplug" version="1.0.2"
-              bundleIdentifier="com.audiovitamins.com.Structure" includeBinaryInAppConfig="0"
-              buildVST="1" buildVST3="1" buildAU="1" buildAUv3="0" buildRTAS="0"
-              buildAAX="1" pluginName="Structure - Gain PLugin" pluginDesc="Structure - Gain PLugin"
-              pluginManufacturer="Audio Vitamins" pluginManufacturerCode="AuVi"
-              pluginCode="Strc" pluginChannelConfigs="{1, 1},{2, 2}" pluginIsSynth="0"
-              pluginWantsMidiIn="0" pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0"
-              pluginEditorRequiresKeys="0" pluginAUExportPrefix="StructureAU"
+<JUCERPROJECT id="UtbO6R" name="Structure - Gain Plugin" projectType="audioplug"
+              version="1.0.2" bundleIdentifier="com.audiovitamins.com.Structure"
+              includeBinaryInAppConfig="0" buildVST="1" buildVST3="1" buildAU="1"
+              buildAUv3="0" buildRTAS="0" buildAAX="1" pluginName="Structure - Gain PLugin"
+              pluginDesc="Structure - Gain PLugin" pluginManufacturer="Audio Vitamins"
+              pluginManufacturerCode="AuVi" pluginCode="Strc" pluginChannelConfigs="{1, 1},{2, 2}"
+              pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
+              pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="StructureAU"
               pluginRTASCategory="" aaxIdentifier="com.AudioVitamins.Structure"
               pluginAAXCategory="AAX_ePlugInCategory_None" jucerVersion="5.2.0"
               userNotes="Deveopment by HungJ.Com" companyName="Audio Vitamins"
@@ -15,14 +15,8 @@
               pluginVSTCategory="" buildStandalone="0" enableIAA="0" displaySplashScreen="0"
               reportAppUsage="0" splashScreenColour="Dark" cppLanguageStandard="11"
               companyCopyright="Audio Vitamins">
-  <MAINGROUP id="jkKiHq" name="Structure">
+  <MAINGROUP id="jkKiHq" name="Structure - Gain Plugin">
     <GROUP id="{5B268EE9-594D-A388-F09E-F1E90AFA7F9D}" name="Source">
-      <GROUP id="{579A58F0-5925-165D-FE4C-637416A37FE3}" name="Authentication">
-        <FILE id="WvihaS" name="Authentication.cpp" compile="1" resource="0"
-              file="Source/Authentication/Authentication.cpp"/>
-        <FILE id="qdGMlc" name="Authentication.h" compile="0" resource="0"
-              file="Source/Authentication/Authentication.h"/>
-      </GROUP>
       <GROUP id="{17E62069-73A5-3302-3968-DE5E7E51193B}" name="PluginCommunication">
         <FILE id="kic45S" name="ManagePluginComunication.cpp" compile="1" resource="0"
               file="Source/PluginComunication/ManagePluginComunication.cpp"/>

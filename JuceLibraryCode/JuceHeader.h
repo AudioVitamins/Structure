@@ -39,7 +39,7 @@
 #if ! JUCE_DONT_DECLARE_PROJECTINFO
 namespace ProjectInfo
 {
-    const char* const  projectName    = "Structure";
+    const char* const  projectName    = "Structure - Gain Plugin";
     const char* const  versionString  = "1.0.2";
     const int          versionNumber  = 0x10002;
 }

@@ -7,7 +7,7 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 4.2.3
+  Created with Projucer version: 5.2.0
 
   ------------------------------------------------------------------------------
 
@@ -66,10 +66,15 @@ void DotComponent::paint (Graphics& g)
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.setColour (Colours::black);
-    g.drawImage (cachedImage_structureanalyseorangelight_png_1,
-                 0, 0, 11, 11,
-                 0, 0, cachedImage_structureanalyseorangelight_png_1.getWidth(), cachedImage_structureanalyseorangelight_png_1.getHeight());
+    {
+        int x = 0, y = 0, width = 11, height = 11;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (Colours::black);
+        g.drawImage (cachedImage_structureanalyseorangelight_png_1,
+                     x, y, width, height,
+                     0, 0, cachedImage_structureanalyseorangelight_png_1.getWidth(), cachedImage_structureanalyseorangelight_png_1.getHeight());
+    }
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]

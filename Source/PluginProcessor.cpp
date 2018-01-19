@@ -15,10 +15,6 @@
 //==============================================================================
 StructureAudioProcessor::StructureAudioProcessor()
 {
-	//Log Start
-#if LOG_MODE == 1
-	JIMMY_LOGGER_ACTIVATE(Jimmy::DATA);
-#endif
 	sampleRate = 0.0f;
 	currentGainEbu128 = 0.0f;
 	samplesPerBlock = 0;
@@ -26,16 +22,6 @@ StructureAudioProcessor::StructureAudioProcessor()
 	analysisState = true;
 	manageCom = new ManagePluginComunication(*this, PLUGIN_PORT);
 	ebu128.addListener(this);
-#if DEMO_VERSION
-	authentication = new Authentication();
-#else
-	authentication = new Authentication(false);
-#endif
-	if(authentication->isValidDate()){
-		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "Valid\n");
-	} else {
-		JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "InValid\n");
-	}
 }
 
 StructureAudioProcessor::~StructureAudioProcessor()
@@ -144,13 +130,12 @@ bool StructureAudioProcessor::setPreferredBusArrangement (bool isInput, int bus,
 void StructureAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& )
 {
 	int expectedRequestRate = 20;
-	if (!authentication->isValidDate())  return;
 
 	if (analysisState) {
 		if (optionMode == BUS_GROUP_MODE) {
 			// Use delay
 			sampleIn3Sec += buffer.getNumSamples();
-			if (sampleIn3Sec > sampleRate * 3) {
+			if (sampleIn3Sec > sampleRate * 3.5) {
 			ebu128.processBlock(buffer);
 			}
 		}
@@ -161,8 +146,6 @@ void StructureAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
 	else {
 		sampleIn3Sec = 0;
 	}
-	
-	if (!analysisState && Ebu128Loudness::minimalReturnValue != currentGainEbu128) {
 		if (optionMode == INSTRUMENTS_MODE) {
 			float gain = Decibels::decibelsToGain<float>(- 27.0  - currentGainEbu128);
 			buffer.applyGain(gain);
@@ -175,7 +158,6 @@ void StructureAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
 			float gain = Decibels::decibelsToGain<float>(-20.0 - currentGainEbu128);
 			buffer.applyGain(gain);
 		}
-	}
 }
 
 //==============================================================================
@@ -241,7 +223,7 @@ void StructureAudioProcessor::pluginClientCallback(PluginClient *, PluginMessage
 	if (msg != nullptr && !msg->isError()) {
 		this->analysisState = msg->getAnalysisMode();
 		if (this->analysisState) {
-//			ResetMetter();
+			ResetMetter();
 		}
 	}
 }
@@ -264,20 +246,21 @@ void StructureAudioProcessor::pluginServerCenter(PluginServerConnection *pluginC
 				}
 			}
 		}
-	}
+	}  
 
 
 }
+
 void StructureAudioProcessor::finishAnalysis(Ebu128Loudness *ebu) {
-	analysisState = false;
-	currentGainEbu128 = ebu->getShortTermLoudness();
+    analysisState = false;
+    currentGainEbu128 = ebu->getShortTermLoudness();
 }
-void StructureAudioProcessor::startAnalysis(Ebu128Loudness *) {
+void StructureAudioProcessor::startAnalysis(Ebu128Loudness *ebu) {
 	analysisState = true;
-//	 currentGainEbu128 = 0.0;
 }
+
 void StructureAudioProcessor::ResetMetter() {
-//	suspendProcessing(true);
+	suspendProcessing(true);
 	ebu128.reset();
-//	suspendProcessing(false);
+	suspendProcessing(false);
 }

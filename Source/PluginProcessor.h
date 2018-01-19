@@ -12,15 +12,10 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "DSP/LogUtil.h"
 #include "DSP/Loudness/Ebu128.h"
 #include "PluginComunication/ManagePluginComunication.h"
 
-#define DEMO_VERSION  1
-#define TEST_VERSION  0
-#define LOG_MODE 0
 #define PLUGIN_PORT 8001
-#include "Authentication/Authentication.h"
 //==============================================================================
 /**
 */
@@ -93,7 +88,6 @@ public:
 	Ebu128Loudness ebu128;
 	ScopedPointer<ManagePluginComunication> manageCom;
 	double sampleIn3Sec;
-	ScopedPointer<Authentication> authentication;
 	void finishAnalysis(Ebu128Loudness *) override;
 	void startAnalysis(Ebu128Loudness *) override;
 	void ResetMetter();

@@ -7,7 +7,7 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 4.3.1
+  Created with Projucer version: 5.2.0
 
   ------------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
                                                   TRANS("14 DAY DEMO EXPIRED\n"
                                                   "Click here to visit audiovitamins.com\n"
                                                   "and to purchase structure")));
-    demoVersionlb->setFont (Font (15.00f, Font::bold));
+    demoVersionlb->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Bold"));
     demoVersionlb->setJustificationType (Justification::centred);
     demoVersionlb->setEditable (false, false, false);
     demoVersionlb->setColour (Label::backgroundColourId, Colour (0x00020000));
@@ -99,7 +99,7 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
     addAndMakeVisible (analyseDotCom = new DotComponent());
     addAndMakeVisible (metterLbt = new Label ("Meeter",
                                               TRANS("0.00 db")));
-    metterLbt->setFont (Font (15.00f, Font::plain));
+    metterLbt->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
     metterLbt->setJustificationType (Justification::centred);
     metterLbt->setEditable (false, false, false);
     metterLbt->setColour (Label::textColourId, Colours::white);
@@ -127,14 +127,6 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
     //[Constructor] You can add your own custom stuff here..
     synGUI();
     startTimer(50);
-    demoLinkBtn->setVisible(false);
-    demoVersionlb->setVisible(false);
-#if TEST_VERSION
-    metterLbt->setVisible(true);
-    synGUI();
-#else
-    metterLbt->setVisible(false);
-#endif
     //[/Constructor]
 }
 
@@ -166,10 +158,15 @@ void StructureAudioProcessorEditor::paint (Graphics& g)
 
     g.fillAll (Colours::white);
 
-    g.setColour (Colours::black);
-    g.drawImage (cachedImage_structureuibackground_png_1,
-                 0, 0, 260, 200,
-                 0, 0, cachedImage_structureuibackground_png_1.getWidth(), cachedImage_structureuibackground_png_1.getHeight());
+    {
+        int x = 0, y = 0, width = 260, height = 200;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (Colours::black);
+        g.drawImage (cachedImage_structureuibackground_png_1,
+                     x, y, width, height,
+                     0, 0, cachedImage_structureuibackground_png_1.getWidth(), cachedImage_structureuibackground_png_1.getHeight());
+    }
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -201,7 +198,6 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == instrumentsBtn)
     {
         //[UserButtonCode_instrumentsBtn] -- add your button handler code here..
-        JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "instrumentsBtn Pressed\n");
         buttonThatWasClicked->setToggleState(true, false);
         p->optionMode = INSTRUMENTS_MODE;
         //[/UserButtonCode_instrumentsBtn]
@@ -209,7 +205,6 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == busBtn)
     {
         //[UserButtonCode_busBtn] -- add your button handler code here..
-        JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "busBtn Pressed\n");
         buttonThatWasClicked->setToggleState(true, false);
         p->optionMode = VOX_LEAD_MODE;
         //[/UserButtonCode_busBtn]
@@ -217,7 +212,6 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == voxBtn)
     {
         //[UserButtonCode_voxBtn] -- add your button handler code here..
-        JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "voxBtn Pressed\n");
         buttonThatWasClicked->setToggleState(true, false);
         p->optionMode = BUS_GROUP_MODE;
         //[/UserButtonCode_voxBtn]
@@ -225,9 +219,7 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == analyseBtn)
     {
         //[UserButtonCode_analyseBtn] -- add your button handler code here..
-        JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "analyseBtn Pressed\n");
         p->analysisState = false;
-        p->ResetMetter();
         updateStateAnalysis();
         //buttonThatWasClicked->setToggleState(true, false);
         //[/UserButtonCode_analyseBtn]
@@ -235,9 +227,7 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == allBtn)
     {
         //[UserButtonCode_allBtn] -- add your button handler code here..
-        JIMMY_LOGGER_PRINT(JIMMY_LOGGER_DATA, "allBtn Pressed\n");
         p->analysisState = false;
-        p->ResetMetter();
         updateStateAnalysis();
         p->sendAnalysisAllMode();
         //buttonThatWasClicked->setToggleState(true, false);
@@ -246,7 +236,6 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == demoLinkBtn)
     {
         //[UserButtonCode_demoLinkBtn] -- add your button handler code here..
-        URL("https://www.audiovitamins.com/structure?utm_source=expireddemo&utm_medium=content&utm_campaign=demoversion").launchInDefaultBrowser();
         //[/UserButtonCode_demoLinkBtn]
     }
 
@@ -264,14 +253,6 @@ void StructureAudioProcessorEditor::timerCallback() {
 void StructureAudioProcessorEditor::synGUI() {
     updateActiveMode();
     updateStateAnalysis();
-    updateMetterValue();
-    updateDemoVersion();
-}
-void StructureAudioProcessorEditor::updateDemoVersion() {
-    if(!p->authentication->isValidDate()){
-        demoLinkBtn->setVisible(true);
-        demoVersionlb->setVisible(true);
-    }
 }
 void StructureAudioProcessorEditor::updateActiveMode() {
     int mode = p->optionMode;
@@ -323,11 +304,6 @@ void StructureAudioProcessorEditor::updateStateAnalysis() {
      }*/
 }
 
-void StructureAudioProcessorEditor::updateMetterValue() {
-    char text[100] = { 0 };
-    sprintf(text, "%2.2f Db", p->ebu128.getShortTermLoudness());
-    metterLbt->setText(text, NotificationType::dontSendNotification);
-}
 //[/MiscUserCode]
 
 
@@ -354,7 +330,8 @@ BEGIN_JUCER_METADATA
          textCol="ffff0000" outlineCol="0" edTextCol="ff000000" edBkgCol="0"
          hiliteCol="4012ff15" labelText="14 DAY DEMO EXPIRED&#10;Click here to visit audiovitamins.com&#10;and to purchase structure"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="15" bold="1" italic="0" justification="36"/>
+         fontname="Default font" fontsize="15" kerning="0" bold="1" italic="0"
+         justification="36" typefaceStyle="Bold"/>
   <IMAGEBUTTON name="Instruments" id="f158cac93ece10b3" memberName="instrumentsBtn"
                virtualName="" explicitFocusOrder="0" pos="29 8 44 60" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="1" keepProportions="1"
@@ -395,7 +372,7 @@ BEGIN_JUCER_METADATA
          explicitFocusOrder="0" pos="24 176 88 24" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="0.00 db" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" bold="0" italic="0" justification="36"/>
+         fontsize="15" kerning="0" bold="0" italic="0" justification="36"/>
   <IMAGEBUTTON name="Demo Link" id="ed1c245236e0e227" memberName="demoLinkBtn"
                virtualName="" explicitFocusOrder="0" pos="0 0 264 200" buttonText=""
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
