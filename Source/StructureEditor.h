@@ -22,6 +22,8 @@
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "./authorization/TrialDialog.h"
+#include "./authorization/AuthDialog.h"
 
 
 //[/Headers]
@@ -37,14 +39,15 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class StructureAudioProcessorEditor  : public AudioProcessorEditor,
-                                       public Timer,
+class StructureGUI  : public AudioProcessorEditor,
+                                       public MultiTimer,
+                                       public CptNotify,
                                        public Button::Listener
 {
 public:
     //==============================================================================
-    StructureAudioProcessorEditor (StructureAudioProcessor& p);
-    ~StructureAudioProcessorEditor();
+    StructureGUI (StructureAudioProcessor& p);
+    ~StructureGUI();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -52,7 +55,7 @@ public:
 //	void updateActiveMode();
 	void updateStateAnalysis();
 	void updateMetterValue();
-	void timerCallback();
+	void timerCallback(int timerID);
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -84,6 +87,10 @@ public:
     static const int structureanalysegreenlight_pngSize;
     static const char* structureanalyseorangelight_png;
     static const int structureanalyseorangelight_pngSize;
+    static const char* authorization_png;
+    static const int authorization_pngSize;
+    static const char* lock2small_png;
+    static const int lock2small_pngSize;
 
 
 private:
@@ -94,6 +101,19 @@ private:
 	Image redDownImg;
 	Image greenDownImg;
 	Image orangeDownImg;
+    //@AS
+    SeqGlob mGlob;
+    bool mUnlocked;// will be set true when we are unlocked
+    // if set to true then the authorize function will try to reauthorize if
+    // expired or within reauth period
+    bool mTryReauth;
+    // For trial dialog
+    SeqTrialDialog mTrialDialog;
+    SeqAuthDialog mAuthDlg;
+    // Inherited via CptNotify
+    virtual void cptValueChange(int cptId, int value) override;
+    void authorize();
+    void prepareAuthorization(bool allowRenew);
     //[/UserVariables]
 
     //==============================================================================
@@ -103,11 +123,12 @@ private:
     ScopedPointer<ImageButton> analyseBtn;
     ScopedPointer<ImageButton> allBtn;
     ScopedPointer<DotComponent> analyseDotCom;
+    ScopedPointer<ImageButton> mBtnUnlock;
     Image cachedImage_structureuibackground_png_1;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StructureAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StructureGUI)
 };
 
 //[EndFile] You can add extra defines here...

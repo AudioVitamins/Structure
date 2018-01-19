@@ -13,7 +13,18 @@
 
 
 //==============================================================================
-StructureAudioProcessor::StructureAudioProcessor()
+StructureAudioProcessor::StructureAudioProcessor() :
+#ifndef JucePlugin_PreferredChannelConfigurations
+    AudioProcessor (BusesProperties()
+    #if ! JucePlugin_IsMidiEffect
+        #if ! JucePlugin_IsSynth
+                    .withInput  ("Input",  AudioChannelSet::stereo(), true)
+        #endif
+                    .withOutput ("Output", AudioChannelSet::stereo(), true)
+        #endif
+                    ),
+    #endif
+mUnlocked(true)
 {
 	sampleRate = 0.0f;
 	currentGainEbu128 = 0.0f;
@@ -129,6 +140,10 @@ bool StructureAudioProcessor::setPreferredBusArrangement (bool isInput, int bus,
 
 void StructureAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& )
 {
+    //@AS
+    if (!mUnlocked)
+       return;
+ 
 	int expectedRequestRate = 20;
 
 	if (analysisState) {
@@ -168,7 +183,7 @@ bool StructureAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* StructureAudioProcessor::createEditor()
 {
-    return new StructureAudioProcessorEditor(*this);
+    return new StructureGUI(*this);
 }
 
 //==============================================================================

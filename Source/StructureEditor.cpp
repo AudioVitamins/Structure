@@ -21,14 +21,14 @@
 //[/Headers]
 
 #include "StructureEditor.h"
-
+#include "./authorization/auth.h"
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
 //==============================================================================
-StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProcessor& p)
-    : AudioProcessorEditor(p)
+StructureGUI::StructureGUI (StructureAudioProcessor& p)
+    : AudioProcessorEditor(p), mGlob(&p.mEditorState), mTrialDialog(&mGlob, this),mAuthDlg(&mGlob, this)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     this->p = &p;
@@ -83,6 +83,16 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
                        Image(), 1.000f, Colour (0x00000000),
                        ImageCache::getFromMemory (white_pushbutton_down_png, white_pushbutton_down_pngSize), 1.000f, Colour (0x00000000));
     addAndMakeVisible (analyseDotCom = new DotComponent());
+    
+    addAndMakeVisible (mBtnUnlock = new ImageButton ("unlock"));
+    mBtnUnlock->setButtonText (TRANS("new button"));
+    mBtnUnlock->addListener (this);
+
+    mBtnUnlock->setImages (false, true, true,
+                           ImageCache::getFromMemory (lock2small_png, lock2small_pngSize), 1.000f, Colour (0x00000000),
+                           Image(), 1.000f, Colour (0x00000000),
+                           Image(), 1.000f, Colour (0x00000000));
+    
     cachedImage_structureuibackground_png_1 = ImageCache::getFromMemory (structureuibackground_png, structureuibackground_pngSize);
 
     //[UserPreSize]
@@ -95,11 +105,19 @@ StructureAudioProcessorEditor::StructureAudioProcessorEditor (StructureAudioProc
 
     //[Constructor] You can add your own custom stuff here..
     synGUI();
-    startTimer(50);
+    startTimer(1,50);
+    startTimer(2, 3000); // licensing timer
+    
+       //@AS
+       addChildComponent(mTrialDialog);
+       addChildComponent(mAuthDlg);
+       fixColors(mGlob.mEditorState, this);
+       mUnlocked = false;
+       mTryReauth = false;
     //[/Constructor]
 }
 
-StructureAudioProcessorEditor::~StructureAudioProcessorEditor()
+StructureGUI::~StructureGUI()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
@@ -110,6 +128,7 @@ StructureAudioProcessorEditor::~StructureAudioProcessorEditor()
     analyseBtn = nullptr;
     allBtn = nullptr;
     analyseDotCom = nullptr;
+    mBtnUnlock = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -117,7 +136,7 @@ StructureAudioProcessorEditor::~StructureAudioProcessorEditor()
 }
 
 //==============================================================================
-void StructureAudioProcessorEditor::paint (Graphics& g)
+void StructureGUI::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -138,7 +157,7 @@ void StructureAudioProcessorEditor::paint (Graphics& g)
     //[/UserPaint]
 }
 
-void StructureAudioProcessorEditor::resized()
+void StructureGUI::resized()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
@@ -149,11 +168,12 @@ void StructureAudioProcessorEditor::resized()
     analyseBtn->setBounds (25, 111, 44, 44);
     allBtn->setBounds (76, 111, 44, 44);
     analyseDotCom->setBounds (40, 103, 11, 11);
+    mBtnUnlock->setBounds (8, 8, 18, 23);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
 
-void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
+void StructureGUI::buttonClicked (Button* buttonThatWasClicked)
 {
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
@@ -198,6 +218,14 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
         //buttonThatWasClicked->setToggleState(true, false);
         //[/UserButtonCode_allBtn]
     }
+    else if (buttonThatWasClicked == mBtnUnlock)
+    {
+        //[UserButtonCode_mBtnUnlock] -- add your button handler code here..
+        //@AS auth btn was pressed
+       mAuthDlg.openDialog();
+       mAuthDlg.doSetup();
+        //[/UserButtonCode_mBtnUnlock]
+    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -206,18 +234,25 @@ void StructureAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
-void StructureAudioProcessorEditor::timerCallback() {
+void StructureGUI::timerCallback(int timerID) {
+   if (timerID == 1) {
     synGUI();
     //p->sendAnalysisAllMode();
+   }
+   else if (timerID == 2) {
+       //@AS
+       stopTimer(2); // prevent firing again
+       authorize();
+   }
 }
-void StructureAudioProcessorEditor::synGUI() {
+void StructureGUI::synGUI() {
 //    updateActiveMode();
     updateStateAnalysis();
 }
-//void StructureAudioProcessorEditor::updateActiveMode() {
+//void StructureGUI::updateActiveMode() {
 //
 //}
-void StructureAudioProcessorEditor::updateStateAnalysis() {
+void StructureGUI::updateStateAnalysis() {
     bool state = p->analysisState;
     analyseDotCom->setMode(state);
     int mode = p->optionMode;
@@ -232,6 +267,122 @@ void StructureAudioProcessorEditor::updateStateAnalysis() {
     }
 }
 
+
+//@AS
+void StructureGUI::cptValueChange(int cptId, int value)
+{
+    switch (cptId) {
+        case SEQCTL_TRIALDIALOG:
+            mGlob.mEditorState->mShownTrialWindow = true; // only show it again if necessary
+            // try to unlock again in a few seconds
+            //(we need to do this to force a processor unlock)
+            prepareAuthorization(false); // don't contact server again
+            break;
+        default:
+            break;
+    }
+}		 
+
+void StructureGUI::authorize()
+{
+    
+    String trialText;
+    String authkey;
+    String uid, pwd;
+    String err;
+    bool unlockEngine = false;
+    mGlob.mEditorState->getUIDPWD(uid, pwd);
+    
+    // read main unlock code
+    seqReadKeyFromFile(authkey);
+    
+    // clear alert
+    //>>>setAlertText("");
+    
+    // authorize
+    if (authkey.length() && uid.length() && pwd.length()) {
+        int days = seqAuthorize(authkey, uid, err);
+        if (days > 0) {
+            // still valid, unlock the engine
+            unlockEngine = true;
+            mUnlocked = true;
+            
+            if (days < 8 && mTryReauth) {
+                // approaching expiration. try to get a new key from server
+                seqDoReauthorize(uid, pwd, err);
+                // try to unlock again in a few seconds
+                prepareAuthorization(false); // don't contact server again
+            }
+            else if (days < 5 && !mTryReauth) {
+                // must have failed to get a key. warn the user
+                /*>>>
+                 setAlertText("Your authorization key is approaching expiration, and Life has "
+                 "been unable to contact the server to renew the key. Your key is still valid, but will expire "
+                 " in a few days. Please click unlock icon to resolve the issue.");
+                 */
+            }
+        }
+        else {
+            // license expired
+            if (!mTryReauth) {
+                trialText = "Your authorization key has expired, and Life has "
+                "been unable to contact the server to renew the key. Please click Registration "
+                "to resolve the issue.";
+                goto trial_mode;
+            }
+            else {
+                // try to reauthorize then come back thru here to unlock again
+                seqDoReauthorize(uid, pwd, err);
+                // try to unlock again in a few seconds
+                prepareAuthorization(false); // don't contact server again
+            }
+            
+        }
+    }
+    else {
+        int days = 0;
+        // no unlock code/uid/pwd is present, see if we have trial unlock
+        if (seqReadKeyFromFile(authkey, true)) { // try to read trial key
+            // is it valid?
+            days = seqAuthorize(authkey, uid, err, true);
+            if (days > 0) {
+                // still valid, unlock the engine
+                unlockEngine = true;
+                mUnlocked = true;
+                
+            }
+        }
+        // will still show trial mode dialog once
+        if (days) { // if they have days left on the trial
+            if (!mGlob.mEditorState->mShownTrialWindow) {
+                // and we havent shown the trial window
+                mGlob.mEditorState->mShownTrialWindow = true;
+                goto trial_mode; //show it once
+                // otherwise we dont show it again
+            }
+        }
+        else
+            goto trial_mode;
+    }
+    mUnlocked = unlockEngine;
+    
+    return;
+trial_mode:
+    
+    mUnlocked = unlockEngine;
+    mTrialDialog.doSetup(trialText);
+    mTrialDialog.openDialog();
+    return;
+    
+}
+
+void StructureGUI::prepareAuthorization(bool allowRenew)
+{
+    mTryReauth = allowRenew;
+    startTimer(2, 3000);
+    // authorize will be called in 3 seconds
+}
+
 //[/MiscUserCode]
 
 
@@ -244,9 +395,9 @@ void StructureAudioProcessorEditor::updateStateAnalysis() {
 
 BEGIN_JUCER_METADATA
 
-<JUCER_COMPONENT documentType="Component" className="StructureAudioProcessorEditor"
+<JUCER_COMPONENT documentType="Component" className="StructureGUI"
                  componentName="" parentClasses="public AudioProcessorEditor, public Timer"
-                 constructorParams="StructureAudioProcessor&amp; p" variableInitialisers="AudioProcessorEditor(p)"
+                 constructorParams="StructureAudioProcessor&amp; p" variableInitialisers="AudioProcessorEditor(p), mGlob(&amp;p.mEditorState), mTrialDialog(&amp;mGlob, this),mAuthDlg(&amp;mGlob, this)"
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="1" initialWidth="260" initialHeight="200">
   <BACKGROUND backgroundColour="ffffffff">
@@ -286,6 +437,12 @@ BEGIN_JUCER_METADATA
                resourceNormal="white_pushbutton_up_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="white_pushbutton_down_png"
                opacityDown="1" colourDown="0"/>
+ <IMAGEBUTTON name="unlock" id="38b1718aad540836" memberName="mBtnUnlock" virtualName=""
+               explicitFocusOrder="0" pos="8 8 18 23" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="lock2small_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown=""
+               opacityDown="1" colourDown="0"/>
   <JUCERCOMP name="" id="59319dd7a237afb9" memberName="analyseDotCom" virtualName=""
              explicitFocusOrder="0" pos="40 103 11 11" sourceFile="DotComponent.cpp"
              constructorParams=""/>
@@ -299,7 +456,7 @@ END_JUCER_METADATA
 // Binary resources - be careful not to edit any of these sections!
 
 // JUCER_RESOURCE: structureuibackground_png, 10134, "../Graphics/structure-UI-background.png"
-static const unsigned char resource_StructureAudioProcessorEditor_structureuibackground_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,4,0,0,0,200,8,2,0,0,0,129,55,8,38,0,0,0,25,116,69,
+static const unsigned char resource_StructureGUI_structureuibackground_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,4,0,0,0,200,8,2,0,0,0,129,55,8,38,0,0,0,25,116,69,
 88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,3,107,105,84,88,116,88,77,76,58,99,111,109,46,97,100,111,98,101,46,120,109,112,0,0,0,
 0,0,60,63,120,112,97,99,107,101,116,32,98,101,103,105,110,61,34,239,187,191,34,32,105,100,61,34,87,53,77,48,77,112,67,101,104,105,72,122,114,101,83,122,78,84,99,122,107,99,57,100,34,63,62,32,60,120,58,
 120,109,112,109,101,116,97,32,120,109,108,110,115,58,120,61,34,97,100,111,98,101,58,110,115,58,109,101,116,97,47,34,32,120,58,120,109,112,116,107,61,34,65,100,111,98,101,32,88,77,80,32,67,111,114,101,
@@ -479,11 +636,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_structureuibac
 64,16,20,3,130,160,24,16,4,197,128,32,40,6,4,65,49,32,8,138,1,65,80,12,8,130,98,64,16,20,3,130,160,24,16,4,197,128,32,40,6,4,65,49,32,8,138,1,65,80,12,8,130,98,64,144,139,202,255,11,48,0,34,165,119,160,
 242,29,196,156,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::structureuibackground_png = (const char*) resource_StructureAudioProcessorEditor_structureuibackground_png;
-const int StructureAudioProcessorEditor::structureuibackground_pngSize = 10134;
+const char* StructureGUI::structureuibackground_png = (const char*) resource_StructureGUI_structureuibackground_png;
+const int StructureGUI::structureuibackground_pngSize = 10134;
 
 // JUCER_RESOURCE: white_pushbutton_44x60_down_png, 1100, "../Graphics/white_pushbutton_44x60_DOWN.png"
-static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutton_44x60_down_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,4,19,
+static const unsigned char resource_StructureGUI_white_pushbutton_44x60_down_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,4,19,
 73,68,65,84,120,218,237,89,59,75,107,65,16,54,55,254,6,91,155,84,22,90,137,133,133,101,138,32,8,169,98,107,42,95,24,109,2,22,233,197,252,5,177,22,252,23,17,44,44,84,240,253,170,20,193,70,140,138,221,222,
 59,7,70,190,251,57,187,39,123,224,114,155,29,24,246,145,125,124,103,102,118,102,118,51,52,148,40,81,162,68,137,18,37,74,148,40,81,162,68,255,156,58,157,78,169,92,46,87,134,135,135,235,179,179,179,205,
 173,173,173,150,114,183,219,53,217,250,29,219,131,172,225,91,183,86,171,53,75,165,82,93,48,9,182,31,128,103,102,102,126,77,78,78,46,29,30,30,190,126,126,126,58,225,126,191,239,222,222,222,178,50,143,223,
@@ -504,11 +661,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutt
 141,199,199,199,151,228,17,121,111,111,207,117,187,221,236,185,115,125,125,221,109,108,108,100,101,136,101,12,142,27,100,142,197,173,86,75,158,88,51,176,115,115,115,175,35,35,35,246,131,182,254,101,32,
 207,244,19,19,19,205,106,181,186,54,61,61,221,154,154,154,250,31,188,54,58,58,26,254,203,32,81,162,68,137,76,250,13,29,194,4,160,40,191,111,191,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::white_pushbutton_44x60_down_png = (const char*) resource_StructureAudioProcessorEditor_white_pushbutton_44x60_down_png;
-const int StructureAudioProcessorEditor::white_pushbutton_44x60_down_pngSize = 1100;
+const char* StructureGUI::white_pushbutton_44x60_down_png = (const char*) resource_StructureGUI_white_pushbutton_44x60_down_png;
+const int StructureGUI::white_pushbutton_44x60_down_pngSize = 1100;
 
 // JUCER_RESOURCE: white_pushbutton_44x60_up_png, 1462, "../Graphics/white_pushbutton_44x60_UP.png"
-static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutton_44x60_up_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,5,125,73,
+static const unsigned char resource_StructureGUI_white_pushbutton_44x60_up_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,5,125,73,
 68,65,84,120,218,237,89,73,76,45,69,20,253,240,222,3,30,200,188,17,48,34,145,40,159,25,69,241,75,8,107,35,134,152,152,56,96,32,249,95,23,63,186,49,138,186,99,227,130,192,91,96,88,18,150,172,16,129,72,
 100,122,184,32,65,25,18,32,64,8,243,60,207,32,67,144,225,122,111,231,23,169,46,170,7,26,196,191,232,74,78,170,187,234,118,213,169,91,167,110,85,119,63,120,96,39,59,217,201,78,118,178,147,157,236,100,39,
 59,217,201,78,255,121,42,41,41,241,113,56,28,241,78,167,243,163,252,252,252,47,61,30,207,183,229,229,229,223,149,149,149,21,223,55,74,75,75,139,243,242,242,158,34,151,79,145,211,195,216,216,88,39,241,
@@ -536,11 +693,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutt
 98,52,253,46,192,153,119,73,255,38,209,2,36,111,7,6,6,190,64,163,66,132,255,15,8,163,31,49,33,33,33,110,34,74,206,180,255,245,217,73,146,254,5,167,22,80,135,99,220,211,169,0,0,0,0,73,69,78,68,174,66,96,
 130,0,0};
 
-const char* StructureAudioProcessorEditor::white_pushbutton_44x60_up_png = (const char*) resource_StructureAudioProcessorEditor_white_pushbutton_44x60_up_png;
-const int StructureAudioProcessorEditor::white_pushbutton_44x60_up_pngSize = 1462;
+const char* StructureGUI::white_pushbutton_44x60_up_png = (const char*) resource_StructureGUI_white_pushbutton_44x60_up_png;
+const int StructureGUI::white_pushbutton_44x60_up_pngSize = 1462;
 
 // JUCER_RESOURCE: white_pushbutton_greenLed_png, 1738, "../Graphics/white_pushbutton_greenLED.png"
-static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutton_greenLed_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,6,145,73,
+static const unsigned char resource_StructureGUI_white_pushbutton_greenLed_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,6,145,73,
 68,65,84,120,218,237,89,91,76,84,71,24,22,118,151,221,133,46,215,196,10,107,189,117,91,145,171,88,170,34,34,173,109,140,22,8,154,152,212,150,70,26,47,177,70,31,122,17,109,250,32,105,177,13,17,30,104,124,
 84,251,210,210,54,161,20,72,105,65,118,233,3,45,45,106,162,70,9,145,155,32,10,222,65,40,106,40,232,223,255,63,113,232,236,48,231,156,101,53,116,211,236,36,95,206,57,51,255,153,249,230,159,111,254,153,
 115,102,214,44,127,242,39,127,242,39,127,250,223,36,139,197,18,102,182,25,14,134,219,131,93,4,179,205,116,144,242,124,146,172,209,104,124,110,78,108,104,223,170,119,23,193,198,207,146,97,83,81,50,100,
@@ -573,11 +730,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutt
 78,61,35,177,35,210,103,16,212,94,218,227,163,130,197,116,78,77,199,5,56,242,38,233,105,18,77,64,242,118,112,112,240,51,212,43,68,196,127,128,112,58,136,9,13,13,181,18,81,114,166,255,172,207,159,36,233,
 31,90,52,195,2,219,228,147,18,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::white_pushbutton_greenLed_png = (const char*) resource_StructureAudioProcessorEditor_white_pushbutton_greenLed_png;
-const int StructureAudioProcessorEditor::white_pushbutton_greenLed_pngSize = 1738;
+const char* StructureGUI::white_pushbutton_greenLed_png = (const char*) resource_StructureGUI_white_pushbutton_greenLed_png;
+const int StructureGUI::white_pushbutton_greenLed_pngSize = 1738;
 
 // JUCER_RESOURCE: white_pushbutton_orangeLed_png, 1742, "../Graphics/white_pushbutton_orangeLED.png"
-static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutton_orangeLed_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,6,149,
+static const unsigned char resource_StructureGUI_white_pushbutton_orangeLed_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,6,149,
 73,68,65,84,120,218,237,89,93,76,84,71,20,118,217,93,150,5,97,249,73,81,192,34,91,137,34,44,2,22,4,75,141,15,77,218,24,168,84,219,164,63,180,146,150,246,65,107,210,84,107,219,39,73,90,99,141,238,3,198,
 38,109,130,60,210,164,161,8,180,180,8,187,180,9,137,45,74,130,68,141,1,65,229,95,69,20,65,192,88,209,211,115,110,29,50,59,204,189,119,89,13,221,52,59,201,151,123,239,204,185,51,223,156,249,230,204,220,
 59,75,150,4,82,32,5,82,32,5,210,255,38,133,132,132,216,194,195,140,251,19,99,45,110,130,13,239,41,207,47,201,154,76,166,103,211,146,66,6,118,109,93,14,229,59,237,112,116,151,29,118,23,197,131,35,41,180,
@@ -610,11 +767,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutt
 118,68,254,34,130,218,219,248,248,168,96,13,157,83,211,113,1,142,188,89,122,154,68,19,144,188,29,26,26,186,148,122,133,136,250,15,16,73,7,49,17,17,17,86,34,74,206,12,156,245,5,146,36,253,3,171,106,200,
 139,247,115,204,149,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::white_pushbutton_orangeLed_png = (const char*) resource_StructureAudioProcessorEditor_white_pushbutton_orangeLed_png;
-const int StructureAudioProcessorEditor::white_pushbutton_orangeLed_pngSize = 1742;
+const char* StructureGUI::white_pushbutton_orangeLed_png = (const char*) resource_StructureGUI_white_pushbutton_orangeLed_png;
+const int StructureGUI::white_pushbutton_orangeLed_pngSize = 1742;
 
 // JUCER_RESOURCE: white_pushbutton_orangeLed_down_png, 1420, "../Graphics/white_pushbutton_orangeLED_DOWN.png"
-static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutton_orangeLed_down_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,5,
+static const unsigned char resource_StructureGUI_white_pushbutton_orangeLed_down_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,60,8,6,0,0,0,29,82,88,154,0,0,5,
 83,73,68,65,84,120,218,237,89,95,72,100,101,20,223,113,180,49,183,116,41,154,221,150,242,79,73,109,174,57,177,52,105,24,248,16,36,49,232,218,206,147,66,68,56,47,141,127,218,25,95,4,97,133,138,13,196,129,
 13,130,130,54,241,165,32,195,254,97,15,101,209,139,130,144,132,10,254,255,23,129,34,107,144,249,15,31,22,78,115,110,28,57,157,206,119,103,238,125,105,136,251,193,225,251,115,207,253,190,223,61,231,124,
 231,156,239,187,103,206,120,197,43,94,241,138,87,254,55,165,176,176,176,228,254,179,254,27,165,193,192,15,72,37,233,54,142,229,36,216,252,252,252,71,47,151,23,254,22,111,190,0,183,222,168,128,247,226,
@@ -641,11 +798,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutt
 221,153,76,38,161,167,167,199,170,237,8,121,56,95,54,239,104,148,72,36,240,138,213,2,219,210,210,178,23,12,6,245,11,109,250,101,128,215,244,161,80,40,214,216,216,120,189,190,190,62,81,91,91,251,95,208,
 245,178,178,50,251,95,6,94,241,138,87,188,162,150,191,0,34,22,124,164,176,254,14,186,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::white_pushbutton_orangeLed_down_png = (const char*) resource_StructureAudioProcessorEditor_white_pushbutton_orangeLed_down_png;
-const int StructureAudioProcessorEditor::white_pushbutton_orangeLed_down_pngSize = 1420;
+const char* StructureGUI::white_pushbutton_orangeLed_down_png = (const char*) resource_StructureGUI_white_pushbutton_orangeLed_down_png;
+const int StructureGUI::white_pushbutton_orangeLed_down_pngSize = 1420;
 
 // JUCER_RESOURCE: white_pushbutton_redled_36x36_down_png, 2644, "../Graphics/white_pushbutton_REDLED_36x36_DOWN.png"
-static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutton_redled_36x36_down_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,50,8,6,0,0,0,39,88,57,234,0,
+static const unsigned char resource_StructureGUI_white_pushbutton_redled_36x36_down_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,50,8,6,0,0,0,39,88,57,234,0,
 0,0,25,116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,3,35,105,84,88,116,88,77,76,58,99,111,109,46,97,100,111,98,101,46,120,109,
 112,0,0,0,0,0,60,63,120,112,97,99,107,101,116,32,98,101,103,105,110,61,34,239,187,191,34,32,105,100,61,34,87,53,77,48,77,112,67,101,104,105,72,122,114,101,83,122,78,84,99,122,107,99,57,100,34,63,62,32,
 60,120,58,120,109,112,109,101,116,97,32,120,109,108,110,115,58,120,61,34,97,100,111,98,101,58,110,115,58,109,101,116,97,47,34,32,120,58,120,109,112,116,107,61,34,65,100,111,98,101,32,88,77,80,32,67,111,
@@ -693,11 +850,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutt
 220,160,13,152,189,4,191,225,190,108,67,73,254,94,57,96,104,89,0,154,128,118,4,49,149,12,135,195,41,153,233,142,199,199,199,83,209,104,52,3,38,137,231,114,57,7,2,225,66,92,2,1,131,11,20,192,53,243,16,
 95,249,254,254,254,194,218,218,218,241,127,2,12,0,201,218,221,109,193,187,245,183,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::white_pushbutton_redled_36x36_down_png = (const char*) resource_StructureAudioProcessorEditor_white_pushbutton_redled_36x36_down_png;
-const int StructureAudioProcessorEditor::white_pushbutton_redled_36x36_down_pngSize = 2644;
+const char* StructureGUI::white_pushbutton_redled_36x36_down_png = (const char*) resource_StructureGUI_white_pushbutton_redled_36x36_down_png;
+const int StructureGUI::white_pushbutton_redled_36x36_down_pngSize = 2644;
 
 // JUCER_RESOURCE: white_pushbutton_redled_36x36_up_png, 2475, "../Graphics/white_pushbutton_REDLED_36x36_UP.png"
-static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutton_redled_36x36_up_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,50,8,6,0,0,0,39,88,57,234,0,0,
+static const unsigned char resource_StructureGUI_white_pushbutton_redled_36x36_up_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,50,8,6,0,0,0,39,88,57,234,0,0,
 0,25,116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,3,35,105,84,88,116,88,77,76,58,99,111,109,46,97,100,111,98,101,46,120,109,
 112,0,0,0,0,0,60,63,120,112,97,99,107,101,116,32,98,101,103,105,110,61,34,239,187,191,34,32,105,100,61,34,87,53,77,48,77,112,67,101,104,105,72,122,114,101,83,122,78,84,99,122,107,99,57,100,34,63,62,32,
 60,120,58,120,109,112,109,101,116,97,32,120,109,108,110,115,58,120,61,34,97,100,111,98,101,58,110,115,58,109,101,116,97,47,34,32,120,58,120,109,112,116,107,61,34,65,100,111,98,101,32,88,77,80,32,67,111,
@@ -742,11 +899,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutt
 13,172,38,96,133,61,240,46,238,255,125,13,221,53,96,95,174,0,104,17,228,60,18,137,148,122,123,123,203,210,75,212,103,102,102,202,43,43,43,21,240,18,121,48,130,8,108,81,196,220,207,159,36,23,84,160,22,
 141,70,171,96,95,213,225,225,225,218,246,246,118,253,111,1,6,0,204,118,42,71,56,207,249,143,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::white_pushbutton_redled_36x36_up_png = (const char*) resource_StructureAudioProcessorEditor_white_pushbutton_redled_36x36_up_png;
-const int StructureAudioProcessorEditor::white_pushbutton_redled_36x36_up_pngSize = 2475;
+const char* StructureGUI::white_pushbutton_redled_36x36_up_png = (const char*) resource_StructureGUI_white_pushbutton_redled_36x36_up_png;
+const int StructureGUI::white_pushbutton_redled_36x36_up_pngSize = 2475;
 
 // JUCER_RESOURCE: white_pushbutton_down_png, 1958, "../Graphics/white_pushbutton_DOWN.png"
-static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutton_down_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,44,8,6,0,0,0,30,132,90,1,0,0,0,25,116,69,
+static const unsigned char resource_StructureGUI_white_pushbutton_down_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,44,8,6,0,0,0,30,132,90,1,0,0,0,25,116,69,
 88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,3,35,105,84,88,116,88,77,76,58,99,111,109,46,97,100,111,98,101,46,120,109,112,0,0,0,0,
 0,60,63,120,112,97,99,107,101,116,32,98,101,103,105,110,61,34,239,187,191,34,32,105,100,61,34,87,53,77,48,77,112,67,101,104,105,72,122,114,101,83,122,78,84,99,122,107,99,57,100,34,63,62,32,60,120,58,120,
 109,112,109,101,116,97,32,120,109,108,110,115,58,120,61,34,97,100,111,98,101,58,110,115,58,109,101,116,97,47,34,32,120,58,120,109,112,116,107,61,34,65,100,111,98,101,32,88,77,80,32,67,111,114,101,32,53,
@@ -782,11 +939,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutt
 223,0,0,186,211,233,116,207,206,206,218,71,71,71,7,243,243,243,97,192,171,171,171,189,122,189,254,109,103,103,231,231,191,240,151,129,224,25,255,139,52,6,60,6,252,193,199,47,1,6,0,25,133,145,233,137,2,
 73,187,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::white_pushbutton_down_png = (const char*) resource_StructureAudioProcessorEditor_white_pushbutton_down_png;
-const int StructureAudioProcessorEditor::white_pushbutton_down_pngSize = 1958;
+const char* StructureGUI::white_pushbutton_down_png = (const char*) resource_StructureGUI_white_pushbutton_down_png;
+const int StructureGUI::white_pushbutton_down_pngSize = 1958;
 
 // JUCER_RESOURCE: white_pushbutton_up_png, 2311, "../Graphics/white_pushbutton_UP.png"
-static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutton_up_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,44,8,6,0,0,0,30,132,90,1,0,0,0,25,116,69,88,
+static const unsigned char resource_StructureGUI_white_pushbutton_up_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,44,0,0,0,44,8,6,0,0,0,30,132,90,1,0,0,0,25,116,69,88,
 116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,3,35,105,84,88,116,88,77,76,58,99,111,109,46,97,100,111,98,101,46,120,109,112,0,0,0,0,0,
 60,63,120,112,97,99,107,101,116,32,98,101,103,105,110,61,34,239,187,191,34,32,105,100,61,34,87,53,77,48,77,112,67,101,104,105,72,122,114,101,83,122,78,84,99,122,107,99,57,100,34,63,62,32,60,120,58,120,
 109,112,109,101,116,97,32,120,109,108,110,115,58,120,61,34,97,100,111,98,101,58,110,115,58,109,101,116,97,47,34,32,120,58,120,109,112,116,107,61,34,65,100,111,98,101,32,88,77,80,32,67,111,114,101,32,53,
@@ -828,11 +985,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_white_pushbutt
 28,22,103,107,107,171,124,115,115,83,131,77,80,194,36,50,20,212,112,252,141,0,187,196,225,6,3,160,14,48,219,232,235,235,115,22,22,22,26,109,110,141,89,216,240,74,149,26,151,151,151,223,10,172,90,95,95,
 55,186,162,255,5,24,0,240,219,213,177,127,113,203,120,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::white_pushbutton_up_png = (const char*) resource_StructureAudioProcessorEditor_white_pushbutton_up_png;
-const int StructureAudioProcessorEditor::white_pushbutton_up_pngSize = 2311;
+const char* StructureGUI::white_pushbutton_up_png = (const char*) resource_StructureGUI_white_pushbutton_up_png;
+const int StructureGUI::white_pushbutton_up_pngSize = 2311;
 
 // JUCER_RESOURCE: structureanalysegreenlight_png, 1501, "../Graphics/structure-analyse-greenlight.png"
-static const unsigned char resource_StructureAudioProcessorEditor_structureanalysegreenlight_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,13,0,0,0,13,8,6,0,0,0,114,235,228,124,0,0,0,25,
+static const unsigned char resource_StructureGUI_structureanalysegreenlight_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,13,0,0,0,13,8,6,0,0,0,114,235,228,124,0,0,0,25,
 116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,3,107,105,84,88,116,88,77,76,58,99,111,109,46,97,100,111,98,101,46,120,109,112,
 0,0,0,0,0,60,63,120,112,97,99,107,101,116,32,98,101,103,105,110,61,34,239,187,191,34,32,105,100,61,34,87,53,77,48,77,112,67,101,104,105,72,122,114,101,83,122,78,84,99,122,107,99,57,100,34,63,62,32,60,
 120,58,120,109,112,109,101,116,97,32,120,109,108,110,115,58,120,61,34,97,100,111,98,101,58,110,115,58,109,101,116,97,47,34,32,120,58,120,109,112,116,107,61,34,65,100,111,98,101,32,88,77,80,32,67,111,114,
@@ -860,11 +1017,11 @@ static const unsigned char resource_StructureAudioProcessorEditor_structureanaly
 62,196,56,182,147,195,101,223,14,222,146,221,219,156,137,234,255,190,81,24,97,225,212,208,173,1,225,166,86,185,190,154,10,94,95,249,38,55,245,224,151,0,3,0,111,20,244,220,38,158,66,48,0,0,0,0,73,69,78,
 68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::structureanalysegreenlight_png = (const char*) resource_StructureAudioProcessorEditor_structureanalysegreenlight_png;
-const int StructureAudioProcessorEditor::structureanalysegreenlight_pngSize = 1501;
+const char* StructureGUI::structureanalysegreenlight_png = (const char*) resource_StructureGUI_structureanalysegreenlight_png;
+const int StructureGUI::structureanalysegreenlight_pngSize = 1501;
 
 // JUCER_RESOURCE: structureanalyseorangelight_png, 1530, "../Graphics/structure-analyse-orangelight.png"
-static const unsigned char resource_StructureAudioProcessorEditor_structureanalyseorangelight_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,13,0,0,0,13,8,6,0,0,0,114,235,228,124,0,0,0,
+static const unsigned char resource_StructureGUI_structureanalyseorangelight_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,13,0,0,0,13,8,6,0,0,0,114,235,228,124,0,0,0,
 25,116,69,88,116,83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,3,107,105,84,88,116,88,77,76,58,99,111,109,46,97,100,111,98,101,46,120,109,
 112,0,0,0,0,0,60,63,120,112,97,99,107,101,116,32,98,101,103,105,110,61,34,239,187,191,34,32,105,100,61,34,87,53,77,48,77,112,67,101,104,105,72,122,114,101,83,122,78,84,99,122,107,99,57,100,34,63,62,32,
 60,120,58,120,109,112,109,101,116,97,32,120,109,108,110,115,58,120,61,34,97,100,111,98,101,58,110,115,58,109,101,116,97,47,34,32,120,58,120,109,112,116,107,61,34,65,100,111,98,101,32,88,77,80,32,67,111,
@@ -892,8 +1049,258 @@ static const unsigned char resource_StructureAudioProcessorEditor_structureanaly
 196,73,219,22,214,152,187,160,153,52,255,223,143,56,100,32,253,253,32,123,89,211,141,124,172,70,135,185,16,117,4,120,13,230,253,50,4,239,238,97,67,40,130,12,124,163,32,98,29,20,9,69,113,242,225,113,73,
 82,155,162,109,14,177,197,251,63,108,37,232,9,253,135,251,45,192,0,212,121,6,252,66,5,242,75,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* StructureAudioProcessorEditor::structureanalyseorangelight_png = (const char*) resource_StructureAudioProcessorEditor_structureanalyseorangelight_png;
-const int StructureAudioProcessorEditor::structureanalyseorangelight_pngSize = 1530;
+const char* StructureGUI::structureanalyseorangelight_png = (const char*) resource_StructureGUI_structureanalyseorangelight_png;
+const int StructureGUI::structureanalyseorangelight_pngSize = 1530;
+
+// JUCER_RESOURCE: authorization_png, 7678, "../Graphics/structure-auth-UI.png"
+static const unsigned char resource_StructureGUI_authorization_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,4,0,0,0,200,8,2,0,0,0,129,55,8,38,0,0,0,25,116,69,88,116,
+    83,111,102,116,119,97,114,101,0,65,100,111,98,101,32,73,109,97,103,101,82,101,97,100,121,113,201,101,60,0,0,3,107,105,84,88,116,88,77,76,58,99,111,109,46,97,100,111,98,101,46,120,109,112,0,0,0,0,0,60,
+    63,120,112,97,99,107,101,116,32,98,101,103,105,110,61,34,239,187,191,34,32,105,100,61,34,87,53,77,48,77,112,67,101,104,105,72,122,114,101,83,122,78,84,99,122,107,99,57,100,34,63,62,32,60,120,58,120,109,
+    112,109,101,116,97,32,120,109,108,110,115,58,120,61,34,97,100,111,98,101,58,110,115,58,109,101,116,97,47,34,32,120,58,120,109,112,116,107,61,34,65,100,111,98,101,32,88,77,80,32,67,111,114,101,32,53,46,
+    54,45,99,49,51,56,32,55,57,46,49,53,57,56,50,52,44,32,50,48,49,54,47,48,57,47,49,52,45,48,49,58,48,57,58,48,49,32,32,32,32,32,32,32,32,34,62,32,60,114,100,102,58,82,68,70,32,120,109,108,110,115,58,114,
+    100,102,61,34,104,116,116,112,58,47,47,119,119,119,46,119,51,46,111,114,103,47,49,57,57,57,47,48,50,47,50,50,45,114,100,102,45,115,121,110,116,97,120,45,110,115,35,34,62,32,60,114,100,102,58,68,101,115,
+    99,114,105,112,116,105,111,110,32,114,100,102,58,97,98,111,117,116,61,34,34,32,120,109,108,110,115,58,120,109,112,77,77,61,34,104,116,116,112,58,47,47,110,115,46,97,100,111,98,101,46,99,111,109,47,120,
+    97,112,47,49,46,48,47,109,109,47,34,32,120,109,108,110,115,58,115,116,82,101,102,61,34,104,116,116,112,58,47,47,110,115,46,97,100,111,98,101,46,99,111,109,47,120,97,112,47,49,46,48,47,115,84,121,112,101,
+    47,82,101,115,111,117,114,99,101,82,101,102,35,34,32,120,109,108,110,115,58,120,109,112,61,34,104,116,116,112,58,47,47,110,115,46,97,100,111,98,101,46,99,111,109,47,120,97,112,47,49,46,48,47,34,32,120,
+    109,112,77,77,58,79,114,105,103,105,110,97,108,68,111,99,117,109,101,110,116,73,68,61,34,120,109,112,46,100,105,100,58,48,55,56,48,49,49,55,52,48,55,50,48,54,56,49,49,56,67,49,52,68,69,48,68,65,55,70,
+    69,50,51,52,57,34,32,120,109,112,77,77,58,68,111,99,117,109,101,110,116,73,68,61,34,120,109,112,46,100,105,100,58,50,53,51,67,67,56,70,65,70,53,51,50,49,49,69,55,56,67,70,56,56,51,55,52,56,48,68,53,55,
+    57,52,67,34,32,120,109,112,77,77,58,73,110,115,116,97,110,99,101,73,68,61,34,120,109,112,46,105,105,100,58,50,53,51,67,67,56,70,57,70,53,51,50,49,49,69,55,56,67,70,56,56,51,55,52,56,48,68,53,55,57,52,
+    67,34,32,120,109,112,58,67,114,101,97,116,111,114,84,111,111,108,61,34,65,100,111,98,101,32,80,104,111,116,111,115,104,111,112,32,67,67,32,40,77,97,99,105,110,116,111,115,104,41,34,62,32,60,120,109,112,
+    77,77,58,68,101,114,105,118,101,100,70,114,111,109,32,115,116,82,101,102,58,105,110,115,116,97,110,99,101,73,68,61,34,120,109,112,46,105,105,100,58,54,48,101,52,52,98,48,52,45,101,51,52,101,45,52,54,56,
+    50,45,57,54,53,52,45,99,55,50,99,55,56,50,52,101,97,98,97,34,32,115,116,82,101,102,58,100,111,99,117,109,101,110,116,73,68,61,34,120,109,112,46,100,105,100,58,48,55,56,48,49,49,55,52,48,55,50,48,54,56,
+    49,49,56,67,49,52,68,69,48,68,65,55,70,69,50,51,52,57,34,47,62,32,60,47,114,100,102,58,68,101,115,99,114,105,112,116,105,111,110,62,32,60,47,114,100,102,58,82,68,70,62,32,60,47,120,58,120,109,112,109,
+    101,116,97,62,32,60,63,120,112,97,99,107,101,116,32,101,110,100,61,34,114,34,63,62,136,135,179,128,0,0,26,41,73,68,65,84,120,218,236,157,7,116,92,213,153,199,95,155,121,211,171,164,81,47,182,101,73,238,
+    128,99,140,48,54,134,44,197,16,194,18,66,10,27,32,193,180,16,32,54,237,144,156,147,61,108,18,202,38,132,78,88,66,73,8,156,77,88,178,57,203,98,32,28,108,192,96,154,77,179,137,109,21,27,171,119,77,209,180,
+    247,222,188,247,246,123,51,150,44,201,26,121,4,146,237,141,255,191,163,99,166,220,121,243,202,247,187,247,251,238,125,18,236,162,69,75,25,0,0,195,112,56,5,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,
+    0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,
+    32,3,0,144,1,0,200,0,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,
+    128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,
+    0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,128,12,0,64,6,0,32,3,0,144,
+    1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,
+    0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,0,25,0,128,12,0,64,6,0,32,3,0,144,1,0,200,0,0,100,0,0,50,0,112,56,17,112,10,142,101,52,77,75,36,226,
+    28,163,139,162,89,20,45,60,63,81,231,200,50,140,62,233,86,134,27,36,116,189,96,160,111,126,74,141,177,156,241,226,228,232,204,161,219,28,212,115,235,58,19,103,217,65,129,239,231,133,48,47,240,130,201,
+    204,241,144,1,124,41,134,34,33,191,207,91,95,95,191,114,213,170,186,121,243,138,138,138,28,14,167,32,240,95,36,106,135,27,188,211,219,179,241,196,250,245,61,193,62,143,107,198,118,156,213,25,93,102,216,
+    16,199,180,113,236,199,60,187,73,20,251,68,171,67,48,31,141,50,172,62,181,94,74,74,239,188,247,225,81,27,7,115,231,206,170,158,83,181,225,165,141,199,166,6,193,224,192,226,133,243,174,185,246,246,51,207,
+    58,139,231,114,200,147,217,92,27,248,156,206,40,195,180,48,76,152,101,103,242,8,104,220,97,76,26,179,68,213,78,81,152,239,202,137,205,9,233,41,171,24,178,216,109,188,112,20,201,224,247,123,231,206,153,
+    245,233,246,157,71,111,145,196,113,171,87,214,39,18,201,99,80,3,69,145,45,102,254,63,30,125,232,236,53,107,102,98,251,209,104,212,72,151,56,86,159,225,3,81,233,135,101,146,44,219,205,48,86,157,185,64,
+    82,79,75,37,30,151,228,231,28,14,175,217,122,180,20,208,78,135,93,211,212,88,44,118,212,6,4,165,197,180,135,161,112,248,152,203,139,134,34,39,159,244,149,173,31,110,157,33,19,142,76,215,198,48,18,203,
+    52,242,172,164,235,183,37,82,63,143,12,133,147,209,163,69,6,69,73,81,77,198,204,236,40,249,165,208,117,221,216,195,99,140,112,56,120,205,213,151,255,238,137,199,121,158,159,249,83,124,216,59,56,82,157,
+    101,27,120,246,28,73,125,40,18,251,194,62,76,251,212,42,133,154,106,212,252,71,245,20,138,106,236,228,49,67,60,30,189,246,154,43,111,190,229,150,127,224,99,164,222,151,122,184,93,60,187,76,209,238,28,
+    138,15,74,241,35,47,67,52,22,87,85,45,126,20,103,228,169,148,74,123,72,35,216,49,98,2,105,127,242,242,175,220,124,235,45,135,53,48,143,144,15,20,205,77,60,123,166,172,94,22,163,64,156,242,37,254,130,5,
+    180,40,138,30,143,211,36,8,99,14,94,103,188,94,183,170,169,5,5,126,73,146,198,156,20,221,24,60,41,69,145,37,185,127,32,56,102,15,120,158,62,101,50,155,70,94,137,69,227,225,200,208,33,235,224,130,124,191,
+    36,203,193,224,196,217,191,211,105,183,90,44,2,237,33,59,190,102,160,61,52,139,166,146,226,128,158,101,148,239,233,237,35,97,38,223,1,151,203,97,179,90,187,123,250,68,209,236,245,184,67,225,72,50,41,29,
+    220,96,162,236,129,77,199,168,209,101,68,163,51,94,92,41,201,248,227,79,61,121,120,51,209,35,154,6,51,204,62,142,253,129,164,190,21,143,4,157,190,153,149,129,101,217,19,151,45,174,172,40,205,90,233,171,
+    106,69,121,49,253,76,248,110,36,18,125,233,149,55,70,158,30,183,100,126,205,220,170,113,109,246,126,222,246,193,214,79,39,223,13,147,73,56,117,213,137,193,80,228,111,175,110,30,115,60,130,80,91,51,171,
+    186,186,82,52,155,39,217,67,187,205,122,202,138,175,100,107,240,194,139,27,227,241,196,228,59,48,127,94,117,69,121,201,159,255,107,67,126,158,111,197,201,75,223,125,255,227,150,150,142,204,91,121,121,
+    222,229,39,30,231,176,219,14,121,50,37,73,222,221,176,119,215,238,230,25,75,144,98,191,254,213,93,130,112,56,87,147,88,74,148,201,117,102,120,210,150,158,178,195,161,67,189,225,216,20,154,101,141,101,
+    62,150,26,25,205,134,235,153,244,71,88,134,99,15,212,121,186,206,114,156,174,170,70,155,225,167,7,4,200,188,78,219,151,101,218,82,84,20,3,154,246,253,100,234,118,139,228,52,137,51,40,195,105,167,158,228,
+    243,186,233,194,119,118,245,80,202,49,238,93,143,219,53,175,110,78,75,107,71,71,103,207,193,159,173,95,126,188,54,220,227,82,52,159,125,198,42,234,86,187,187,250,6,6,131,70,79,204,50,20,193,115,102,87,
+    168,169,67,39,244,116,58,168,153,148,24,211,25,7,10,252,245,203,79,200,172,28,117,118,246,70,34,67,178,162,140,235,55,88,142,157,87,59,39,145,72,146,114,7,111,182,188,188,216,233,176,235,57,212,60,178,
+    164,100,246,211,200,187,210,63,153,215,171,103,87,44,89,60,143,94,108,106,222,71,223,146,30,12,149,186,186,57,86,139,113,85,104,40,24,24,12,209,235,52,178,209,208,81,24,200,95,48,175,122,86,101,233,91,
+    91,182,69,134,162,211,30,152,121,94,215,215,207,63,127,26,114,203,238,30,206,229,100,69,49,213,222,97,170,40,159,76,5,65,80,83,81,185,95,18,139,74,116,77,165,144,149,123,187,121,135,139,198,65,222,110,
+    83,163,81,85,151,70,229,232,130,185,176,152,99,88,37,60,148,74,68,196,64,137,209,215,178,244,145,54,186,0,150,162,82,195,10,142,151,186,168,151,209,196,162,50,185,183,203,228,203,215,146,146,18,15,90,
+    2,101,153,174,89,147,101,121,176,143,26,43,193,65,45,25,103,57,179,22,238,239,40,44,95,145,74,205,78,196,123,103,78,134,185,213,149,110,151,253,157,247,62,154,48,214,51,29,127,205,220,202,158,158,254,
+    9,27,80,200,100,124,166,99,248,218,154,213,177,88,98,227,27,239,208,191,163,219,84,85,150,228,56,208,210,214,82,163,242,194,162,194,252,147,78,92,66,159,221,241,89,195,158,189,173,74,42,107,202,88,83,
+    93,73,105,216,206,137,250,99,171,85,180,89,197,92,38,0,84,131,84,90,75,141,30,208,191,153,243,67,193,253,233,142,93,141,77,251,70,90,150,149,22,154,77,124,60,30,255,248,211,93,157,93,189,99,114,54,142,
+    155,51,167,98,126,221,156,211,87,47,255,219,107,111,199,227,211,89,107,41,138,124,201,149,87,78,207,100,212,19,79,217,79,63,205,60,191,46,244,216,19,249,191,188,125,146,150,137,174,246,202,91,127,234,
+    228,249,189,119,223,97,205,43,74,118,181,205,254,229,29,82,71,39,103,181,196,62,221,17,184,248,59,158,147,235,19,237,109,20,0,150,146,210,216,238,221,59,191,123,73,82,142,7,214,156,235,59,235,204,198,
+    107,174,19,124,62,37,26,156,251,200,195,241,134,166,150,251,239,177,23,86,196,186,90,74,47,191,202,121,252,146,198,245,235,106,30,121,164,253,145,71,29,139,23,211,211,134,27,127,108,45,40,75,69,135,44,
+    229,229,179,239,190,99,207,173,63,161,175,88,250,193,59,98,105,233,238,43,175,233,249,159,191,150,185,252,171,21,229,105,77,21,115,190,95,99,106,5,52,5,250,208,80,52,155,9,153,96,162,200,48,153,133,108,
+    225,155,73,63,206,252,106,125,40,20,166,203,63,206,4,135,195,150,238,102,115,152,234,209,141,173,141,76,10,217,172,150,101,75,23,208,43,155,223,222,182,187,113,239,36,38,240,60,79,205,216,44,235,66,60,
+    207,26,145,157,75,97,170,143,200,64,143,82,131,131,97,183,203,81,87,83,245,238,251,159,140,54,161,48,144,119,252,146,58,50,225,181,215,223,29,103,130,113,66,52,173,161,241,243,173,219,182,211,129,212,
+    47,95,50,189,195,130,148,140,159,53,93,75,10,28,167,37,18,156,221,238,251,241,117,135,24,67,226,113,83,65,65,249,77,235,24,186,142,225,16,111,117,148,94,127,173,174,164,2,223,190,200,86,87,163,165,100,
+    85,87,189,171,79,245,156,186,138,30,112,22,139,177,159,114,210,127,238,154,226,171,214,10,94,111,42,52,152,146,18,249,255,252,245,234,251,126,205,50,188,20,28,160,19,92,243,216,195,5,223,190,136,94,47,
+    188,228,123,130,199,99,46,200,47,91,127,131,99,86,77,178,183,83,79,202,130,219,29,184,228,98,93,81,106,31,123,212,50,123,150,212,213,85,245,111,255,202,40,18,37,27,139,84,93,87,164,153,154,77,162,36,167,
+    171,187,111,242,236,133,186,235,108,19,249,244,86,52,22,159,87,59,155,134,194,77,111,126,48,97,136,79,242,241,177,13,245,244,188,208,126,25,78,56,126,62,61,125,127,235,142,113,213,249,132,31,205,76,40,
+    101,209,85,75,165,212,28,79,69,166,165,158,62,46,191,223,179,124,217,226,79,183,55,140,62,63,44,203,44,89,84,75,239,190,245,206,71,84,30,100,219,84,91,71,79,103,87,31,165,136,165,37,129,105,148,33,80,
+    144,95,85,53,190,30,211,98,113,61,251,158,76,112,152,9,163,183,18,10,11,117,122,192,113,124,126,222,152,83,41,43,250,216,126,71,116,184,59,238,123,80,75,38,221,11,151,38,147,67,254,179,206,74,133,34,61,
+    207,60,67,233,147,158,82,63,189,98,237,198,154,154,190,231,255,187,247,217,63,209,131,79,206,88,195,89,109,84,219,89,42,43,141,28,123,69,189,172,38,169,80,8,110,50,170,202,138,117,55,246,73,209,178,181,
+    215,80,174,21,218,184,137,94,79,182,180,208,55,198,27,26,140,116,244,129,123,101,99,37,90,35,13,226,127,223,233,56,110,137,125,209,194,109,39,156,180,101,254,188,230,117,55,89,139,42,99,60,95,164,233,
+    254,212,20,230,148,166,150,38,165,82,148,231,112,147,246,151,116,114,82,84,196,76,248,110,44,22,247,184,29,126,159,123,227,27,239,101,15,113,178,65,205,113,103,50,49,237,113,59,41,183,233,237,27,232,238,
+    233,207,249,131,106,182,228,135,222,205,37,77,34,99,83,233,19,157,121,48,191,110,118,107,91,215,190,214,206,209,109,40,115,163,244,169,173,189,119,220,0,120,48,59,119,239,241,121,93,84,60,180,119,244,
+    76,151,12,229,229,101,99,178,166,214,214,232,11,27,244,100,66,29,26,18,23,44,112,125,243,27,198,21,121,233,21,113,225,2,161,108,255,116,72,236,213,215,132,226,34,113,193,124,122,28,124,232,17,185,121,
+    15,213,9,66,32,32,109,223,225,255,201,173,122,50,73,13,28,231,157,107,156,168,193,224,224,61,247,233,82,210,40,195,108,54,255,45,235,57,167,147,134,72,234,185,35,109,205,84,27,248,191,182,166,125,199,
+    54,223,217,103,72,237,237,177,68,132,179,90,233,172,154,210,189,47,13,8,58,199,83,46,111,242,251,83,225,144,115,118,29,5,186,220,211,155,127,209,55,218,95,248,11,159,14,35,185,183,175,248,202,203,91,159,
+    122,178,228,186,31,166,130,65,53,22,31,153,20,52,23,21,37,63,223,231,63,231,236,146,51,206,237,120,245,69,103,186,236,38,211,120,187,221,82,86,50,184,123,123,104,211,155,148,110,165,120,222,175,235,5,
+    170,250,249,12,141,12,52,220,251,125,174,201,11,91,35,123,209,179,141,12,20,61,58,165,206,178,172,76,242,113,61,183,21,226,76,221,154,78,202,3,244,160,177,169,37,199,163,48,246,48,139,12,20,217,185,166,
+    73,233,150,153,169,15,122,48,20,141,238,106,216,59,174,77,113,81,30,189,213,48,42,107,202,6,217,66,152,205,211,185,60,92,82,92,50,110,76,16,74,75,60,87,95,233,95,255,99,74,218,18,111,111,49,46,232,155,
+    111,81,113,124,32,227,223,242,174,188,199,8,158,254,219,127,33,55,52,121,174,184,220,127,227,58,203,9,199,105,177,152,209,181,203,114,124,211,155,105,19,6,123,215,221,196,7,242,125,235,110,240,173,187,
+    142,119,185,122,174,95,79,53,10,103,119,176,2,79,39,37,182,107,183,247,180,83,169,165,187,254,164,240,187,239,233,153,81,50,61,169,204,102,38,151,89,227,57,203,243,138,28,205,59,255,60,58,135,123,111,
+    190,205,179,122,149,200,154,141,210,185,170,162,237,87,247,68,183,111,95,249,247,29,201,189,123,247,253,252,78,122,101,100,39,45,197,197,189,127,249,107,215,111,127,55,239,79,127,164,64,209,100,137,242,
+    183,161,109,31,38,118,55,46,252,223,191,90,44,182,148,18,101,121,142,58,86,114,207,55,149,187,13,166,38,195,174,6,58,83,250,220,57,229,147,77,242,168,106,182,104,54,81,29,153,72,246,246,5,39,153,36,54,
+    50,152,92,14,192,168,25,212,204,218,25,245,169,164,89,56,146,219,108,76,250,131,217,6,159,116,136,171,185,84,240,195,45,247,143,39,141,77,173,7,207,65,59,29,182,204,232,145,254,109,129,201,126,204,102,
+    211,80,52,158,83,177,148,51,246,177,115,187,98,93,173,243,252,243,56,135,195,184,16,101,37,169,254,65,163,70,202,243,179,150,3,243,45,188,223,103,158,51,75,218,185,139,12,9,60,120,175,56,127,30,95,144,
+    111,91,181,210,113,246,153,169,174,158,145,52,41,252,244,179,230,186,90,223,245,63,18,74,138,133,210,82,223,205,235,204,115,102,51,47,108,16,92,46,138,0,18,122,96,195,203,230,162,66,191,195,67,9,253,192,
+    11,47,154,211,145,49,102,121,108,248,28,209,1,123,191,122,90,116,251,142,93,127,124,146,6,4,223,105,167,83,55,201,91,173,74,95,127,235,29,255,46,20,23,182,253,230,193,228,190,22,222,233,28,29,99,98,113,
+    209,206,31,253,72,240,122,42,47,248,86,244,179,157,156,40,154,124,222,79,46,188,144,30,156,180,115,23,107,178,40,225,16,109,220,248,61,141,169,220,12,49,181,52,169,127,32,220,214,209,93,20,240,59,29,150,
+    230,189,29,225,72,108,162,154,65,201,62,50,40,198,98,220,164,3,11,181,201,37,38,210,9,149,162,40,114,58,46,83,209,104,34,247,69,153,244,87,164,178,206,80,165,148,92,78,32,185,64,45,71,246,228,96,187,68,
+    179,41,211,96,217,9,181,57,103,161,202,52,202,16,139,143,191,37,33,250,226,75,114,67,35,107,179,74,187,27,108,233,158,155,25,238,179,15,204,251,187,156,241,183,223,177,28,63,166,154,167,164,136,205,172,
+    138,166,231,254,181,80,40,147,44,141,96,59,109,53,179,117,91,102,4,48,49,108,240,165,87,41,201,153,123,239,125,82,103,103,104,243,102,19,103,153,248,90,200,138,96,20,12,21,188,205,86,179,126,29,165,88,
+    206,101,75,149,141,47,83,103,106,171,171,109,251,195,19,237,15,62,50,248,214,107,179,126,250,51,125,164,144,51,126,145,72,23,75,74,66,154,220,251,236,159,235,254,243,233,96,81,5,117,132,150,242,178,240,
+    7,91,222,155,183,104,249,206,237,139,159,127,126,219,215,207,53,217,29,26,195,74,83,185,77,110,202,235,12,205,123,58,40,242,170,42,138,230,213,86,198,98,201,150,182,238,209,74,12,23,208,122,182,2,122,
+    242,94,95,207,185,128,206,108,77,81,84,158,231,232,65,108,42,147,146,147,20,208,233,2,32,183,2,122,184,37,21,72,244,128,61,232,38,132,253,59,22,75,244,13,132,115,220,160,166,78,231,226,109,103,103,215,
+    152,233,209,167,159,77,188,255,129,247,202,181,226,226,133,84,182,82,124,103,114,60,110,212,50,57,229,253,90,82,162,127,83,99,63,203,164,151,186,152,225,14,222,24,253,199,222,246,171,69,163,52,110,176,
+    233,190,129,231,109,209,246,230,68,99,115,225,218,75,187,30,127,42,169,73,54,171,119,226,11,17,14,218,103,213,89,170,42,109,181,53,238,149,43,140,209,108,225,252,204,183,112,54,43,125,83,211,245,55,208,
+    41,230,157,142,241,113,162,170,52,234,237,92,187,246,212,139,191,53,247,183,15,38,154,155,213,68,130,132,11,238,218,209,116,253,250,234,7,126,227,200,47,214,162,49,197,110,31,228,167,144,251,124,145,123,
+    147,186,123,6,63,248,112,87,91,71,143,197,34,212,84,151,86,207,46,102,217,209,105,82,214,164,127,146,100,125,164,191,79,79,152,230,90,51,80,248,80,54,50,82,60,76,71,205,144,158,48,213,115,76,147,82,153,
+    213,209,244,58,131,62,225,177,68,134,98,93,221,3,185,252,244,244,6,251,6,66,211,40,67,107,203,152,204,45,190,233,245,130,95,221,69,38,24,197,116,75,43,239,245,166,131,56,150,216,246,225,112,81,17,139,
+    60,247,60,165,254,182,149,43,18,239,190,79,69,243,129,99,161,88,207,104,160,24,231,205,90,191,60,252,212,211,99,77,123,134,89,113,178,110,12,143,186,177,238,198,48,67,31,125,76,175,135,222,216,204,102,
+    143,50,89,147,2,255,242,29,42,157,55,251,11,222,116,123,119,93,186,214,247,79,95,117,48,130,26,141,233,70,255,194,152,124,121,108,186,56,30,51,178,167,255,67,169,87,34,25,221,115,211,109,5,23,93,104,157,
+    51,155,170,103,147,215,184,191,166,251,15,207,36,91,219,172,85,179,121,73,138,178,76,239,84,126,41,244,11,46,212,83,207,218,222,209,223,217,53,80,20,240,5,10,60,53,115,74,119,55,181,15,143,12,147,21,208,
+    169,67,69,109,174,179,73,195,95,148,158,226,76,77,101,48,212,211,187,161,102,159,90,205,169,128,86,135,103,147,50,135,172,31,116,200,52,106,209,235,130,112,196,254,228,66,79,111,111,75,75,75,69,197,254,
+    210,211,186,162,158,202,98,203,210,227,120,167,75,250,236,51,165,181,213,60,183,218,125,241,183,251,127,121,183,218,219,203,166,167,252,105,76,80,35,67,102,151,203,123,237,213,253,84,182,46,59,65,40,40,
+    48,10,235,15,182,58,191,245,205,204,189,101,198,114,208,217,103,41,159,183,244,92,183,78,92,178,136,94,76,126,248,177,109,69,61,179,100,81,170,47,83,139,83,229,202,71,63,49,110,168,137,126,246,153,137,
+    84,160,158,94,20,71,238,182,96,77,166,76,76,211,63,121,231,157,51,180,117,91,100,176,143,122,250,238,167,159,166,78,61,239,204,179,149,80,144,53,25,145,201,10,251,255,229,210,55,215,208,70,40,79,51,158,
+    154,140,58,219,110,247,126,126,207,93,21,63,187,205,177,104,161,26,75,44,122,229,197,230,91,110,241,158,178,74,112,56,162,13,59,253,86,235,62,142,29,20,4,113,70,71,134,81,189,163,222,209,53,64,167,197,
+    108,230,125,94,199,1,25,178,174,51,164,14,113,171,69,250,227,185,213,12,76,102,14,52,51,153,107,54,77,161,3,72,127,69,42,123,37,144,219,200,144,153,132,61,32,131,126,144,12,134,116,162,249,136,253,150,
+    185,217,98,123,229,229,151,71,158,122,214,254,128,122,116,53,24,20,42,202,3,247,223,227,60,239,92,10,125,115,109,77,224,158,187,141,147,40,203,84,94,151,252,249,25,163,20,166,26,96,245,170,194,71,31,162,
+    178,85,13,5,77,85,85,129,135,31,48,85,86,176,54,155,247,154,43,50,91,243,254,240,42,215,247,46,214,227,113,61,145,240,92,241,3,207,85,87,100,122,136,253,51,37,14,111,178,181,181,243,119,79,42,3,131,130,
+    197,168,170,13,1,56,78,79,95,56,206,100,162,88,167,107,108,247,23,217,106,230,14,188,248,18,37,106,98,160,76,102,148,232,199,159,228,95,116,129,174,164,88,142,215,135,47,52,89,68,31,215,211,22,177,233,
+    219,153,232,227,244,84,112,56,105,35,123,110,190,205,24,247,154,26,233,27,143,127,99,83,213,207,255,117,223,47,238,72,132,7,124,86,235,14,158,213,77,83,248,221,104,118,209,162,165,95,254,188,215,213,148,
+    80,71,216,188,183,219,110,23,43,203,242,123,122,195,253,131,19,220,118,58,191,182,84,86,82,77,123,186,179,109,199,100,226,231,206,46,138,12,37,218,58,6,14,249,165,180,181,104,52,217,210,222,95,61,187,
+    208,108,18,26,154,187,114,73,247,41,179,173,155,91,146,72,200,123,91,122,39,154,142,244,121,92,54,218,67,249,80,247,120,7,242,221,121,126,231,206,221,237,118,187,165,162,44,143,118,152,118,123,92,155,
+    202,242,124,187,77,108,220,211,165,40,71,230,215,39,28,86,243,150,247,182,28,182,175,219,218,219,243,220,178,147,46,235,30,8,121,220,140,70,249,18,79,163,39,107,220,186,167,218,231,207,147,123,122,228,
+    94,227,156,219,170,231,82,177,18,107,110,54,187,189,150,89,85,209,237,219,141,198,164,135,44,89,138,138,76,62,159,150,72,106,138,146,108,107,165,17,64,83,100,75,73,41,239,118,197,118,238,116,44,88,144,
+    252,188,133,119,59,5,167,51,214,208,64,239,26,19,121,146,228,88,188,40,190,187,81,9,14,20,93,118,169,174,40,221,127,124,198,226,207,43,224,249,31,218,196,110,151,119,198,211,164,241,235,15,177,132,213,
+    106,206,140,21,147,172,51,28,178,102,72,143,10,41,81,60,116,55,79,65,54,114,111,82,48,24,205,243,59,188,110,107,223,64,14,179,171,233,251,56,178,101,98,201,164,164,218,205,52,208,29,82,6,155,205,148,89,
+    145,200,86,51,164,39,223,34,22,209,91,144,231,236,232,10,29,17,25,122,250,7,95,218,176,97,205,57,231,28,198,239,100,247,167,245,186,150,10,71,41,149,55,18,27,222,20,220,252,134,96,119,9,46,55,189,51,180,
+    117,43,245,239,98,160,48,21,29,26,220,244,55,147,39,159,183,90,141,5,59,139,45,222,216,148,254,184,206,242,130,201,239,215,213,20,79,47,54,53,107,82,66,44,42,9,190,245,166,217,151,175,244,247,171,73,122,
+    90,76,239,178,102,51,167,105,161,45,111,138,129,82,147,199,219,254,228,99,198,144,152,87,92,206,241,175,243,76,147,213,230,156,202,174,79,79,70,171,142,76,186,167,215,25,178,165,25,233,155,219,212,201,
+    103,147,98,177,36,157,78,147,48,153,15,84,33,20,23,186,70,182,22,12,27,51,244,30,183,149,231,114,42,29,38,89,9,137,197,36,122,215,237,178,76,190,5,191,207,46,24,119,49,169,195,133,178,58,161,12,209,152,
+    36,201,138,205,106,178,90,76,71,68,6,187,221,113,211,141,55,235,135,245,23,15,245,204,236,167,177,40,225,112,24,151,138,30,107,154,88,80,68,98,80,248,210,143,41,63,223,148,151,71,9,41,203,113,98,65,9,
+    213,3,122,230,76,210,91,62,159,201,79,63,126,193,227,214,51,107,154,106,74,112,187,204,5,1,122,64,27,161,130,129,119,57,205,5,5,195,239,170,148,59,209,70,140,76,76,16,172,5,165,150,130,82,59,203,81,231,
+    244,123,139,105,74,247,111,79,155,12,102,129,77,38,229,145,100,58,91,80,106,57,44,168,13,4,99,212,172,32,207,62,73,155,178,34,183,150,49,33,125,153,105,171,253,3,81,122,133,12,201,225,79,87,233,233,61,
+    156,248,221,164,148,146,101,197,98,230,39,9,95,167,67,244,56,69,69,86,180,97,255,181,44,50,24,243,155,93,97,99,199,2,78,241,80,171,203,2,207,5,242,28,211,30,155,156,96,185,122,154,238,93,205,93,135,35,
+    75,165,166,255,222,204,239,155,218,168,48,117,25,138,2,78,151,115,188,109,14,187,153,10,176,193,144,145,49,43,198,237,66,154,197,34,28,220,151,83,178,110,168,112,40,25,226,9,37,158,84,76,38,46,223,111,
+    59,120,142,136,138,138,210,34,23,199,179,237,93,145,209,107,5,193,112,98,40,38,81,161,85,92,228,18,197,172,185,31,213,217,20,180,146,146,50,214,234,15,154,231,201,76,148,247,244,69,105,63,3,249,246,9,
+    125,160,65,195,239,181,246,7,227,131,225,132,154,62,22,218,160,177,176,146,69,6,73,78,245,14,196,168,1,157,58,167,221,156,101,160,99,93,14,177,180,216,101,181,78,127,181,205,243,252,107,155,222,122,224,
+    254,251,15,95,154,116,228,160,235,81,173,234,175,155,185,39,28,118,59,63,229,209,88,152,162,58,186,199,105,22,205,92,52,102,252,29,12,10,30,138,24,183,211,76,245,104,44,46,167,147,126,141,50,13,171,69,
+    40,204,183,199,226,10,5,9,69,152,69,164,142,86,232,234,53,186,252,92,38,106,40,28,11,243,108,86,145,47,45,116,210,70,100,133,250,93,227,230,106,218,142,197,8,116,189,179,59,34,27,203,220,106,250,240,247,
+    211,219,31,243,123,44,118,155,41,224,183,202,178,154,144,84,99,234,149,70,79,214,152,141,32,13,108,86,129,182,211,214,53,52,24,76,228,121,45,133,249,182,240,144,76,213,3,53,48,155,56,135,205,68,79,35,
+    81,153,6,135,193,96,220,227,18,243,125,22,73,54,37,146,228,183,49,244,83,27,187,213,68,135,19,141,74,225,72,210,235,18,135,235,31,93,155,244,14,142,161,168,68,89,153,207,99,241,186,69,58,87,241,68,138,
+    142,200,88,151,100,141,209,128,234,19,91,186,239,72,165,82,3,193,25,249,221,113,135,195,121,207,111,30,160,48,189,254,134,235,15,83,154,116,216,201,252,81,191,90,85,255,200,196,221,236,176,121,69,219,
+    23,216,200,212,100,232,232,137,186,157,162,211,110,18,61,188,170,233,108,186,55,141,39,83,253,131,7,38,82,250,131,9,191,199,74,129,75,23,126,116,250,145,82,245,244,223,145,201,101,61,75,39,115,40,28,41,
+    178,41,130,109,163,250,75,10,205,96,88,162,8,54,198,25,85,163,13,142,73,177,66,73,218,25,234,128,41,112,157,7,117,252,212,126,40,166,100,6,159,136,192,57,236,38,151,227,192,30,210,126,81,241,156,121,76,
+    74,144,108,164,61,141,30,166,81,109,200,165,193,80,50,26,207,220,133,193,100,134,166,244,156,65,182,41,131,225,226,33,174,36,101,149,190,142,226,126,220,17,165,135,83,99,181,116,40,38,207,92,172,120,60,
+    190,123,239,123,176,169,177,241,193,135,31,250,199,75,147,232,178,57,117,189,66,99,94,49,115,63,117,218,93,150,47,152,109,78,207,212,42,248,127,129,44,75,78,135,229,206,187,238,60,253,244,211,103,112,
+    106,181,107,32,52,131,127,107,117,124,94,100,209,153,82,77,143,114,236,83,34,255,204,81,245,23,245,192,209,140,217,44,74,178,254,253,203,214,94,120,193,55,54,110,156,254,63,53,107,183,103,166,61,116,118,
+    248,110,237,233,253,97,134,31,80,212,138,58,147,167,233,213,154,238,96,153,13,102,254,82,167,229,57,183,247,203,152,192,224,175,112,31,131,120,125,121,77,123,90,175,184,252,170,64,32,127,229,202,83,86,
+    174,90,89,83,91,91,88,88,232,112,124,217,185,172,72,50,65,35,66,21,195,244,205,224,100,46,171,49,186,194,176,17,150,217,197,115,31,243,220,70,139,185,83,180,58,5,179,253,203,111,26,105,210,177,140,170,
+    170,201,68,156,231,88,171,213,66,240,153,187,83,39,249,31,50,176,163,202,213,145,7,250,254,73,177,152,174,21,244,116,47,86,212,24,55,35,25,71,230,171,140,255,63,3,199,245,8,66,72,16,24,193,108,153,190,
+    255,63,3,100,0,0,53,3,0,144,1,128,9,249,63,1,6,0,185,232,59,117,80,227,182,197,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
+
+const char* StructureGUI::authorization_png = (const char*) resource_StructureGUI_authorization_png;
+const int StructureGUI::authorization_pngSize = 7678;
+
+// JUCER_RESOURCE: lock2small_png, 5834, "/lock2small.png"
+static const unsigned char resource_StructureGUI_lock2small_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,87,0,0,1,163,8,6,0,0,0,152,50,86,23,0,0,0,1,115,82,71,66,0,174,206,28,233,0,0,0,4,103,
+    65,77,65,0,0,177,143,11,252,97,5,0,0,0,9,112,72,89,115,0,2,180,12,0,2,180,12,1,207,83,107,90,0,0,0,25,116,69,88,116,83,111,102,116,119,97,114,101,0,112,97,105,110,116,46,110,101,116,32,52,46,48,46,49,
+    57,212,214,178,100,0,0,22,58,73,68,65,84,120,94,237,221,9,144,100,119,93,192,113,54,36,129,132,27,57,12,114,5,2,42,168,144,130,160,2,162,114,99,9,138,8,120,16,5,42,30,101,64,20,148,67,69,176,184,44,144,
+    75,32,148,72,10,138,155,8,65,144,42,196,24,67,5,36,160,1,13,108,9,86,1,37,193,205,102,118,54,59,179,51,211,211,247,224,239,77,255,65,96,55,201,255,191,59,175,223,235,55,159,79,213,171,158,221,192,246,
+    191,251,253,223,183,255,175,167,143,27,0,0,0,0,0,0,0,0,0,0,0,0,64,43,124,243,155,223,188,113,250,17,128,163,249,250,215,191,126,247,136,229,253,6,131,193,227,86,86,86,254,40,126,126,241,214,214,214,95,
+    197,159,47,218,220,220,188,34,126,254,218,81,182,165,163,252,221,215,250,253,254,23,123,189,222,197,241,243,235,171,127,103,109,109,237,185,241,231,39,84,255,254,149,87,94,121,70,186,74,128,110,136,184,
+    237,169,226,54,30,143,159,48,28,14,95,53,157,78,63,16,241,220,31,17,236,199,54,137,255,94,187,184,206,105,117,125,113,253,75,147,201,228,35,113,249,154,248,235,39,94,117,213,85,247,138,203,61,105,168,
+    0,237,180,119,239,222,147,99,5,121,215,88,117,254,90,4,236,181,209,180,207,68,204,198,219,133,107,169,24,95,229,115,49,222,243,98,220,103,199,95,221,45,66,124,163,116,147,0,154,113,240,224,193,59,70,152,
+    158,62,26,141,222,27,81,218,23,219,214,44,91,139,169,26,127,216,31,183,233,239,227,54,253,206,202,202,202,233,233,166,2,212,39,250,179,39,86,120,15,137,248,252,69,172,248,190,26,33,106,245,202,244,120,
+    197,237,171,86,182,87,198,237,125,249,120,60,254,217,248,43,79,35,0,59,99,223,190,125,167,198,42,238,33,113,154,255,166,8,205,129,89,118,118,167,184,15,14,197,246,150,126,191,255,136,165,165,165,155,166,
+    187,8,32,95,172,214,126,52,66,242,230,216,150,82,91,248,14,177,170,61,24,171,217,183,197,253,116,102,186,203,0,142,238,242,203,47,63,41,98,241,244,8,234,101,17,143,105,234,8,215,33,238,167,234,185,131,
+    43,98,117,255,187,241,199,147,211,93,9,236,118,17,132,61,113,154,123,122,172,194,94,29,145,56,188,93,12,142,73,220,127,189,120,96,122,211,96,48,184,103,252,209,243,179,176,91,109,110,110,62,40,130,240,
+    225,8,66,167,127,49,53,111,113,127,78,98,37,123,81,60,104,61,44,221,213,192,110,80,189,43,42,162,122,73,117,74,155,122,64,13,170,251,55,206,8,62,27,247,245,147,226,143,86,178,208,69,213,193,29,43,213,
+    7,198,138,234,226,237,35,159,185,138,200,126,58,86,178,213,203,185,78,72,187,4,88,116,17,213,7,199,234,233,34,43,213,102,85,247,127,236,135,127,141,200,62,60,237,26,96,17,29,56,112,224,180,233,116,250,
+    119,162,218,46,41,178,255,24,15,122,119,73,187,10,88,4,251,247,239,191,201,96,48,120,81,132,117,144,142,103,90,40,246,207,104,56,28,190,50,90,123,179,180,235,128,182,138,168,62,54,14,214,171,210,241,203,
+    2,136,200,46,71,100,159,28,63,250,165,23,180,77,4,245,180,56,213,252,104,117,202,57,59,100,89,36,213,110,27,143,199,159,232,247,251,119,77,187,20,104,82,28,151,213,187,170,158,26,97,189,102,118,152,178,
+    200,98,21,123,120,52,26,61,51,98,235,163,15,161,41,113,0,222,41,162,250,177,116,92,210,33,177,95,63,89,189,211,43,237,106,96,94,226,244,241,81,113,0,94,157,142,69,58,40,86,177,215,68,96,127,57,237,114,
+    160,78,113,204,157,58,28,14,207,155,29,126,236,6,163,209,232,221,113,150,226,21,5,80,151,88,173,222,125,60,30,239,77,199,28,187,72,156,165,124,37,86,177,247,74,83,1,216,41,189,94,239,177,113,128,109,164,
+    99,141,93,104,58,157,86,95,180,248,171,105,74,0,199,163,250,173,113,245,134,128,184,244,18,43,182,223,221,21,129,125,77,92,156,146,166,8,80,42,14,160,155,196,106,245,227,233,184,130,111,139,121,113,217,
+    202,202,202,45,211,84,1,114,69,88,239,52,30,143,47,75,199,18,28,33,230,199,23,99,158,156,145,166,12,112,125,214,215,215,127,36,14,154,125,233,24,130,107,85,189,117,182,215,235,61,32,77,29,224,218,108,
+    108,108,156,25,167,124,43,233,216,129,235,85,253,162,115,115,115,243,167,211,20,2,190,87,156,230,61,34,86,172,253,116,204,64,182,152,55,163,216,126,33,77,37,224,91,98,245,113,118,117,128,164,99,5,138,
+    197,252,137,105,52,121,70,154,82,192,112,56,60,103,58,157,78,210,49,178,235,140,70,163,141,184,253,255,25,43,247,79,245,251,253,15,69,36,94,22,219,11,15,30,60,248,172,125,251,246,157,179,188,188,124,246,
+    250,250,250,147,226,191,255,98,117,89,253,185,250,251,253,251,247,255,126,245,191,139,237,37,241,255,187,48,238,199,75,227,231,207,199,191,183,158,254,233,93,39,110,255,52,110,255,31,167,169,5,187,87,
+    172,52,158,22,7,196,174,8,107,4,116,26,129,252,74,28,252,23,196,237,126,206,218,218,218,227,227,175,79,221,187,119,239,201,113,185,35,159,101,90,253,59,177,157,20,247,233,41,135,15,31,174,222,120,241,
+    172,193,96,240,190,184,252,210,110,185,159,83,96,159,157,238,18,216,125,226,32,120,74,108,157,253,90,235,104,233,246,138,52,182,87,71,84,31,125,232,208,161,91,164,155,222,136,24,210,169,49,142,71,198,
+    246,170,136,237,229,49,174,195,179,145,118,79,245,64,18,60,69,192,238,19,147,255,254,93,12,107,28,208,7,34,94,239,138,83,244,167,196,202,241,251,210,205,109,165,234,69,248,49,206,39,198,120,207,143,113,
+    119,238,165,111,85,96,99,123,104,186,185,208,125,27,27,27,247,141,85,83,47,29,3,11,47,110,203,48,182,247,196,237,122,76,252,241,196,116,51,23,202,37,151,92,114,98,196,246,97,113,59,222,25,219,230,236,
+    150,45,190,120,208,24,174,173,173,253,84,186,153,208,93,213,39,27,197,132,95,78,115,127,97,197,138,40,26,52,189,98,52,26,157,219,246,21,106,169,184,109,55,175,126,201,24,251,233,115,213,234,47,221,228,
+    133,21,251,105,37,246,211,253,211,205,131,238,57,120,240,224,205,227,96,93,232,47,15,140,3,117,24,7,234,133,177,157,149,110,86,167,197,106,252,62,227,241,248,189,113,187,23,250,245,199,49,239,174,137,
+    21,236,109,211,205,130,238,168,190,238,58,14,210,79,166,185,190,112,170,184,196,248,223,120,232,208,161,59,167,155,180,171,92,125,245,213,183,143,219,255,170,184,31,22,246,99,31,99,252,87,196,69,163,191,
+    84,132,29,21,19,250,132,56,40,47,220,158,225,11,38,86,60,189,24,251,249,155,155,155,119,73,55,103,87,139,149,236,105,213,131,76,220,47,107,233,46,90,40,177,47,47,190,224,130,11,110,152,110,14,44,182,56,
+    133,126,126,28,140,11,245,121,172,49,220,73,140,251,93,85,76,210,205,224,59,196,41,246,109,226,254,121,75,196,106,161,158,147,173,166,97,181,2,79,55,3,22,87,172,248,30,56,153,76,166,105,110,47,132,56,
+    248,62,27,225,248,201,248,113,71,94,216,223,101,17,171,251,196,254,189,100,118,207,45,134,24,243,116,48,24,252,92,186,9,176,120,14,28,56,112,90,172,108,14,165,57,221,122,17,137,67,17,213,115,227,199,19,
+    210,77,32,67,220,95,123,134,195,225,83,227,254,59,176,125,71,46,128,152,151,27,43,43,43,167,167,155,0,139,35,230,239,137,49,129,63,61,155,202,237,22,227,172,222,206,243,193,248,241,86,105,248,28,131,234,
+    213,32,177,234,127,71,220,159,11,113,166,18,195,252,66,92,156,148,134,15,139,33,98,245,162,217,20,110,183,56,192,214,98,172,79,78,195,102,7,196,41,119,245,153,6,11,113,198,18,15,6,231,165,97,67,251,197,
+    169,245,89,17,173,86,191,181,117,171,250,141,213,100,242,169,213,213,213,187,165,97,179,131,122,189,222,15,196,253,251,241,234,126,78,119,121,43,85,171,236,8,236,35,211,176,161,189,226,88,186,117,76,214,
+    255,77,115,183,149,102,199,211,248,101,241,163,231,86,107,20,247,239,158,120,160,125,94,220,223,195,237,59,190,165,226,65,96,57,230,237,29,210,176,161,157,34,90,239,76,115,182,149,226,64,223,140,211,214,
+    199,165,225,50,7,213,87,176,196,253,222,234,215,197,70,96,63,154,134,11,237,19,97,125,76,172,0,90,251,203,140,56,192,191,188,178,178,114,215,52,92,230,104,99,99,227,251,35,96,255,145,118,69,235,196,220,
+    168,158,38,250,245,52,92,104,143,165,165,165,155,198,228,108,237,211,1,49,182,127,138,240,223,62,13,151,6,84,79,25,69,196,62,144,118,73,235,196,28,57,184,186,186,122,235,52,92,104,135,88,181,190,57,205,
+    209,214,25,141,70,239,143,11,207,175,182,64,236,135,234,53,177,127,179,189,99,90,40,2,251,129,52,84,104,94,175,215,251,137,88,149,180,238,213,1,49,166,234,115,1,223,22,63,122,47,121,139,196,254,168,62,
+    107,226,117,213,254,217,222,81,45,82,77,153,126,191,255,168,52,84,104,78,245,33,203,241,104,255,111,105,110,182,74,28,192,111,136,11,97,109,161,106,191,196,254,121,121,27,3,27,243,249,191,226,194,155,
+    11,104,86,156,226,61,109,54,37,219,37,142,217,63,72,67,164,197,98,63,157,157,118,89,171,12,6,131,231,165,33,194,252,197,129,113,163,88,125,124,35,205,199,86,168,86,66,225,252,248,209,138,117,1,196,126,
+    58,33,246,215,107,170,157,182,189,3,91,34,230,245,193,229,229,229,155,165,97,194,124,141,199,227,215,166,185,216,26,113,80,188,61,46,132,117,129,84,159,175,26,251,237,117,179,61,216,30,49,166,119,167,
+    33,194,252,244,122,189,59,196,228,107,213,59,111,134,195,97,245,129,220,94,21,176,128,98,191,237,137,83,241,183,110,239,200,150,136,197,244,36,198,116,143,52,68,152,143,88,181,158,151,230,96,43,68,232,
+    255,61,46,22,242,155,87,153,137,253,87,61,69,240,207,219,59,180,37,70,163,209,5,105,120,80,191,205,205,205,59,71,204,6,105,254,53,110,50,153,124,181,122,7,80,26,30,11,172,250,38,221,120,224,222,155,118,
+    109,227,34,246,195,88,189,254,96,26,30,212,43,38,255,91,210,220,107,92,21,249,88,93,220,47,13,141,14,136,160,157,17,251,181,53,95,132,24,15,222,31,138,11,223,74,65,189,226,81,252,158,49,241,91,241,189,
+    73,113,16,78,99,21,253,196,52,52,58,164,223,239,63,188,218,191,105,87,55,42,230,251,180,215,235,61,32,13,13,234,49,28,14,91,243,54,215,24,203,95,199,133,21,69,7,85,251,53,206,144,94,188,189,163,91,32,
+    206,142,62,152,134,6,59,175,250,38,212,120,16,111,197,43,4,210,243,114,55,77,67,163,131,98,229,122,74,236,231,207,204,246,120,179,98,44,147,88,77,159,145,134,6,59,43,38,250,43,210,92,107,212,100,50,233,
+    197,74,226,172,52,44,58,108,48,24,252,80,60,160,175,164,93,223,168,152,255,127,155,134,5,59,167,90,69,68,212,174,78,243,172,81,17,86,111,109,221,69,134,195,225,83,210,174,111,84,68,254,154,184,112,182,
+    196,206,138,160,253,246,108,138,53,43,2,255,169,184,240,122,214,93,36,246,247,9,177,223,63,186,61,1,26,22,199,193,11,211,176,96,103,180,225,185,175,88,57,12,98,21,115,102,26,18,187,72,122,149,74,47,77,
+    133,198,68,228,191,28,23,222,5,200,206,216,216,216,56,115,54,181,154,21,97,253,203,52,36,118,161,8,236,31,166,169,208,168,234,101,98,105,72,112,124,98,213,218,248,123,190,99,213,82,125,133,140,21,195,
+    46,22,251,127,79,204,131,106,229,216,168,88,189,126,36,13,9,142,221,202,202,202,45,99,66,55,250,110,153,173,16,171,214,167,166,33,177,139,197,234,245,177,213,124,72,83,163,17,113,60,12,215,215,215,125,
+    31,27,199,39,30,165,127,51,205,169,198,196,24,46,141,11,111,22,224,91,171,215,234,237,168,141,26,141,70,62,76,155,227,19,19,249,146,52,159,26,17,139,148,233,120,60,126,104,26,14,84,175,92,185,127,204,
+    203,70,223,26,27,87,255,185,52,28,40,23,97,187,109,76,162,70,63,253,42,174,255,147,105,56,240,109,49,47,254,33,77,145,70,84,207,84,245,122,189,59,166,225,64,153,56,29,111,244,251,177,170,231,214,54,55,
+    55,31,148,134,3,223,54,28,14,239,29,129,109,116,245,58,24,12,94,144,134,3,101,34,174,31,75,243,168,17,113,236,92,154,134,2,71,136,249,89,125,243,68,99,226,250,47,143,11,191,11,160,204,222,189,123,79,142,
+    184,53,246,209,130,213,170,181,223,239,255,76,26,14,28,97,99,99,227,190,213,60,73,83,102,238,170,149,243,210,210,146,183,195,82,38,78,121,126,62,205,161,70,196,170,224,75,113,225,109,174,92,171,152,31,
+    213,219,98,63,187,61,97,26,50,28,14,207,73,195,129,60,227,241,248,245,105,254,52,34,38,237,111,165,161,192,181,138,121,250,248,52,101,26,17,113,247,29,91,228,139,57,115,195,152,180,75,179,233,51,127,113,
+    182,181,182,186,186,122,235,52,28,184,86,91,91,91,55,139,249,114,40,77,157,185,139,227,100,45,46,156,97,145,103,48,24,252,112,76,216,198,158,203,138,9,123,126,26,10,92,175,152,47,47,75,83,103,238,170,
+    231,124,55,55,55,31,156,134,2,215,173,223,239,63,35,205,157,70,140,124,16,54,5,98,49,112,143,104,92,99,47,203,26,14,135,47,77,67,129,235,54,153,76,62,152,230,205,220,197,138,249,43,105,24,144,45,230,236,
+    231,211,20,154,187,184,238,127,73,195,128,107,23,115,165,122,9,214,55,102,211,102,254,98,21,240,242,52,20,200,22,103,91,207,76,83,104,238,226,120,57,16,23,55,78,67,129,163,139,211,171,234,45,175,141,60,
+    223,90,93,239,129,3,7,238,145,134,2,217,150,151,151,239,208,212,83,3,213,243,174,222,10,203,245,218,220,220,252,149,52,103,230,46,226,250,223,113,225,51,91,41,22,243,166,250,180,172,198,94,243,26,113,
+    125,86,26,10,28,93,156,150,191,54,205,151,185,139,131,195,183,107,114,204,98,254,188,52,77,165,185,27,12,6,239,79,195,128,163,139,9,218,216,103,101,246,251,125,31,45,200,49,27,141,70,247,75,83,105,238,
+    182,182,182,46,75,195,128,163,139,149,107,35,223,17,31,81,223,88,93,93,189,85,26,6,20,91,94,94,174,222,80,176,154,166,212,92,141,199,227,234,219,58,188,153,128,163,219,191,127,255,237,102,83,101,254,38,
+    147,137,15,31,230,184,197,234,181,177,15,119,95,89,89,57,61,13,3,190,91,156,150,63,34,205,147,185,139,21,243,27,210,48,224,152,69,92,95,144,166,212,220,197,28,62,59,13,3,190,91,196,245,220,52,79,230,110,
+    48,24,60,46,13,3,142,89,175,215,251,241,52,165,230,46,226,234,157,90,28,93,76,142,198,62,9,107,125,125,253,118,105,24,112,204,98,42,221,98,107,107,171,145,207,33,246,9,89,92,171,233,116,250,158,52,79,
+    230,42,78,229,14,197,213,251,68,119,118,68,156,5,237,75,83,107,174,34,234,23,165,33,192,119,235,247,251,141,188,237,53,162,254,241,52,4,56,110,49,159,222,158,166,214,92,69,212,175,73,67,128,239,22,143,
+    188,235,105,158,204,149,95,102,177,147,34,114,127,146,166,214,92,197,241,51,74,67,128,255,183,111,223,190,59,199,35,254,56,205,147,185,154,76,38,231,166,97,192,113,27,143,199,191,148,166,214,92,69,92,
+    167,251,247,239,191,119,26,6,204,172,175,175,223,59,38,71,35,31,216,178,180,180,244,200,52,12,56,110,87,94,121,229,89,105,106,205,85,117,248,172,173,173,61,36,13,3,102,98,98,252,88,154,35,115,23,215,125,
+    243,52,12,56,110,49,159,110,148,166,214,220,197,117,63,44,13,3,102,226,84,234,209,105,126,204,85,92,111,63,78,165,110,146,134,1,199,173,250,90,248,225,112,88,189,29,117,238,38,147,201,111,164,97,192,204,
+    202,202,202,57,105,126,204,213,116,58,93,170,86,26,105,24,112,220,98,90,157,24,145,251,159,217,12,155,175,213,213,213,63,75,195,128,153,209,104,244,252,52,63,230,42,194,250,197,52,4,216,49,49,181,62,49,
+    155,97,243,85,189,17,39,13,1,102,34,114,127,154,230,199,92,197,202,245,11,105,8,176,99,98,94,53,242,1,46,113,28,189,49,13,1,102,154,138,235,198,198,198,165,105,8,176,99,14,31,62,124,97,154,98,115,37,174,
+    28,161,169,184,246,122,189,139,211,16,96,199,196,131,246,251,210,20,155,43,113,229,8,77,197,117,48,24,124,44,13,1,118,76,191,223,127,71,154,98,115,37,174,28,161,169,184,78,38,147,15,167,33,192,142,25,
+    141,70,111,77,83,108,174,196,149,35,52,21,215,184,222,87,166,33,192,142,137,121,245,236,52,197,230,74,92,57,66,131,113,125,69,26,2,236,152,152,87,207,76,83,108,174,196,149,35,136,43,93,34,174,180,134,
+    184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,
+    74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,
+    93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,
+    134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,
+    37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,180,134,184,210,37,226,74,107,136,43,93,34,174,29,21,119,240,115,98,91,90,176,
+    109,61,205,143,185,138,235,221,248,158,113,216,108,59,177,173,165,41,54,87,113,189,155,223,51,142,69,216,94,153,210,213,126,49,216,63,79,247,53,64,171,69,175,222,156,210,213,126,226,10,44,10,113,5,168,
+    129,184,2,212,64,92,1,106,32,174,0,53,16,87,128,26,136,43,64,13,196,21,160,6,226,10,80,3,113,5,168,129,184,2,212,64,92,1,106,32,174,0,53,16,87,128,26,136,43,64,13,196,21,160,6,226,10,80,3,113,5,168,129,
+    184,2,212,64,92,1,106,32,174,0,53,16,87,128,26,136,43,64,13,196,21,160,6,226,10,80,3,113,5,168,129,184,2,212,64,92,1,106,32,174,25,226,122,95,29,23,183,177,217,108,139,183,197,241,251,220,184,156,59,113,
+    205,16,215,251,146,52,4,96,193,196,241,251,123,233,80,158,43,113,205,32,174,176,184,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,
+    184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,
+    53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,
+    2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,
+    131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,
+    196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,
+    184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,
+    53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,
+    2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,
+    131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,
+    196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,
+    184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,
+    53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,
+    2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,
+    131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,
+    196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,
+    184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,
+    53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,
+    2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,131,184,2,165,196,53,67,131,113,29,197,182,
+    97,179,217,22,114,27,166,67,121,174,226,122,197,21,96,167,137,43,64,13,196,21,160,6,226,10,80,3,113,5,168,129,184,2,212,64,92,1,106,32,174,0,53,16,87,128,26,136,43,64,13,196,21,160,6,226,10,80,3,113,5,
+    168,129,184,2,212,64,92,1,106,32,174,0,53,16,87,128,26,136,43,64,13,196,21,160,6,226,10,80,3,113,5,168,129,184,2,212,64,92,1,106,32,174,0,53,16,87,128,26,136,43,64,13,196,21,160,6,226,10,80,3,113,5,168,
+    193,66,197,53,198,123,82,12,248,20,155,205,102,107,251,22,189,58,57,165,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,224,58,221,224,6,255,7,35,151,129,121,215,12,229,197,0,0,0,0,73,69,78,68,174,66,
+    96,130,0,0};
+
+const char* StructureGUI::lock2small_png = (const char*) resource_StructureGUI_lock2small_png;
+const int StructureGUI::lock2small_pngSize = 5834;
+
 
 
 //[EndFile] You can add extra defines here...

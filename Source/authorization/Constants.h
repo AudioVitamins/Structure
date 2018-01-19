@@ -9,22 +9,22 @@
 
 
 
-#define SEQ_APP_NAME "life"
+#define SEQ_APP_NAME "structure"
 // name of file that stores license key
-#define SEQ_LICENSE_NAME "lifekey"  
+#define SEQ_LICENSE_NAME "structurekey"  
 #define SEQ_CO_NAME  "AudioVitamins"
 // used on the Trial dialog
 #define SEQ_PURCHASE_URL  "http://www.audiovitamins.com"
 // this is where it will try to reauthorize
 //#define SEQ_LICENSE_URL "http://installers.audiovitamins.com/validation/unlock.php"
-#define SEQ_LICENSE_URL "http://v64-d10b733-01/life/unlock.php"
+#define SEQ_LICENSE_URL "http://v64-d10b733-01/structure/unlock.php"
 // this is the URL of the user-friendly form for manually requesting an unlock code
 #define SEQ_LICENSE_URL_FRIENDLY "https://www.audiovitamins.com/my-account/offline-activation/"
 // this is the URL of the user-friendly form for manually requesting a trial code
 #define SEQ_TRIAL_URL_FRIENDLY "https://www.audiovitamins.com/trial-activation"
 // when they enter an email, it auto posts to this
 //#define SEQ_TRIAL_URL "http://installers.audiovitamins.com/validation/request_trial.php"
-#define SEQ_TRIAL_URL "http://v64-d10b733-01/life/request_trial.php"
+#define SEQ_TRIAL_URL "http://v64-d10b733-01/structure/request_trial.php"
 
 
 // for licensing, these are passed to the license server (and validated against key)

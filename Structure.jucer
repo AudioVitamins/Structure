@@ -17,6 +17,28 @@
               companyCopyright="Audio Vitamins">
   <MAINGROUP id="jkKiHq" name="Structure - Gain Plugin">
     <GROUP id="{5B268EE9-594D-A388-F09E-F1E90AFA7F9D}" name="Source">
+      <GROUP id="{7ACDC718-13C4-81FD-FE25-7DCCA75A7E49}" name="authorization">
+        <FILE id="mF7PaF" name="auth.cpp" compile="1" resource="0" file="Source/authorization/auth.cpp"/>
+        <FILE id="QZV6MU" name="auth.h" compile="0" resource="0" file="Source/authorization/auth.h"/>
+        <FILE id="oWFbOi" name="AuthDialog.cpp" compile="1" resource="0" file="Source/authorization/AuthDialog.cpp"/>
+        <FILE id="wuQ43O" name="AuthDialog.h" compile="0" resource="0" file="Source/authorization/AuthDialog.h"/>
+        <FILE id="NYU6TO" name="Colors.h" compile="0" resource="0" file="Source/authorization/Colors.h"/>
+        <FILE id="itsaVO" name="CommonComponents.cpp" compile="1" resource="0"
+              file="Source/authorization/CommonComponents.cpp"/>
+        <FILE id="W7rmr7" name="CommonComponents.h" compile="0" resource="0"
+              file="Source/authorization/CommonComponents.h"/>
+        <FILE id="vkydnl" name="Constants.h" compile="0" resource="0" file="Source/authorization/Constants.h"/>
+        <FILE id="lBGaqN" name="EditorState.cpp" compile="1" resource="0" file="Source/authorization/EditorState.cpp"/>
+        <FILE id="QioGzM" name="EditorState.h" compile="0" resource="0" file="Source/authorization/EditorState.h"/>
+        <FILE id="C7CeTq" name="SeqImageX.cpp" compile="1" resource="0" file="Source/authorization/SeqImageX.cpp"/>
+        <FILE id="lY56W4" name="SeqImageX.h" compile="0" resource="0" file="Source/authorization/SeqImageX.h"/>
+        <FILE id="MX5Ex9" name="TrialDialog.cpp" compile="1" resource="0" file="Source/authorization/TrialDialog.cpp"/>
+        <FILE id="TSHTJi" name="TrialDialog.h" compile="0" resource="0" file="Source/authorization/TrialDialog.h"/>
+        <FILE id="mx5SGx" name="ucshared.cpp" compile="1" resource="0" file="Source/authorization/ucshared.cpp"/>
+        <FILE id="BCesdT" name="ucshared.h" compile="0" resource="0" file="Source/authorization/ucshared.h"/>
+        <FILE id="FyRs6w" name="ucvalidate.cpp" compile="1" resource="0" file="Source/authorization/ucvalidate.cpp"/>
+        <FILE id="eNSBq7" name="unlockcode.h" compile="0" resource="0" file="Source/authorization/unlockcode.h"/>
+      </GROUP>
       <GROUP id="{17E62069-73A5-3302-3968-DE5E7E51193B}" name="PluginCommunication">
         <FILE id="kic45S" name="ManagePluginComunication.cpp" compile="1" resource="0"
               file="Source/PluginComunication/ManagePluginComunication.cpp"/>

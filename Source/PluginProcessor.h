@@ -14,6 +14,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DSP/Loudness/Ebu128.h"
 #include "PluginComunication/ManagePluginComunication.h"
+#include "./authorization/EditorState.h"
 
 #define PLUGIN_PORT 8001
 //==============================================================================
@@ -91,6 +92,9 @@ public:
 	void finishAnalysis(Ebu128Loudness *) override;
 	void startAnalysis(Ebu128Loudness *) override;
 	void ResetMetter();
+    
+    bool mUnlocked;
+    EditorState mEditorState;
 
 private:
     //==============================================================================
