@@ -34,7 +34,7 @@ char version code
 // max period of time of validity
 // this is used to create time code and validate that date has not been
 // tampered with
-#define VALID_DAYS 92 
+#define VALID_DAYS 92000
 
 /* Generate an unlock code. no checks are done for any validity
    * note that this function will not exist on the client side *

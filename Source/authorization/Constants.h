@@ -16,8 +16,8 @@
 // used on the Trial dialog
 #define SEQ_PURCHASE_URL  "http://www.audiovitamins.com"
 // this is where it will try to reauthorize
-//#define SEQ_LICENSE_URL "http://installers.audiovitamins.com/validation/unlock.php"
-#define SEQ_LICENSE_URL "http://v64-d10b733-01/structure/unlock.php"
+#define SEQ_LICENSE_URL "http://installers.audiovitamins.com/validation/unlock.php"
+// #define SEQ_LICENSE_URL "http://v64-d10b733-01/structure/unlock.php"
 // this is the URL of the user-friendly form for manually requesting an unlock code
 #define SEQ_LICENSE_URL_FRIENDLY "https://www.audiovitamins.com/my-account/offline-activation/"
 // this is the URL of the user-friendly form for manually requesting a trial code
@@ -42,8 +42,8 @@
 #define SEQCTL_AUTHDIALOG           19 //* auth dialog will notify when done
 #define SEQCTL_TRIALDIALOG          26 //* trial dialog will notify when done
 
-#define SEQ_SIZE_MAIN_W       750
-#define SEQ_SIZE_MAIN_H       150
+#define SEQ_SIZE_MAIN_W       260
+#define SEQ_SIZE_MAIN_H       200
 // mouse sensitivity default. higher value means less sensitive
 #define SEQ_MOUSE_SENSE_DEFAULT 4   
 // max mouse sensitivity (ie least sensitive value)

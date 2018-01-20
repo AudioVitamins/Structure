@@ -77,47 +77,6 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="D:\Working\FrameWork\VST3 SDK"
-            vst3Folder="D:\Working\FrameWork\VST3 SDK" aaxFolder="D:\Working\FrameWork\AAX_SDK">
-      <CONFIGURATIONS>
-        <CONFIGURATION name="Debug_VST" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="1" optimisation="1" targetName="$(ProjectName)" binaryPath="$(Configuration)\$(PlatformName)"
-                       intermediatesPath="int\$(ProjectName)\$(Configuration)\$(PlatformName)"
-                       defines="JUCE_DEBUG" debugInformationFormat="ProgramDatabase"
-                       enablePluginBinaryCopyStep="0"/>
-        <CONFIGURATION name="Release_VST" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="0" optimisation="3" targetName="$(ProjectName)" binaryPath="$(Configuration)\$(PlatformName)"
-                       intermediatesPath="int\$(ProjectName)\$(Configuration)\$(PlatformName)"
-                       debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
-                       linkTimeOptimisation="1"/>
-        <CONFIGURATION name="Debug_AAX" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       targetName="$(ProjectName)" binaryPath="$(Configuration)\$(ProjectName).aaxplugin\Contents\$(PlatformName)"
-                       intermediatesPath="int\$(ProjectName)\$(Configuration)\$(PlatformName)"
-                       defines="JUCE_DEBUG" debugInformationFormat="ProgramDatabase"
-                       enablePluginBinaryCopyStep="0" linkTimeOptimisation="1"/>
-        <CONFIGURATION name="Release_AAX" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       targetName="$(ProjectName)" binaryPath="$(Configuration)\$(ProjectName).aaxplugin\Contents\$(PlatformName)"
-                       intermediatesPath="int\$(ProjectName)\$(Configuration)\$(PlatformName)"
-                       debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
-                       linkTimeOptimisation="1"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_audio_basics" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_core" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_opengl" path="../../FrameWork/JUCE/modules"/>
-        <MODULEPATH id="juce_video" path="../../FrameWork/JUCE/modules"/>
-      </MODULEPATHS>
-    </VS2015>
     <XCODE_MAC targetFolder="Builds/MacOSX" vst3Folder="/Frameworks/VST3SDK"
                aaxFolder="/Frameworks/AAX">
       <CONFIGURATIONS>
@@ -156,6 +115,32 @@
         <MODULEPATH id="juce_audio_basics" path="../../../Frameworks/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
+    <VS2015 targetFolder="Builds/VisualStudio2015_1" vst3Folder="" aaxFolder="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
+                       linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="Structure - Gain Plugin"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
+                       debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
+                       linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="Structure - Gain Plugin"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../FrameWork/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../FrameWork/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2015>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="0" useLocalCopy="0" useGlobalPath="1"/>

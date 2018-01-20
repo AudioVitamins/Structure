@@ -4,7 +4,7 @@
 #include "auth.h"
 #include "unlockcode.h" // for constant only
 //#include "SeqImageX.h"
-#include "../StructureGUI.h" // so we can access the image resource for background
+#include "../StructureEditor.h" // so we can access the image resource for background
 
 void SeqTrialDialog::endDialog(bool hitOk)
 {
@@ -131,10 +131,10 @@ void SeqTrialDialog::enableDisable()
                 SEQ_TRIAL_URL_FRIENDLY ".";
 #else
                 
-                txt += "If you have purchased Structure, click Registration to enter your registration details.\n"
-                "To demo Structure for 30 days, enter a valid email address to have a trial code sent by email and enter it below\n"
-                "If you are not online, request a trial code at "
-                SEQ_TRIAL_URL_FRIENDLY ".";
+                txt += "If you have purchased Structure, click Register\nor enter your demo trial code below\n"
+               "To get a trial code visit\n https://www.audiovitamins.com/trial-code\n"
+//                SEQ_TRIAL_URL_FRIENDLY "."
+                ;
 #endif
             }
             mLblDescription->setText(txt,juce::dontSendNotification);
@@ -226,7 +226,8 @@ void SeqTrialDialog::notify(int id, int /*val*/) {
             break;
         case SEQCTL_TRIAL_REGISTRATION:
             // show the registration dialog
-            mAuthDlg.openDialo           mAuthDlg.Setup();
+            mAuthDlg.openDialog();
+            mAuthDlg.doSetup();
             break;
         case SEQCTL_TRIAL_CONTINUE:
             // if this button is available they can go on
@@ -254,61 +255,56 @@ void SeqTrialDialog::resizedInner(Component * inner) {
     
     mBackground.setBounds(r);
     
-    r.reduce(8, 8);
+    r.reduce(5, 5);
     
     // Title
-    tmp= r.removeFromTop(15);
+    tmp= r.removeFromTop(10);
     mLblTitle->setBounds(tmp);
-    r.removeFromTop(4);
+    r.removeFromTop(3);
     
     // Description
-    tmp = r.removeFromTop(42);
+    tmp = r.removeFromTop(50);
     mLblDescription->setBounds(tmp);
-    r.removeFromTop(4);
+    r.removeFromTop(3);
     
-    tmp2 = r.removeFromBottom(80);
-    tmp2.removeFromLeft(10);
+
+//    
+//    // email label and textbox and button
+//    tmp = tmp2.removeFromTop(20);
+//    left = tmp.removeFromLeft(110);
+//    mLblEmail->setBounds(left);
+//    tmp.removeFromLeft(4);
+//    left = tmp.removeFromLeft(200);
+//    mTxtEmail->setBounds(left);
+//    tmp.removeFromLeft(4);
+//    left = tmp.removeFromLeft(175);
+//    mBtnEmail->setBounds(left);
+//
     
-    // email label and textbox and button
-    tmp = tmp2.removeFromTop(20);
-    left = tmp.removeFromLeft(110);
-    mLblEmail->setBounds(left);
-    tmp.removeFromLeft(4);
-    left = tmp.removeFromLeft(200);
-    mTxtEmail->setBounds(left);
-    tmp.removeFromLeft(4);
-    left = tmp.removeFromLeft(175);
-    mBtnEmail->setBounds(left);
+    // trial code label and text box
+    tmp = r.removeFromTop(20);
+    mLblTrialCode->setBounds(tmp);
+    r.removeFromTop(3);
+    tmp = r.removeFromTop(20);
+    mTxtTrialCode->setBounds(tmp);
+    r.removeFromTop(3);
+    tmp = r.removeFromTop(20);
+    mBtnAcceptTrialCode->setBounds(tmp);
     
+    r.removeFromTop(3);
     // continue button
-    tmp.removeFromLeft(20);
-    left = tmp.removeFromLeft(100);
+    tmp = r.removeFromTop(20);
+    left = tmp.removeFromLeft(80);
     mBtnContinue->setBounds(left);
     
-    
-    
-    tmp2.removeFromTop(4);
-    // trial code label and text box
-    tmp = tmp2.removeFromTop(20);
-    left = tmp.removeFromLeft(110);
-    mLblTrialCode->setBounds(left);
-    tmp.removeFromLeft(4);
-    left = tmp.removeFromLeft(200);
-    mTxtTrialCode->setBounds(left);
-    tmp.removeFromLeft(4);
-    left = tmp.removeFromLeft(175);
-    mBtnAcceptTrialCode->setBounds(left);
-    
-    
+    tmp.removeFromLeft(5);
     // registration button
-    tmp.removeFromLeft(20);
-    left = tmp.removeFromLeft(100);
+    left = tmp.removeFromLeft(80);
     mBtnRegistration->setBounds(left);
     
+    tmp.removeFromLeft(5);
     // buy now button
-    tmp = tmp2.removeFromTop(20);
-    tmp.removeFromLeft(154);
-    left = tmp.removeFromLeft(200);
+    left = tmp.removeFromLeft(80);
     mLblBuyNow->setBounds(left);
     
     
@@ -327,29 +323,29 @@ mAuthDlg(glob, this)
     
     mBackground.setVisible(true);
 #ifdef STRUCTURE_BETA
-#define SBTITLE "Beta Version of Structure"
+#define SBTITLE "Beta Version"
 #else
-#define SBTITLE "Unregistered Version of Structure"
+#define SBTITLE "Demo Mode"
 #endif
     mLblTitle = addStdLabel(SBTITLE);
     mLblTitle->setJustificationType(juce::Justification::centred);
     mLblTitle->setFont(Font(16.0f, Font::bold));
     mLblDescription = addStdLabel("");
     mLblDescription->setMinimumHorizontalScale(1.0f);
-    mLblDescription->setFont(Font(14.0f, Font::plain));
+    mLblDescription->setFont(Font(12.0f, Font::plain));
     mLblDescription->setJustificationType(juce::Justification::topLeft);
     mLblEmail = addStdLabel("Email address");
     mLblTrialCode = addStdLabel(BETA_TRIAL " code");
-    mLblBuyNow = addStdLabel("Click to purchase now");
+    mLblBuyNow = addStdLabel("BUY NOW");
     mLblBuyNow->setFont(Font(15, Font::underlined));
     mLblBuyNow->addMouseListener(this,false);
     mTxtEmail = addStdTextEditor();
     mTxtTrialCode = addStdTextEditor();
     
     mBtnEmail = addStdButton("Send me a " BETA_TRIAL " code", 0, SEQCTL_TRIAL_SENDMAIL);
-    mBtnAcceptTrialCode = addStdButton("Start " BETA_TRIAL, 0, SEQCTL_TRIAL_USETRIAL);
-    mBtnRegistration = addStdButton("Registration", 0, SEQCTL_TRIAL_REGISTRATION);
-    mBtnContinue = addStdButton("Continue " BETA_TRIAL, 0, SEQCTL_TRIAL_CONTINUE);
+    mBtnAcceptTrialCode = addStdButton("START DEMO", 0, SEQCTL_TRIAL_USETRIAL);
+    mBtnRegistration = addStdButton("REGISTER", 0, SEQCTL_TRIAL_REGISTRATION);
+    mBtnContinue = addStdButton("CONTINUE", 0, SEQCTL_TRIAL_CONTINUE);
     
     addChildComponent(mAuthDlg);
 }
