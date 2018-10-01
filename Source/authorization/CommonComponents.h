@@ -231,8 +231,8 @@ To use this, you need to override it, and add an instance of the overriden class
 main component. When you want the dialog to show, call openDialog.
 */
 class SeqModalDialog : public Component,
-   public ButtonListener,
-   public ComboBoxListener,
+public Button::Listener,
+public ComboBox::Listener,
    public CptNotify           // for our own controls
 {
 

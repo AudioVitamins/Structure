@@ -15,7 +15,7 @@ logMessage(String msg)
    os = File(fn).createOutputStream();
    if (os != nullptr) {
       msg += "\n";
-      os->writeText(msg, false, false);
+      os->writeText(msg, false, false,0);
    }
 }
 

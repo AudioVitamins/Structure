@@ -238,10 +238,12 @@ void StructureGUI::timerCallback(int timerID) {
    if (timerID == 1) {
     synGUI();
     //p->sendAnalysisAllMode();
+       timerCallback(1);
    }
    else if (timerID == 2) {
        //@AS
        stopTimer(2); // prevent firing again
+//       timerCallback(2);
        authorize();
    }
 }
